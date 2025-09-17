@@ -8,14 +8,14 @@
     body{
       font-family:system-ui,Arial,sans-serif;
       max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
-      background:#006400; color:#fff; /* أخضر غامق مضبوط */
+      background:#006400; color:#fff; /* أخضر غامق */
     }
     h1{font-size:20px;margin:0 0 16px;text-align:center}
     .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
     label{font-weight:600;color:#fff}
     select,input,button,textarea{
       font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
-      background:#fff; color:#000; /* الحقول بيضاء */
+      background:#fff; color:#000;
     }
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
     .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
@@ -58,12 +58,8 @@
       <option value="need">need</option>
     </select>
 
-    <label for="refund">Refund</label>
-    <select id="refund">
-      <option value="no">no refund</option>
-      <option value="value">أدخل قيمة</option>
-    </select>
-    <input id="refundValue" type="text" inputmode="numeric" placeholder="مثال: 15.75" style="display:none" />
+    <label for="refund">Refund (رقم فقط / أو يترك فارغ)</label>
+    <input id="refund" type="text" inputmode="decimal" placeholder="مثال: 15.75" />
   </div>
 
   <div class="actions">
@@ -79,35 +75,27 @@
     const CALL_LINE = "Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider back to get order";
     const COMP_LINE = "no Compensation";
 
-    el('refund').addEventListener('change', () => {
-      if (el('refund').value === 'value') {
-        el('refundValue').style.display = 'block';
-      } else {
-        el('refundValue').style.display = 'none';
-        el('refundValue').value = '';
-      }
-    });
-
+    // التحقق: رقم صحيح/عشري أو فاضي
     function isNumericOrEmpty(v) {
       if (!v) return true;
-      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
+      return /^-?\d+(\.\d+)?$/.test(v.trim());
     }
 
     function buildTemplate() {
       const risk     = el('riskLabel').value;
       const evidence = el('evidence').value;
       const receipt  = el('receipt').value;
-      let refundTxt  = "";
+      let refund     = (el('refund').value || '').trim();
 
-      if (el('refund').value === "no") {
-        refundTxt = "no refund";
-      } else {
-        refundTxt = (el('refundValue').value || "").trim();
-        if (!isNumericOrEmpty(refundTxt)) {
-          alert('Refund يجب أن يكون رقمًا أو يترك فارغًا.');
-          el('refundValue').focus();
-          return;
-        }
+      if (!isNumericOrEmpty(refund)) {
+        alert('حقل Refund يجب أن يحتوي رقمًا فقط (صحيح أو عشري) أو يترك فارغًا.');
+        el('refund').focus();
+        return;
+      }
+
+      // لو الحقل فاضي = no refund
+      if (!refund) {
+        refund = "no refund";
       }
 
       const lines = [
@@ -115,7 +103,7 @@
         `Case Solution Risk Label: (${risk})RC`,
         `Evidence: ${evidence}`,
         `Receipt: ${receipt}`,
-        `Refund: (${refundTxt}) refund`,
+        `Refund: (${refund}) refund`,
         `Compensation: ${COMP_LINE}`
       ];
 
@@ -126,9 +114,7 @@
       el('riskLabel').value = '0';
       el('evidence').value = 'Clear';
       el('receipt').value = 'yes';
-      el('refund').value = 'no';
-      el('refundValue').style.display = 'none';
-      el('refundValue').value = '';
+      el('refund').value = '';
       el('output').value = '';
     }
 
