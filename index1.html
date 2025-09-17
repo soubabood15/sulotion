@@ -22,17 +22,17 @@
     .btn.primary{background:#222;color:#fff}
     #output{
       width:100%;min-height:160px;font:inherit;padding:12px;border:1px solid #ccc;border-radius:12px;resize:none;
-      background:#fff; color:#000;
+      background:#fff; color:#000;white-space:pre-wrap
     }
     .hint{font-size:.85em;color:#333}
     .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#000;direction:ltr}
   </style>
 </head>
 <body>
-  <h1>Missing senario 2</h1>
+  <h1>مولّد القالب — Case Solution (Scenario 2)</h1>
 
   <div class="grid">
-    <!-- Call line ثابت -->
+   
     <label>Call line</label>
     <div class="call-box">
       Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider refused to back
@@ -104,6 +104,7 @@
         `Compensation: ${COMP_LINE}`
       ];
 
+     
       el('output').value = lines.join("\\n");
     }
 
@@ -115,7 +116,7 @@
       el('output').value = '';
     }
 
-    // نسخ عند الضغط
+   
     el('output').addEventListener('click', () => {
       el('output').select();
       document.execCommand('copy');
