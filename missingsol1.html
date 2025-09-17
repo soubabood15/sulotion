@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Case Template Generator — Scenario 1</title>
+  <title>Missing — Scenario 1</title>
   <style>
     body{
       font-family:system-ui,Arial,sans-serif;
@@ -28,7 +28,7 @@
   </style>
 </head>
 <body>
-  <h1>مولّد القالب — Case Solution (Scenario 1)</h1>
+  <h1>Missing — Scenario 1</h1>
 
   <div class="grid">
     <label>Call line</label>
@@ -58,17 +58,17 @@
       <option value="need">need</option>
     </select>
 
-    <label for="refund">Refund (رقم فقط / أو يترك فارغ)</label>
-    <input id="refund" type="text" inputmode="decimal" placeholder="مثال: 15.75" />
+    <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
+    <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
   </div>
 
   <div class="actions">
-    <button class="btn primary" id="build">توليد القالب</button>
-    <button class="btn" id="clear">تفريغ الحقول</button>
+    <button class="btn primary" id="build">صنع الحل</button>
+    <button class="btn" id="clear">مسح</button>
   </div>
 
-  <textarea id="output" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
-  <div class="hint">⬆ اضغط على المربع لنسخ النتيجة كاملة</div>
+  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
+  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
 
   <script>
     const el = (id) => document.getElementById(id);
@@ -76,8 +76,8 @@
     const COMP_LINE = "no Compensation";
 
     function isNumericOrEmpty(v) {
-      if (!v) return true;               // فارغ مسموح
-      return /^-?\d+(\.\d+)?$/.test(v.trim()); // رقم صحيح/عشري
+      if (!v) return true;               
+      return /^-?\d+(\.\d+)?$/.test(v.trim()); 
     }
 
     function buildTemplate() {
@@ -115,7 +115,7 @@
     el('output').addEventListener('click', () => {
       el('output').select();
       document.execCommand('copy');
-      alert("✔ تم نسخ القالب كامل");
+      alert("✔ خلص انت هيك نسخته");
     });
 
     el('build').addEventListener('click', buildTemplate);
