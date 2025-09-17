@@ -24,24 +24,15 @@
   <h1>مولّد القالب — Case Solution</h1>
 
   <div class="grid">
-    <label for="whoCalled">Call merchant/rider</label>
-    <select id="whoCalled">
-      <option value="merchant">merchant</option>
-      <option value="rider">rider</option>
-      <option value="merchant & rider">merchant & rider</option>
-      <option value="customer">customer</option>
-    </select>
-
-    <label for="callResults">Call results</label>
-    <textarea id="callResults" placeholder="اكتب ملخص نتائج الاتصال..."></textarea>
+    <label for="callLine">Call line</label>
+    <textarea id="callLine">Call merchant ,call results ; needed Restaurant admitted the mistake</textarea>
 
     <label for="riskLabel">Case Solution Risk Label</label>
     <select id="riskLabel">
-      <!-- إذا عندكم قائمة أدق، غيّر الخيارات بحرّية -->
       <option value="1">1RC</option>
       <option value="2">2RC</option>
       <option value="3">3RC</option>
-      <option value="3+">3RC+</option>
+      <option value="3>">3RC></option>
     </select>
 
     <label for="evidence">Evidence</label>
@@ -53,22 +44,19 @@
 
     <label for="receipt">Receipt</label>
     <select id="receipt">
-      <option value="need">need</option>
-      <option value="provided">provided</option>
-      <option value="not required">not required</option>
+      <option value="yes">yes</option>
+      <option value="no">no</option>
     </select>
 
     <label for="refund">Refund (رقم فقط / ممكن فارغ)</label>
     <input id="refund" type="text" inputmode="numeric" placeholder="مثال: 15.75" />
     <div class="row-span">
-      <small class="hint">يُسمح بترك حقل Refund فارغاً. لو كتبت قيمة، لازم تكون رقم (صحيح أو عشري).</small>
+      <small class="hint">يُسمح بترك Refund فارغاً. لو كتبت قيمة، لازم تكون رقم (صحيح أو عشري).</small>
     </div>
 
     <label for="comp">Compensation</label>
     <select id="comp">
       <option value="no compensation">no compensation</option>
-      <option value="partial compensation">partial compensation</option>
-      <option value="full compensation">full compensation</option>
     </select>
   </div>
 
@@ -91,13 +79,12 @@
     }
 
     function buildTemplate() {
-      const who = el('whoCalled').value;
-      const results = (el('callResults').value || '').trim();
-      const risk = el('riskLabel').value;         // 1 / 2 / 3 / 3+
-      const evidence = el('evidence').value;      // Clear / ...
-      const receipt = el('receipt').value;        // need / ...
-      const refundRaw = (el('refund').value || '').trim();
-      const compensation = el('comp').value;
+      const callLine   = (el('callLine').value || '').trim();
+      const risk       = el('riskLabel').value;
+      const evidence   = el('evidence').value;
+      const receipt    = el('receipt').value;
+      const refundRaw  = (el('refund').value || '').trim();
+      const comp       = el('comp').value;
 
       if (!isNumericOrEmpty(refundRaw)) {
         alert('حقل Refund يجب أن يحتوي رقمًا فقط (أو اتركه فارغًا).');
@@ -107,18 +94,16 @@
 
       const refundTxt = refundRaw; // may be empty
 
-      // ننسّق النص بالضبط وفق المطلوب
       const lines = [
-        `Call merchant/rider: ${who}`,
-        `Call results: ${results || '-'}`,
+        `${callLine}`,
         `Case Solution Risk Label: (${risk})RC`,
         `Evidence: ${evidence}`,
         `Receipt: ${receipt}`,
         `Refund: (${refundTxt}) refund`,
-        `Compensation: ${compensation}`
+        `Compensation: ${comp}`
       ];
 
-      el('output').textContent = lines.join('  \n'); // مسافتين + سطر جديد للوضوح
+      el('output').textContent = lines.join('  \n');
       el('outWrap').style.display = 'block';
       el('copy').disabled = false;
     }
@@ -127,7 +112,6 @@
       const txt = el('output').textContent;
       if (!txt) return;
       navigator.clipboard.writeText(txt).then(()=>{
-        // اختيارياً: إشعار بسيط
         const old = el('copy').textContent;
         el('copy').textContent = 'تم النسخ ✔';
         setTimeout(()=> el('copy').textContent = old, 1200);
@@ -135,13 +119,12 @@
     }
 
     function clearAll() {
-      el('callResults').value = '';
+      el('callLine').value = 'Call merchant ,call results ; needed Restaurant admitted the mistake';
       el('riskLabel').value = '1';
       el('evidence').value = 'Clear';
-      el('receipt').value = 'need';
+      el('receipt').value = 'yes';
       el('refund').value = '';
       el('comp').value = 'no compensation';
-      el('whoCalled').value = 'merchant';
       el('output').textContent = '';
       el('outWrap').style.display = 'none';
       el('copy').disabled = true;
