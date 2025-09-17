@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Template Generator</title>
+  <style>
+    :root{
+      --bg:#9A5800;    /* افتراضي: لون الحالة الأولى */
+      --text:#fff;
+      --card:#fff;
+      --card-text:#000;
+      --btn:#222;
+      --btn-text:#fff;
+    }
+    body{
+      font-family:system-ui,Arial,sans-serif;
+      max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
+      background:var(--bg); color:var(--text);
+      transition:background .2s ease;
+    }
+    h1{font-size:20px;margin:0 0 16px;text-align:center}
+    .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
+    label{font-weight:600}
+    select,input,button{
+      font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
+      background:var(--card); color:var(--card-text);
+    }
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .btn{cursor:pointer;border:1px solid var(--btn);border-radius:10px;padding:10px 14px}
+    .btn.primary{background:var(--btn);color:var(--btn-text)}
+    #output{
+      width:100%;min-height:160px;font:inherit;padding:12px;border:1px solid #ccc;border-radius:12px;resize:none;
+      background:var(--card); color:#000;
+    }
+    .hint{font-size:.85em;color:#eee}
+    .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:var(--card);color:var(--card-text);direction:ltr}
+  </style>
+</head>
+<body>
+  <h1>مولّد القالب — Case Solution</h1>
+
+  <div class="grid">
+    <!-- اختيار السيناريو -->
+    <label for="scenario">Scenario</label>
+    <select id="scenario">
+      <option value="s1">Scenario 1 (لون #9A5800)</option>
+      <option value="s2">Scenario 2 (لون #B9AF95)</option>
+    </select>
+
+    <!-- Call line ثابت حسب السيناريو -->
+    <label>Call line</label>
+    <div id="callBox" class="call-box">
+      <!-- يتعبّى برمجياً -->
+    </div>
+
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel">
+      <option value="0">0RC</option>
+      <option value="1">1RC</option>
+      <option value="2">2RC</option>
+      <option value="3">3RC</option>
+      <option value="3>">3RC></option>
+    </select>
+
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear">Clear</option>
+      <option value="Unclear">Unclear</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="need">need</option>
+    </select>
+
+    <label for="refund">Refund (رقم فقط / ممكن فارغ)</label>
+    <input id="refund" type="text" inputmode="numeric" placeholder="مثال: 15.75" />
+    <div class="hint">يُسمح بترك Refund فارغاً. لو كتبت قيمة، لازم تكون رقم.</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build">توليد القالب</button>
+    <button class="btn" id="clear">تفريغ الحقول</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
+  <div class="hint">⬆ اضغط على المربع لنسخ النتيجة كاملة</div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const SCENARIOS = {
+      s1: {
+        bg: '#9A5800',
+        call: 'Call merchant ,call results ; needed Restaurant admitted the mistake'
+      },
+      s2: {
+        bg: '#B9AF95',
+        call: 'Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider refused to back'
+      }
+    };
+
+    const COMP_LINE = 'no Compensation';
+
+    function applyScenario(key){
+      const sc = SCENARIOS[key] || SCENARIOS.s1;
+      // غيّر الخلفية
+      document.documentElement.style.setProperty('--bg', sc.bg);
+      // عيّن سطر المكالمة
+      el('callBox').textContent = sc.call;
+    }
+
+    function isNumericOrEmpty(v) {
+      if (!v) return true;
+      return /^-?\d+(\.\d+)?$/.test(v.trim());
+    }
+
+    function buildTemplate() {
+      const scenario = el('scenario').value;
+      const callLine = SCENARIOS[scenario].call;
+      const risk     = el('riskLabel').value;
+      const evidence = el('evidence').value;
+      const receipt  = el('receipt').value;
+      const refund   = (el('refund').value || '').trim();
+
+      if (!isNumericOrEmpty(refund)) {
+        alert('حقل Refund يجب أن يحتوي رقمًا فقط (أو اتركه فارغًا).');
+        el('refund').focus();
+        return;
+      }
+
+      const lines = [
+        `Call line: ${callLine}`,
+        `Case Solution Risk Label: (${risk})RC`,
+        `Evidence: ${evidence}`,
+        `Receipt: ${receipt}`,
+        `Refund: (${refund}) refund`,
+        `Compensation: ${COMP_LINE}`
+      ];
+
+      el('output').value = lines.join('\n');
+    }
+
+    function clearAll() {
+      el('scenario').value = 's1';
+      applyScenario('s1');
+      el('riskLabel').value = '0';
+      el('evidence').value = 'Clear';
+      el('receipt').value = 'yes';
+      el('refund').value = '';
+      el('output').value = '';
+    }
+
+    // نسخ كامل عند الضغط على الناتج
+    el('output').addEventListener('click', () => {
+      el('output').select();
+      document.execCommand('copy');
+      alert('✔ تم نسخ القالب كامل');
+    });
+
+    el('scenario').addEventListener('change', (e)=>applyScenario(e.target.value));
+    el('build').addEventListener('click', buildTemplate);
+    el('clear').addEventListener('click', clearAll);
+
+    // تهيئة أولية
+    applyScenario('s1');
+  </script>
+</body>
+</html>
