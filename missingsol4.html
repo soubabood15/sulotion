@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Template Generator — Scenario 4</title>
+  <style>
+    body{
+      font-family:system-ui,Arial,sans-serif;
+      max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
+      background:#7D8C9B; color:#fff; /* خلفية رمادي مزرق */
+    }
+    h1{font-size:20px;margin:0 0 16px;text-align:center}
+    .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
+    label{font-weight:600;color:#fff}
+    select,input,button,textarea{
+      font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
+      background:#fff; color:#000; /* الحقول بيضاء */
+    }
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
+    .btn.primary{background:#222;color:#fff}
+    #output{
+      width:100%;min-height:160px;resize:none;white-space:pre-wrap
+    }
+    .hint{font-size:.85em;color:#eee}
+    .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#000;direction:ltr}
+  </style>
+</head>
+<body>
+  <h1>مولّد القالب — Case Solution (Scenario 4)</h1>
+
+  <div class="grid">
+    <label>Call line</label>
+    <div class="call-box">
+      Call merchant ,call results ;  needed Restaurant didn't admitted
+    </div>
+
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel">
+      <option value="0">0RC</option>
+      <option value="1">1RC</option>
+      <option value="2">2RC</option>
+      <option value="3">3RC</option>
+      <option value="3>">3RC></option>
+    </select>
+
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear">Clear</option>
+      <option value="Unclear" selected>Unclear</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="need" selected>need</option>
+    </select>
+
+    <label for="refund">Refund (رقم فقط / ممكن فارغ)</label>
+    <input id="refund" type="text" inputmode="numeric" placeholder="مثال: 15.75" />
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build">توليد القالب</button>
+    <button class="btn" id="clear">تفريغ الحقول</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
+  <div class="hint">⬆ اضغط على المربع لنسخ النتيجة كاملة</div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+    const CALL_LINE = "Call merchant ,call results ;  needed Restaurant didn't admitted";
+    const COMP_LINE = "no Compensation";
+
+    function isNumericOrEmpty(v) {
+      if (!v) return true;
+      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
+    }
+
+    function buildTemplate() {
+      const risk     = el('riskLabel').value;
+      const evidence = el('evidence').value;
+      const receipt  = el('receipt').value;
+      const refund   = (el('refund').value || '').trim();
+
+      if (!isNumericOrEmpty(refund)) {
+        alert('حقل Refund يجب أن يحتوي رقمًا فقط (أو يترك فارغًا).');
+        el('refund').focus();
+        return;
+      }
+
+      const lines = [
+        `Call line: ${CALL_LINE}`,
+        `Case Solution Risk Label: (${risk})RC`,
+        `Evidence: ${evidence}`,
+        `Receipt: ${receipt}`,
+        `Refund: (${refund}) refund`,
+        `Compensation: ${COMP_LINE}`
+      ];
+
+      el('output').value = lines.join("\\n");
+    }
+
+    function clearAll() {
+      el('riskLabel').value = '0';
+      el('evidence').value = 'Unclear';
+      el('receipt').value = 'need';
+      el('refund').value = '';
+      el('output').value = '';
+    }
+
+    el('output').addEventListener('click', () => {
+      el('output').select();
+      document.execCommand('copy');
+      alert("✔ تم نسخ القالب كامل");
+    });
+
+    el('build').addEventListener('click', buildTemplate);
+    el('clear').addEventListener('click', clearAll);
+  </script>
+</body>
+</html>
