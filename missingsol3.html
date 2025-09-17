@@ -8,30 +8,26 @@
     body{
       font-family:system-ui,Arial,sans-serif;
       max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
-      background:#00600; color:#fff; /* أخضر غامق للخلفية */
+      background:#00600; color:#fff; /* خلفية خضراء غامقة */
     }
-    h1{font-size:20px;margin:0 0 16px;text-align:center;color:#fff}
+    h1{font-size:20px;margin:0 0 16px;text-align:center}
     .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
-    label{font-weight:600;color:#fff}
-    select,input,button{
-      font:inherit;padding:10px;border:1px solid #004d00;border-radius:8px;
-      background:#0a9440; color:#fff; /* حقول بلون أخضر أفتح */
+    label{font-weight:600}
+    select,input,button,textarea{
+      font:inherit;padding:10px;border:1px solid #fff;border-radius:8px;
+      background:transparent; color:#fff;
     }
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-    .btn{cursor:pointer;border:1px solid #fff;border-radius:10px;padding:10px 14px;background:#004d00;color:#fff}
-    #output{
-      width:100%;min-height:160px;font:inherit;padding:12px;border:1px solid #004d00;border-radius:12px;resize:none;
-      background:#0a9440; color:#fff;white-space:pre-wrap;
-    }
+    .btn{cursor:pointer;border:1px solid #fff;border-radius:10px;padding:10px 14px;background:transparent;color:#fff}
+    #output{width:100%;min-height:160px;resize:none;white-space:pre-wrap}
     .hint{font-size:.85em;color:#eee}
-    .call-box{padding:10px;border:1px solid #004d00;border-radius:8px;background:#0a9440;color:#fff;direction:ltr}
+    .call-box{padding:10px;border:1px solid #fff;border-radius:8px;direction:ltr}
   </style>
 </head>
 <body>
   <h1>مولّد القالب — Case Solution (Scenario 3)</h1>
 
   <div class="grid">
-    <!-- Call line ثابت -->
     <label>Call line</label>
     <div class="call-box">
       Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider back to get order
@@ -80,7 +76,6 @@
     const CALL_LINE = "Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider back to get order";
     const COMP_LINE = "no Compensation";
 
-    // إظهار حقل إدخال قيمة إذا اختار "value"
     el('refund').addEventListener('change', () => {
       if (el('refund').value === 'value') {
         el('refundValue').style.display = 'block';
@@ -92,7 +87,7 @@
 
     function isNumericOrEmpty(v) {
       if (!v) return true;
-      return /^-?\d+(\.\d+)?$/.test(v.trim());
+      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
     }
 
     function buildTemplate() {
@@ -134,7 +129,6 @@
       el('output').value = '';
     }
 
-    // نسخ كامل عند الضغط على الناتج
     el('output').addEventListener('click', () => {
       el('output').select();
       document.execCommand('copy');
