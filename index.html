@@ -9,26 +9,28 @@
     h1{font-size:20px;margin:0 0 16px}
     .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
     label{font-weight:600}
-    input,select,textarea,button{font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px}
-    textarea{min-height:76px;resize:vertical}
+    input,select,button{font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px}
     .row-span{grid-column:1 / -1}
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
     .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
     .btn.primary{background:#222;color:#fff}
-    .output{margin-top:20px;background:#f7f7f8;border:1px solid #e5e5e7;border-radius:12px;padding:12px}
-    pre{white-space:pre-wrap;word-break:break-word;direction:ltr}
-    small.hint{color:#666}
+    .output{margin-top:20px;position:relative}
+    textarea#output{width:100%;min-height:160px;font:inherit;padding:12px;border:1px solid #ccc;border-radius:12px;resize:vertical}
+    .copy-btn{position:absolute;top:10px;left:10px;cursor:pointer;border:1px solid #222;border-radius:8px;background:#222;color:#fff;padding:6px 12px}
   </style>
 </head>
 <body>
   <h1>مولّد القالب — Case Solution</h1>
 
   <div class="grid">
-    <label for="callLine">Call line</label>
-    <textarea id="callLine">Call merchant ,call results ; needed Restaurant admitted the mistake</textarea>
+    <label>Call line</label>
+    <div style="padding:10px;border:1px solid #ccc;border-radius:8px;background:#f2f2f2;">
+      Call merchant ,call results ; needed Restaurant admitted the mistake
+    </div>
 
     <label for="riskLabel">Case Solution Risk Label</label>
     <select id="riskLabel">
+      <option value="0">0RC</option>
       <option value="1">1RC</option>
       <option value="2">2RC</option>
       <option value="3">3RC</option>
@@ -38,8 +40,7 @@
     <label for="evidence">Evidence</label>
     <select id="evidence">
       <option value="Clear">Clear</option>
-      <option value="Insufficient">Insufficient</option>
-      <option value="Not provided">Not provided</option>
+      <option value="Unclear">Unclear</option>
     </select>
 
     <label for="receipt">Receipt</label>
@@ -54,37 +55,37 @@
       <small class="hint">يُسمح بترك Refund فارغاً. لو كتبت قيمة، لازم تكون رقم (صحيح أو عشري).</small>
     </div>
 
-    <label for="comp">Compensation</label>
-    <select id="comp">
-      <option value="no compensation">no compensation</option>
-    </select>
+    <label>Compensation</label>
+    <div style="padding:10px;border:1px solid #ccc;border-radius:8px;background:#f2f2f2;">
+      no compensation
+    </div>
   </div>
 
   <div class="actions">
     <button class="btn primary" id="build">توليد القالب</button>
-    <button class="btn" id="copy" disabled>نسخ النتيجة</button>
     <button class="btn" id="clear">تفريغ الحقول</button>
   </div>
 
   <div class="output" id="outWrap" style="display:none">
-    <pre id="output"></pre>
+    <button class="copy-btn" id="copy">نسخ</button>
+    <textarea id="output" readonly></textarea>
   </div>
 
   <script>
     const el = (id) => document.getElementById(id);
+    const CALL_LINE = "Call merchant ,call results ; needed Restaurant admitted the mistake";
+    const COMP_LINE = "no compensation";
 
     function isNumericOrEmpty(v) {
-      if (!v) return true; // allow empty
-      return /^-?\d+(\.\d+)?$/.test(v.trim());
+      if (!v) return true;
+      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
     }
 
     function buildTemplate() {
-      const callLine   = (el('callLine').value || '').trim();
       const risk       = el('riskLabel').value;
       const evidence   = el('evidence').value;
       const receipt    = el('receipt').value;
       const refundRaw  = (el('refund').value || '').trim();
-      const comp       = el('comp').value;
 
       if (!isNumericOrEmpty(refundRaw)) {
         alert('حقل Refund يجب أن يحتوي رقمًا فقط (أو اتركه فارغًا).');
@@ -92,42 +93,36 @@
         return;
       }
 
-      const refundTxt = refundRaw; // may be empty
+      const refundTxt = refundRaw;
 
       const lines = [
-        `${callLine}`,
+        `${CALL_LINE}`,
         `Case Solution Risk Label: (${risk})RC`,
         `Evidence: ${evidence}`,
         `Receipt: ${receipt}`,
         `Refund: (${refundTxt}) refund`,
-        `Compensation: ${comp}`
+        `Compensation: ${COMP_LINE}`
       ];
 
-      el('output').textContent = lines.join('  \n');
+      el('output').value = lines.join("\\n");
       el('outWrap').style.display = 'block';
-      el('copy').disabled = false;
     }
 
     function copyOutput() {
-      const txt = el('output').textContent;
-      if (!txt) return;
-      navigator.clipboard.writeText(txt).then(()=>{
-        const old = el('copy').textContent;
-        el('copy').textContent = 'تم النسخ ✔';
-        setTimeout(()=> el('copy').textContent = old, 1200);
-      });
+      el('output').select();
+      document.execCommand('copy');
+      const old = el('copy').textContent;
+      el('copy').textContent = '✔ تم النسخ';
+      setTimeout(()=> el('copy').textContent = old, 1500);
     }
 
     function clearAll() {
-      el('callLine').value = 'Call merchant ,call results ; needed Restaurant admitted the mistake';
-      el('riskLabel').value = '1';
+      el('riskLabel').value = '0';
       el('evidence').value = 'Clear';
       el('receipt').value = 'yes';
       el('refund').value = '';
-      el('comp').value = 'no compensation';
-      el('output').textContent = '';
+      el('output').value = '';
       el('outWrap').style.display = 'none';
-      el('copy').disabled = true;
     }
 
     el('build').addEventListener('click', buildTemplate);
