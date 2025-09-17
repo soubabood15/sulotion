@@ -58,8 +58,8 @@
       <option value="need" selected>need</option>
     </select>
 
-    <label for="refund">Refund (رقم فقط / ممكن فارغ)</label>
-    <input id="refund" type="text" inputmode="numeric" placeholder="مثال: 15.75" />
+    <label for="refund">Refund (رقم فقط / أو يترك فارغ)</label>
+    <input id="refund" type="text" inputmode="decimal" placeholder="مثال: 15.75" />
   </div>
 
   <div class="actions">
@@ -75,21 +75,27 @@
     const CALL_LINE = "Call merchant ,call results ;  needed Restaurant didn't admitted";
     const COMP_LINE = "no Compensation";
 
+    // تحقق من أن القيمة رقم أو عشري أو فارغ
     function isNumericOrEmpty(v) {
       if (!v) return true;
-      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
+      return /^-?\d+(\.\d+)?$/.test(v.trim());
     }
 
     function buildTemplate() {
       const risk     = el('riskLabel').value;
       const evidence = el('evidence').value;
       const receipt  = el('receipt').value;
-      const refund   = (el('refund').value || '').trim();
+      let refund     = (el('refund').value || '').trim();
 
       if (!isNumericOrEmpty(refund)) {
-        alert('حقل Refund يجب أن يحتوي رقمًا فقط (أو يترك فارغًا).');
+        alert('حقل Refund يجب أن يحتوي رقمًا فقط (صحيح أو عشري) أو يترك فارغًا.');
         el('refund').focus();
         return;
+      }
+
+      // لو الحقل فارغ نكتب no refund
+      if (!refund) {
+        refund = "no refund";
       }
 
       const lines = [
@@ -101,7 +107,7 @@
         `Compensation: ${COMP_LINE}`
       ];
 
-      el('output').value = lines.join("\\n");
+      el('output').value = lines.join("\n");
     }
 
     function clearAll() {
