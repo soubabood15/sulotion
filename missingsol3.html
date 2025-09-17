@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Template Generator — Scenario 3</title>
+  <style>
+    body{
+      font-family:system-ui,Arial,sans-serif;
+      max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
+      background:#00600; color:#fff; /* لون سيناريو 3 */
+    }
+    h1{font-size:20px;margin:0 0 16px;text-align:center}
+    .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
+    label{font-weight:600}
+    select,input,button{
+      font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
+      background:#fff; color:#000;
+    }
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
+    .btn.primary{background:#222;color:#fff}
+    #output{
+      width:100%;min-height:160px;font:inherit;padding:12px;border:1px solid #ccc;border-radius:12px;resize:none;
+      background:#fff; color:#000;white-space:pre-wrap; /* كل خانة بسطر */
+    }
+    .hint{font-size:.85em;color:#eee}
+    .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#000;direction:ltr}
+  </style>
+</head>
+<body>
+  <h1>مولّد القالب — Case Solution (Scenario 3)</h1>
+
+  <div class="grid">
+    <!-- Call line ثابت -->
+    <label>Call line</label>
+    <div class="call-box">
+      Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider back to get order
+    </div>
+
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel">
+      <option value="0">0RC</option>
+      <option value="1">1RC</option>
+      <option value="2">2RC</option>
+      <option value="3">3RC</option>
+      <option value="3>">3RC></option>
+    </select>
+
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear">Clear</option>
+      <option value="Unclear">Unclear</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="need">need</option>
+    </select>
+
+    <label for="refund">Refund</label>
+    <select id="refund">
+      <option value="no">no refund</option>
+      <option value="value">أدخل قيمة</option>
+    </select>
+    <input id="refundValue" type="text" inputmode="numeric" placeholder="مثال: 15.75" style="display:none" />
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build">توليد القالب</button>
+    <button class="btn" id="clear">تفريغ الحقول</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
+  <div class="hint">⬆ اضغط على المربع لنسخ النتيجة كاملة</div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+    const CALL_LINE = "Call merchant ,call results ;  needed Restaurant Say rider forget order I called rider: rider back to get order";
+    const COMP_LINE = "no Compensation";
+
+    // إظهار حقل إدخال قيمة إذا اختار "value"
+    el('refund').addEventListener('change', () => {
+      if (el('refund').value === 'value') {
+        el('refundValue').style.display = 'block';
+      } else {
+        el('refundValue').style.display = 'none';
+        el('refundValue').value = '';
+      }
+    });
+
+    function isNumericOrEmpty(v) {
+      if (!v) return true;
+      return /^-?\d+(\.\d+)?$/.test(v.trim());
+    }
+
+    function buildTemplate() {
+      const risk     = el('riskLabel').value;
+      const evidence = el('evidence').value;
+      const receipt  = el('receipt').value;
+      let refundTxt  = "";
+
+      if (el('refund').value === "no") {
+        refundTxt = "no refund";
+      } else {
+        refundTxt = (el('refundValue').value || "").trim();
+        if (!isNumericOrEmpty(refundTxt)) {
+          alert('Refund يجب أن يكون رقمًا أو يترك فارغًا.');
+          el('refundValue').focus();
+          return;
+        }
+      }
+
+      const lines = [
+        `Call line: ${CALL_LINE}`,
+        `Case Solution Risk Label: (${risk})RC`,
+        `Evidence: ${evidence}`,
+        `Receipt: ${receipt}`,
+        `Refund: (${refundTxt}) refund`,
+        `Compensation: ${COMP_LINE}`
+      ];
+
+      el('output').value = lines.join("\n");
+    }
+
+    function clearAll() {
+      el('riskLabel').value = '0';
+      el('evidence').value = 'Clear';
+      el('receipt').value = 'yes';
+      el('refund').value = 'no';
+      el('refundValue').style.display = 'none';
+      el('refundValue').value = '';
+      el('output').value = '';
+    }
+
+    // نسخ كامل عند الضغط على الناتج
+    el('output').addEventListener('click', () => {
+      el('output').select();
+      document.execCommand('copy');
+      alert("✔ تم نسخ القالب كامل");
+    });
+
+    el('build').addEventListener('click', buildTemplate);
+    el('clear').addEventListener('click', clearAll);
+  </script>
+</body>
+</html>
