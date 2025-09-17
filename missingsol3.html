@@ -8,20 +8,23 @@
     body{
       font-family:system-ui,Arial,sans-serif;
       max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
-      background:#00600; color:#fff; /* خلفية خضراء غامقة */
+      background:#00600; color:#fff; /* الخلفية خضراء */
     }
     h1{font-size:20px;margin:0 0 16px;text-align:center}
     .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
-    label{font-weight:600}
+    label{font-weight:600;color:#fff}
     select,input,button,textarea{
-      font:inherit;padding:10px;border:1px solid #fff;border-radius:8px;
-      background:transparent; color:#fff;
+      font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
+      background:#fff; color:#000; /* الحقول بيضاء والنص أسود */
     }
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-    .btn{cursor:pointer;border:1px solid #fff;border-radius:10px;padding:10px 14px;background:transparent;color:#fff}
-    #output{width:100%;min-height:160px;resize:none;white-space:pre-wrap}
+    .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
+    .btn.primary{background:#222;color:#fff}
+    #output{
+      width:100%;min-height:160px;resize:none;white-space:pre-wrap
+    }
     .hint{font-size:.85em;color:#eee}
-    .call-box{padding:10px;border:1px solid #fff;border-radius:8px;direction:ltr}
+    .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#000;direction:ltr}
   </style>
 </head>
 <body>
@@ -64,7 +67,7 @@
   </div>
 
   <div class="actions">
-    <button class="btn" id="build">توليد القالب</button>
+    <button class="btn primary" id="build">توليد القالب</button>
     <button class="btn" id="clear">تفريغ الحقول</button>
   </div>
 
@@ -87,7 +90,7 @@
 
     function isNumericOrEmpty(v) {
       if (!v) return true;
-      return /^-?\\d+(\\.\\d+)?$/.test(v.trim());
+      return /^-?\d+(\.\d+)?$/.test(v.trim());
     }
 
     function buildTemplate() {
