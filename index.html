@@ -21,6 +21,7 @@
   <h1>مولّد القالب — Case Solution</h1>
 
   <div class="grid">
+    <!-- Call line ثابت -->
     <label>Call line</label>
     <div style="padding:10px;border:1px solid #ccc;border-radius:8px;background:#f2f2f2;direction:ltr">
       Call merchant ,call results ; needed Restaurant admitted the mistake
@@ -50,11 +51,6 @@
     <label for="refund">Refund (رقم فقط / ممكن فارغ)</label>
     <input id="refund" type="text" inputmode="numeric" placeholder="مثال: 15.75" />
     <div class="hint">يُسمح بترك Refund فارغاً. لو كتبت قيمة، لازم تكون رقم.</div>
-
-    <label>Compensation</label>
-    <div style="padding:10px;border:1px solid #ccc;border-radius:8px;background:#f2f2f2;">
-      no compensation
-    </div>
   </div>
 
   <div class="actions">
@@ -110,7 +106,7 @@
       el('output').value = '';
     }
 
-    // نسخ كلشي عند الضغط على الحقل
+    // نسخ كامل عند الضغط على الناتج
     el('output').addEventListener('click', () => {
       el('output').select();
       document.execCommand('copy');
