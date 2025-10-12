@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>اعتذارات وهولد</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Cairo", sans-serif;
+    background: linear-gradient(120deg,#e1ecff,#f5f8ff);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+    padding: 40px;
+    gap: 40px;
+    overflow-x: hidden;
+  }
+  h2{
+    text-align:center;
+    margin-bottom:10px;
+    color:#285eff;
+  }
+  .section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    padding: 24px;
+    width: 430px;
+    transition: all .4s ease;
+    animation: fadeIn .8s ease;
+  }
+  @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  button {
+    background: linear-gradient(45deg,#4b8cff,#72a9ff);
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .3s;
+  }
+  button:hover { transform: scale(1.05); background: linear-gradient(45deg,#3f7eff,#609dff); }
+  .box {
+    margin-top:14px;
+    display: flex;
+    justify-content: space-between;
+    gap:10px;
+  }
+  .msg {
+    background:#f3f7ff;
+    border:1px solid #d8e5ff;
+    border-radius:10px;
+    padding:12px;
+    flex:1;
+    cursor:pointer;
+    transition:.2s;
+    min-height:90px;
+    overflow-y:auto;
+  }
+  .msg:hover { background:#e9f1ff; }
+  .popup {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    padding:30px 40px;
+    text-align:center;
+    z-index:999;
+    animation: pop .5s ease;
+  }
+  @keyframes pop {from{opacity:0;transform:translate(-50%,-60%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .hidden{display:none;}
+  .popup button{margin-top:20px;}
+</style>
+</head>
+<body>
+
+<!-- القسم الأيمن -->
+<div class="section" id="apology">
+  <h2>قسم الاعتذارات</h2>
+
+  <h3>الاعتذارات الطويلة</h3>
+  <button onclick="generate('longApology')">توليد اعتذار طويل</button>
+  <div class="box">
+    <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
+    <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
+  </div>
+
+  <h3>الاعتذارات القصيرة</h3>
+  <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
+  <div class="box">
+    <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
+    <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
+  </div>
+</div>
+
+<!-- القسم الأيسر -->
+<div class="section" id="hold">
+  <h2>قسم الهولد</h2>
+  <button onclick="generate('hold')">توليد هولد</button>
+  <div class="box">
+    <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
+    <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
+  </div>
+</div>
+
+<!-- popup -->
+<div id="popup" class="popup hidden">
+  <p id="popupMsg"></p>
+  <button onclick="resetLists()">🔄 توليد من البداية</button>
+</div>
+
+<script>
+const longApology = [
+  {ar:`عن أي إزعاج قد تسببت به تجربتك...`, en:`We sincerely apologize for any inconvenience...`},
+  {ar:`نعتذر بصدق عن أي إزعاج...`, en:`We sincerely apologize for any inconvenience your experience...`},
+  {ar:`نأسف لعدم تلبية توقعاتك...`, en:`We truly apologize if your experience did not meet your expectations.`},
+  // ... (اختصري باقي الطويلات هنا أو أضيفيها كلها)
+];
+
+const shortApology = [
+  {ar:`نعتذر يا الغالي على التجربة اللي ما كانت بالمستوى، بنحرص تكون القادمة أفضل بإذن الله.`,en:`We’re sorry for the experience, we’ll make sure your next one is much better.`},
+  {ar:`نأسف إذا ما كانت التجربة مثل ما توقعت، وراح نحرص نعوضك بتجربة أفضل الجاية.`,en:`Sorry it didn’t go as expected, we’ll make it better next time.`},
+  {ar:`نتفهم ملاحظاتك ونعمل نطور الخدمة عشان ترضيك أكثر بإذن الله.`,en:`We understand your feedback and will improve to serve you better.`},
+  {ar:`نعتذر عن اللي صار، وراح نتابع الموضوع عشان تكون راضي تمام إن شاء الله.`,en:`We’re sorry about what happened and will make sure you’re satisfied next time.`},
+];
+
+const hold = [
+  {ar:`عشان أشيك لك على الموضوع؟ شكراً على صبرك.`,en:`Could you please give me a minute to check on this for you? Thank you for your patience.`},
+  {ar:`أحتاج دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`,en:`I need an extra minute to complete the required task, and I appreciate your understanding.`},
+  {ar:`سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`,en:`I will take another minute to verify the details. Thank you for your patience.`},
+  {ar:`الرجاء الانتظار دقيقة أخرى حتى أتمكن من إنهاء العمل بدقة.`,en:`Please wait one more minute so I can complete the task accurately.`},
+];
+
+let used = {longApology:[], shortApology:[], hold:[]};
+
+function generate(type){
+  let list = eval(type);
+  let remain = list.filter((_,i)=>!used[type].includes(i));
+  if(remain.length===0){
+    document.getElementById('popup').classList.remove('hidden');
+    document.getElementById('popupMsg').textContent = `🎉 تم عرض كل ${type==='hold'?'الهولد':'الاعتذارات'}، يمكنك البدء من جديد.`;
+    return;
+  }
+  let randomIndex = Math.floor(Math.random()*remain.length);
+  let idx = list.indexOf(remain[randomIndex]);
+  used[type].push(idx);
+  if(type==='hold'){
+    showText('holdAr','holdEn',list[idx]);
+  }else if(type==='shortApology'){
+    showText('shortAr','shortEn',list[idx]);
+  }else{
+    showText('longAr','longEn',list[idx]);
+  }
+}
+
+function showText(idAr,idEn,obj){
+  document.getElementById(idAr).textContent=obj.ar;
+  document.getElementById(idEn).textContent=obj.en;
+}
+
+function copyText(id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent);
+  el.style.background="#d8ecff";
+  setTimeout(()=>el.style.background="#f3f7ff",400);
+}
+
+function resetLists(){
+  used={longApology:[], shortApology:[], hold:[]};
+  document.getElementById('popup').classList.add('hidden');
+}
+</script>
+
+</body>
+</html>
