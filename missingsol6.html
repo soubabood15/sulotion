@@ -231,10 +231,20 @@ textarea#output {
   <div class="card">
     <h2>قسم السولوشن (Scenario 1)</h2>
     <div class="grid">
-      <label>Call line</label>
-      <div class="call-box">
-        Call merchant ,call results ; needed Restaurant admitted the mistake
-      </div>
+     <!-- 🧩 Call Line -->
+<label for="callType">Call line</label>
+<select id="callType" onchange="toggleCallInput()">
+  <option value="none">اختر نوع المكالمة</option>
+  <option value="noneed">No need</option>
+  <option value="merchant">Merchant</option>
+  <option value="rider">Rider</option>
+</select>
+
+<!-- هذا الحقل يظهر فقط إذا اختار Merchant أو Rider -->
+<div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
+  <label for="callResult">Call Result</label>
+  <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
+</div>
 
       <label for="riskLabel">Case Solution Risk Label</label>
       <select id="riskLabel">
@@ -277,10 +287,10 @@ textarea#output {
     <div class="calc-box">
       <input id="calcInput" type="number" placeholder="أدخل الرقم" />
       <div class="calc-buttons">
-        <button onclick="calc(0.8)">Main dish (0.8)</button>
-        <button onclick="calc(0.6)">Side dish (0.6)</button>
+        <button onclick="calc(0.8)">Main dish</button>
+        <button onclick="calc(0.6)">Side dish</button>
         <button onclick="calc(0.3)"> Drink</button>
-        <button onclick="calc(0.1)">Cutlery (0.1)</button>
+        <button onclick="calc(0.1)">Cutlery</button>
       </div>
       <div id="calcResult" class="calc-result">النتيجة: —</div>
     </div>
@@ -513,6 +523,8 @@ function buildTemplate() {
   const risk     = el('riskLabel').value;
   const evidence = el('evidence').value;
   const receipt  = el('receipt').value;
+  const callType = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
   let refund     = (el('refund').value || '').trim();
 
   if (!isNumericOrEmpty(refund)) {
@@ -522,8 +534,29 @@ function buildTemplate() {
   }
   if (!refund) refund = "no refund";
 
+  // بناء نص الكول لاين
+  let callLine = "";
+  if (callType === "noneed") {
+    callLine = "Call merchant/Rider , Call result : No need";
+  } else if (callType === "merchant") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع التاجر.");
+      return;
+    }
+    callLine = `Call merchant , Call result : ${callResult}`;
+  } else if (callType === "rider") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع السائق.");
+      return;
+    }
+    callLine = `Call rider , Call result : ${callResult}`;
+  } else {
+    alert("اختَر نوع المكالمة أولاً.");
+    return;
+  }
+
   const lines = [
-    `Call line: ${CALL_LINE}`,
+    `Call line: ${callLine}`,
     `Case Solution Risk Label: (${risk})RC`,
     `Evidence: ${evidence}`,
     `Receipt: ${receipt}`,
@@ -549,6 +582,16 @@ el('output').addEventListener('click', () => {
 
 el('build').addEventListener('click', buildTemplate);
 el('clear').addEventListener('click', clearAll);
+function toggleCallInput(){
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if(callType === "merchant" || callType === "rider"){
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
+}
 </script>
 
 </body>
