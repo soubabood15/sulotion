@@ -78,6 +78,37 @@
   @keyframes pop {from{opacity:0;transform:translate(-50%,-60%)}to{opacity:1;transform:translate(-50%,-50%)}}
   .hidden{display:none;}
   .popup button{margin-top:20px;}
+  .calc-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.calc-box input {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #c9dafd;
+  outline: none;
+  text-align: center;
+  transition: .3s;
+}
+.calc-box input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 3px #5b8def22;
+}
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+.calc-result {
+  background: #f3f7ff;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #e1e9ff;
+}
 </style>
 </head>
 <body>
@@ -110,7 +141,22 @@
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
 </div>
+ <div class="card">
+    <h2>الآلة الحاسبة</h2>
+    <p class="subhead">احسب النسبة مباشرة (0.8 - 0.6 - 0.3 - 0.1)</p>
+    <div class="calc-box">
+      <input id="calcInput" type="number" placeholder="أدخل الرقم" />
+      <div class="calc-buttons">
+        <button onclick="calc(0.8)">Main dish (0.8)</button>
+        <button onclick="calc(0.6)">Side dish (0.6)</button>
+        <button onclick="calc(0.3)">Add-on (0.3)</button>
+        <button onclick="calc(0.1)">Extra (0.1)</button>
+      </div>
+      <div id="calcResult" class="calc-result">النتيجة: —</div>
+    </div>
+  </div>
 
+</div> 
 <!-- popup -->
 <div id="popup" class="popup hidden">
   <p id="popupMsg"></p>
@@ -231,17 +277,50 @@ const longApology = [
 ];
 
 const shortApology = [
-  {ar:`نعتذر يا الغالي على التجربة اللي ما كانت بالمستوى، بنحرص تكون القادمة أفضل بإذن الله.`,en:`We’re sorry for the experience, we’ll make sure your next one is much better.`},
-  {ar:`نأسف إذا ما كانت التجربة مثل ما توقعت، وراح نحرص نعوضك بتجربة أفضل الجاية.`,en:`Sorry it didn’t go as expected, we’ll make it better next time.`},
-  {ar:`نتفهم ملاحظاتك ونعمل نطور الخدمة عشان ترضيك أكثر بإذن الله.`,en:`We understand your feedback and will improve to serve you better.`},
-  {ar:`نعتذر عن اللي صار، وراح نتابع الموضوع عشان تكون راضي تمام إن شاء الله.`,en:`We’re sorry about what happened and will make sure you’re satisfied next time.`},
+ {ar:`نعتذر يا الغالي عن التجربة اللي ما كانت بالمستوى، وراح نحرص تكون القادمة أفضل بإذن الله.`, en:`We’re sorry your experience wasn’t great, we’ll make sure the next one is better insha’Allah.`},
+{ar:`آسفين إذا واجهت أي إزعاج، ملاحظتك تهمنا وراح نحسن الخدمة للأفضل.`, en:`Sorry for the inconvenience — your feedback matters and we’ll improve our service.`},
+{ar:`نأسف إن التجربة ما كانت مثل توقعاتك، وراح نعمل على تحسينها مستقبلاً.`, en:`We’re sorry it didn’t meet your expectations, we’ll make it better next time.`},
+{ar:`نعتذر عن القصور، ونتفهم ملاحظاتك وراح نطور الخدمة قريب إن شاء الله.`, en:`We apologize for the shortfall and we’ll work on improving soon, God willing.`},
+{ar:`نأسف لو سبّبنا لك أي إزعاج، هدفنا دايمًا رضاك وتقديم الأفضل.`, en:`We’re sorry for any inconvenience — our goal is always your satisfaction.`},
+{ar:`نعتذر منك، بنحرص نكسب رضاك ونستعيد ثقتك فينا.`, en:`Our apologies, we’ll work to regain your trust and satisfaction.`},
+{ar:`نأسف على التجربة، وراح نراجع الملاحظات لضمان تحسين الخدمة.`, en:`Sorry about your experience — we’ll review your feedback to improve our service.`},
+{ar:`نعتذر عن اللي صار، وراح نسعى تكون تجربتك القادمة أسهل وأفضل.`, en:`We’re sorry about what happened — we’ll make your next experience smoother.`},
+{ar:`نأسف لأي تقصير، بنشتغل دايم على رفع الجودة وتطوير الخدمة.`, en:`Apologies for the shortfall — we’re constantly improving our quality.`},
+{ar:`آسفين على اللي صار، وشاكرين ملاحظاتك اللي تساعدنا نتحسن.`, en:`Sorry about what happened, your feedback helps us improve.`},
+{ar:`نعتذر على أي خلل، وراح نعمل على تحسين تجربتك القادمة بإذن الله.`, en:`We apologize for any issue and we’ll improve your next experience insha’Allah.`},
+{ar:`نأسف على التجربة الغير مرضية، وراح نعمل على تطوير الخدمة بشكل مستمر.`, en:`Sorry for the unsatisfactory experience — we’ll keep improving our service.`},
+{ar:`نعتذر إذا ما كانت التجربة بالمستوى، وراح نحسن الأمور لرضاك.`, en:`Sorry if it wasn’t as expected — we’ll make things right for you.`},
+{ar:`نأسف على أي إزعاج، وراح نتابع الملاحظات لضمان الأفضل.`, en:`Apologies for any inconvenience — we’ll follow up to ensure better service.`},
+{ar:`نعتذر عن التقصير، وملاحظتك بتفيدنا في تحسين الخدمة أكثر.`, en:`Sorry for any shortcomings — your feedback helps us get better.`},
+{ar:`آسفين على التجربة، وشكرًا لتفهمك وثقتك.`, en:`Sorry about the experience, and thank you for your understanding and trust.`},
+{ar:`نعتذر إذا واجهت مشكلة، ونعمل نتأكد إنها ما تتكرر.`, en:`We’re sorry for the issue and will make sure it doesn’t happen again.`},
+{ar:`نأسف لأي قصور، وبنحرص تكون المرات الجاية مرضية لك أكثر.`, en:`Apologies for any shortfall — we’ll make sure next time is better.`},
+{ar:`نعتذر عن الإزعاج، وملاحظتك محل اهتمام الفريق.`, en:`Sorry for the inconvenience — your feedback is being reviewed by the team.`},
+{ar:`نأسف إذا التجربة ما كانت بالمستوى، ونتمنى فرصة نعوضك فيها.`, en:`We’re sorry it wasn’t up to standards — we hope to make it up to you.`},
+{ar:`نعتذر عن أي تقصير، وراح نطور الأداء بناءً على ملاحظتك.`, en:`We apologize for any shortfall — we’ll improve our performance accordingly.`},
+{ar:`نأسف لو الخدمة ما كانت ترضيك، وراح نحرص تكون الجاية أريح وأسرع.`, en:`Sorry if the service wasn’t satisfying — we’ll make it smoother next time.`},
+{ar:`نعتذر على التجربة الغير مرضية، وهدفنا نخدمك بشكل أفضل الجاية.`, en:`Sorry for the disappointing experience — our goal is to serve you better next time.`},
+{ar:`نأسف لأي خلل صار، ونعمل على تحسين التجربة القادمة.`, en:`We’re sorry for any issue, and we’ll enhance your next experience.`},
+{ar:`نعتذر على اللي حصل، وثقتك تهمنا ونسعى نحافظ عليها.`, en:`Apologies for what happened — your trust matters and we’ll keep it.`},
+{ar:`نأسف إن التجربة ما كانت مثالية، ووعدنا لك إن الجاية تكون أفضل بإذن الله.`, en:`Sorry the experience wasn’t perfect — we promise the next one will be better, God willing.`}
 ];
 
 const hold = [
-  {ar:`عشان أشيك لك على الموضوع؟ شكراً على صبرك.`,en:`Could you please give me a minute to check on this for you? Thank you for your patience.`},
-  {ar:`أحتاج دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`,en:`I need an extra minute to complete the required task, and I appreciate your understanding.`},
-  {ar:`سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`,en:`I will take another minute to verify the details. Thank you for your patience.`},
-  {ar:`الرجاء الانتظار دقيقة أخرى حتى أتمكن من إنهاء العمل بدقة.`,en:`Please wait one more minute so I can complete the task accurately.`},
+ {ar:`عطني دقيقة أتأكد لك من التفاصيل، شاكر صبرك يا الغالي.`, en:`Give me a minute to double-check the details, thank you for your patience.`},
+{ar:`بدقيقة أراجع الحالة وأرجع لك بالتحديث، ممتن لتفهمك.`, en:`I’ll review your case and get back to you shortly, I appreciate your understanding.`},
+{ar:`ثواني أتأكد لك من النظام وأرجع مباشرة، شاكر صبرك.`, en:`Let me check the system real quick and get right back to you, thanks for waiting.`},
+{ar:`دقيقة بس أتحقق من بعض المعلومات، وراح أرجع لك فوراً.`, en:`Just a minute to verify a few details, I’ll be right back.`},
+{ar:`أحتاج لحظة أتأكد من الطلب، شكراً لتعاونك وصبرك.`, en:`I need a moment to check your request, thank you for your cooperation and patience.`},
+{ar:`راح أتأكد لك من الحالة الآن وأحدثك مباشرة بعد ما أخلص.`, en:`I’ll check your case now and update you right after.`},
+{ar:`دقيقة فقط أراجع البيانات وبتواصل معك مباشرة بعدها.`, en:`Just a minute to review the details, I’ll reach back out right after.`},
+{ar:`أشيّك لك الآن على التحديثات وبتواصل معك بعد لحظات.`, en:`I’m checking the latest updates and will get back to you shortly.`},
+{ar:`راح أحتاج أقل من دقيقة أراجع التفاصيل ونتابع مع بعض.`, en:`I’ll need less than a minute to go through the details, then we’ll continue together.`},
+{ar:`أشيك الحين وأتأكد أن كل شيء واضح، أقدّر صبرك.`, en:`Let me confirm everything’s clear, I appreciate your patience.`},
+{ar:`راح أراجع النظام بسرعة وأحدثك أول ما أخلص.`, en:`I’ll review the system quickly and update you as soon as I’m done.`},
+{ar:`بس لحظة أتأكد من المعلومات وأرجع لك، شكرًا لتفهمك.`, en:`Just a moment to confirm the details, thank you for your understanding.`},
+{ar:`دقيقة فقط أتأكد من الرد النهائي وأعطيك التحديث.`, en:`Just one minute to confirm the final response and I’ll update you.`},
+{ar:`أحتاج وقت بسيط أراجع الطلب بدقة، شاكر لك تعاونك.`, en:`I just need a short moment to carefully review your request, thank you for your cooperation.`},
+{ar:`أتأكد الآن من التفاصيل الدقيقة، شكراً لصبرك الدائم.`, en:`I’m confirming the details now, thank you for your continued patience.`}
 ];
 
 let used = {longApology:[], shortApology:[], hold:[]};
@@ -281,6 +360,16 @@ function copyText(id){
 function resetLists(){
   used={longApology:[], shortApology:[], hold:[]};
   document.getElementById('popup').classList.add('hidden');
+}
+function calc(rate){
+  const input = document.getElementById('calcInput').value;
+  const result = document.getElementById('calcResult');
+  if(!input || isNaN(input)){
+    result.textContent = 'الرجاء إدخال رقم صالح';
+    return;
+  }
+  const total = (input * rate).toFixed(2);
+  result.textContent = `النتيجة: ${total}`;
 }
 </script>
 
