@@ -109,6 +109,47 @@
   text-align: center;
   border: 1px solid #e1e9ff;
 }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px 16px;
+  align-items: center;
+}
+.call-box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  direction: ltr;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.btn {
+  cursor: pointer;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.btn.primary {
+  background: #285eff;
+  color: #fff;
+  border: none;
+}
+textarea#output {
+  width: 100%;
+  min-height: 160px;
+  resize: none;
+  white-space: pre-wrap;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
 </style>
 </head>
 <body>
@@ -154,7 +195,49 @@
       <div id="calcResult" class="calc-result">النتيجة: —</div>
     </div>
   </div>
+  <!-- قسم السولوشن -->
+  <div class="card">
+    <h2>قسم السولوشن (Scenario 1)</h2>
+    <div class="grid">
+      <label>Call line</label>
+      <div class="call-box">
+        Call merchant ,call results ; needed Restaurant admitted the mistake
+      </div>
 
+      <label for="riskLabel">Case Solution Risk Label</label>
+      <select id="riskLabel">
+        <option value="0">0RC</option>
+        <option value="1">1RC</option>
+        <option value="2">2RC</option>
+        <option value="3">3RC</option>
+        <option value="3>">3RC></option>
+      </select>
+
+      <label for="evidence">Evidence</label>
+      <select id="evidence">
+        <option value="Clear" selected>Clear</option>
+        <option value="Unclear">Unclear</option>
+      </select>
+
+      <label for="receipt">Receipt</label>
+      <select id="receipt">
+        <option value="yes">yes</option>
+        <option value="no">no</option>
+        <option value="need">need</option>
+      </select>
+
+      <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
+      <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="build">صنع الحل</button>
+      <button class="btn" id="clear">مسح</button>
+    </div>
+
+    <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
+    <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+  </div>
 </div> 
 <!-- popup -->
 <div id="popup" class="popup hidden">
@@ -305,21 +388,21 @@ const shortApology = [
 ];
 
 const hold = [
- {ar:`عطني دقيقة أتأكد لك من التفاصيل، شاكر صبرك يا الغالي.`, en:`Give me a minute to double-check the details, thank you for your patience.`},
-{ar:`بدقيقة أراجع الحالة وأرجع لك بالتحديث، ممتن لتفهمك.`, en:`I’ll review your case and get back to you shortly, I appreciate your understanding.`},
-{ar:`ثواني أتأكد لك من النظام وأرجع مباشرة، شاكر صبرك.`, en:`Let me check the system real quick and get right back to you, thanks for waiting.`},
-{ar:`دقيقة بس أتحقق من بعض المعلومات، وراح أرجع لك فوراً.`, en:`Just a minute to verify a few details, I’ll be right back.`},
-{ar:`أحتاج لحظة أتأكد من الطلب، شكراً لتعاونك وصبرك.`, en:`I need a moment to check your request, thank you for your cooperation and patience.`},
-{ar:`راح أتأكد لك من الحالة الآن وأحدثك مباشرة بعد ما أخلص.`, en:`I’ll check your case now and update you right after.`},
-{ar:`دقيقة فقط أراجع البيانات وبتواصل معك مباشرة بعدها.`, en:`Just a minute to review the details, I’ll reach back out right after.`},
-{ar:`أشيّك لك الآن على التحديثات وبتواصل معك بعد لحظات.`, en:`I’m checking the latest updates and will get back to you shortly.`},
-{ar:`راح أحتاج أقل من دقيقة أراجع التفاصيل ونتابع مع بعض.`, en:`I’ll need less than a minute to go through the details, then we’ll continue together.`},
-{ar:`أشيك الحين وأتأكد أن كل شيء واضح، أقدّر صبرك.`, en:`Let me confirm everything’s clear, I appreciate your patience.`},
-{ar:`راح أراجع النظام بسرعة وأحدثك أول ما أخلص.`, en:`I’ll review the system quickly and update you as soon as I’m done.`},
-{ar:`بس لحظة أتأكد من المعلومات وأرجع لك، شكرًا لتفهمك.`, en:`Just a moment to confirm the details, thank you for your understanding.`},
-{ar:`دقيقة فقط أتأكد من الرد النهائي وأعطيك التحديث.`, en:`Just one minute to confirm the final response and I’ll update you.`},
-{ar:`أحتاج وقت بسيط أراجع الطلب بدقة، شاكر لك تعاونك.`, en:`I just need a short moment to carefully review your request, thank you for your cooperation.`},
-{ar:`أتأكد الآن من التفاصيل الدقيقة، شكراً لصبرك الدائم.`, en:`I’m confirming the details now, thank you for your continued patience.`}
+{ar:`أحتاج دقيقة أتأكد لك من التفاصيل وأرجع لك فورًا، شاكر صبرك.`, en:`I just need a minute to confirm the details and I’ll be right back, thank you for your patience.`},
+{ar:`بس دقيقة أتأكد من الطلب بالنظام وبتحدثك مباشرة بعد ما أخلص.`, en:`Give me a minute to check your order in the system, I’ll update you right after.`},
+{ar:`راح أحتاج دقيقة أراجع الحالة بدقة وأرجع لك بالتحديث.`, en:`I’ll take a minute to review the case carefully and get back to you with an update.`},
+{ar:`دقيقة فقط أتأكد أن كل شيء واضح وأبلغك بالنتيجة.`, en:`Just a minute to make sure everything is clear, then I’ll let you know the result.`},
+{ar:`لحظة بسيطة أتأكد من التحديث الأخير وبتواصل معك فورًا.`, en:`One short moment to confirm the latest update and I’ll get back to you right away.`},
+{ar:`أحتاج دقيقة أشيّك على الملاحظات عشان أقدر أساعدك بدقة.`, en:`I need a minute to review the notes so I can assist you accurately.`},
+{ar:`دقيقة بس أتأكد من البيانات وأرجع لك بالرد النهائي.`, en:`Just a minute to double-check the information and I’ll get back to you with the final response.`},
+{ar:`راح أراجع الطلب دقيقة وحدة وأحدثك بأول ما أخلص.`, en:`I’ll review the request for one minute and update you as soon as I’m done.`},
+{ar:`أحتاج دقيقة إضافية أتأكد من النظام عشان أقدّم لك أدق معلومة.`, en:`I need an extra minute to check the system and provide you with the most accurate info.`},
+{ar:`دقيقة فقط أتأكد من الإجراء المطلوب وبتواصل معك بعدها مباشرة.`, en:`Just a minute to confirm the required action, I’ll contact you right after.`},
+{ar:`اسمح لي دقيقة أشيّك على التفاصيل عشان أتأكد من كل نقطة.`, en:`Allow me one minute to review the details and make sure everything is correct.`},
+{ar:`راح أحتاج دقيقة بسيطة أتأكد فيها من حالة الطلب بالنظام.`, en:`I’ll need a short minute to check the order status in the system.`},
+{ar:`دقيقة فقط أراجع البيانات المطلوبة وبتواصل معك بعدها فورًا.`, en:`Just a minute to review the needed data and I’ll reach back out immediately after.`},
+{ar:`أحتاج دقيقة أتأكد من التحديث وأعطيك الرد الأكيد بعدها.`, en:`I need one minute to verify the update and I’ll give you the confirmed answer right after.`},
+{ar:`دقيقة بس أتأكد أن الإجراء تم بالطريقة الصحيحة وراح أبلغك.`, en:`Just a minute to make sure the action went through correctly and I’ll let you know.`}
 ];
 
 let used = {longApology:[], shortApology:[], hold:[]};
@@ -370,6 +453,55 @@ function calc(rate){
   const total = (input * rate).toFixed(2);
   result.textContent = `النتيجة: ${total}`;
 }
+  const el = (id) => document.getElementById(id);
+const CALL_LINE = "Call merchant ,call results ; needed Restaurant admitted the mistake";
+const COMP_LINE = "no Compensation";
+
+function isNumericOrEmpty(v) {
+  if (!v) return true;
+  return /^-?\d+(\.\d+)?$/.test(v.trim());
+}
+
+function buildTemplate() {
+  const risk     = el('riskLabel').value;
+  const evidence = el('evidence').value;
+  const receipt  = el('receipt').value;
+  let refund     = (el('refund').value || '').trim();
+
+  if (!isNumericOrEmpty(refund)) {
+    alert('حقل Refund يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
+    el('refund').focus();
+    return;
+  }
+  if (!refund) refund = "no refund";
+
+  const lines = [
+    `Call line: ${CALL_LINE}`,
+    `Case Solution Risk Label: (${risk})RC`,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund}) refund`,
+    `Compensation: ${COMP_LINE}`
+  ];
+  el('output').value = lines.join("\n");
+}
+
+function clearAll() {
+  el('riskLabel').value = '0';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('output').value = '';
+}
+
+el('output').addEventListener('click', () => {
+  el('output').select();
+  document.execCommand('copy');
+  alert("✔ تم النسخ بنجاح");
+});
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', clearAll);
 </script>
 
 </body>
