@@ -150,6 +150,52 @@ textarea#output {
   margin-top: 10px;
   padding: 10px;
 }
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #d8e5ff;
+}
+
+.solution {
+  margin-top: 10px;
+}
+
+.solution-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.solution-grid label {
+  font-weight: 600;
+  color: #285eff;
+}
+
+.solution-grid select,
+.solution-grid input {
+  padding: 8px;
+  border: 1px solid #c9dafd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.solution-grid select:focus,
+.solution-grid input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 2px #5b8def33;
+}
+
+.solution textarea {
+  width: 100%;
+  margin-top: 12px;
+  min-height: 90px;
+  resize: none;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  padding: 8px;
+}
 </style>
 </head>
 <body>
@@ -180,20 +226,6 @@ textarea#output {
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
-  </div>
-</div>
- <div class="card">
-    <h2>الآلة الحاسبة</h2>
-    <div class="calc-box">
-      <input id="calcInput" type="number" placeholder="أدخل الرقم" />
-      <div class="calc-buttons">
-        <button onclick="calc(0.8)">Main dish (0.8)</button>
-        <button onclick="calc(0.6)">Side dish (0.6)</button>
-        <button onclick="calc(0.3)"> Drink</button>
-        <button onclick="calc(0.1)">Cutlery (0.1)</button>
-      </div>
-      <div id="calcResult" class="calc-result">النتيجة: —</div>
-    </div>
   </div>
   <!-- قسم السولوشن -->
   <div class="card">
@@ -239,6 +271,21 @@ textarea#output {
     <div class="hint">كبسه على الحقل ينسخ كلشي</div>
   </div>
 </div> 
+</div>
+ <div class="card">
+    <h2>الآلة الحاسبة</h2>
+    <div class="calc-box">
+      <input id="calcInput" type="number" placeholder="أدخل الرقم" />
+      <div class="calc-buttons">
+        <button onclick="calc(0.8)">Main dish (0.8)</button>
+        <button onclick="calc(0.6)">Side dish (0.6)</button>
+        <button onclick="calc(0.3)"> Drink</button>
+        <button onclick="calc(0.1)">Cutlery (0.1)</button>
+      </div>
+      <div id="calcResult" class="calc-result">النتيجة: —</div>
+    </div>
+  </div>
+  
 <!-- popup -->
 <div id="popup" class="popup hidden">
   <p id="popupMsg"></p>
