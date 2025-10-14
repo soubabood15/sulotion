@@ -571,8 +571,8 @@ function buildTemplate() {
     `Case Solution Risk Label: (${risk})RC`,
     `Evidence: ${evidence}`,
     `Receipt: ${receipt}`,
-    `Refund: (${refund})'',
-    `Compensation: (${compensation}), 
+    `Refund: (${refund}) refund`,
+    `Compensation: (${compensation}) compensation`
   ];
 
   el('output').value = lines.join("\n");
