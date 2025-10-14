@@ -267,9 +267,12 @@ textarea#output {
         <option value="no">no</option>
         <option value="need">need</option>
       </select>
-
+       
       <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
       <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
+
+      <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+      <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
     </div>
 
     <div class="actions">
@@ -520,19 +523,27 @@ function isNumericOrEmpty(v) {
 }
 
 function buildTemplate() {
-  const risk     = el('riskLabel').value;
-  const evidence = el('evidence').value;
-  const receipt  = el('receipt').value;
-  const callType = el('callType').value;
+  const risk       = el('riskLabel').value;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
   const callResult = (el('callResult').value || '').trim();
-  let refund     = (el('refund').value || '').trim();
+  let refund       = (el('refund').value || '').trim();
+  let compensation = (el('compensation').value || '').trim();
 
   if (!isNumericOrEmpty(refund)) {
     alert('حقل Refund يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
     el('refund').focus();
     return;
   }
+  if (!isNumericOrEmpty(compensation)) {
+    alert('حقل Compensation يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
+    el('compensation').focus();
+    return;
+  }
+
   if (!refund) refund = "no refund";
+  if (!compensation) compensation = "no compensation";
 
   // بناء نص الكول لاين
   let callLine = "";
@@ -561,8 +572,9 @@ function buildTemplate() {
     `Evidence: ${evidence}`,
     `Receipt: ${receipt}`,
     `Refund: (${refund}) refund`,
-    `Compensation: ${COMP_LINE}`
+    `Compensation: (${compensation}) compensation`
   ];
+
   el('output').value = lines.join("\n");
 }
 
