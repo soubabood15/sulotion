@@ -268,7 +268,7 @@ textarea#output {
 <label for="callType">Call line</label>
 <select id="callType" onchange="toggleCallInput()">
   <option value="none">اختر نوع المكالمة</option>
-  <option value="noneed">No need</option>
+  <option value="noneed"selected>No need</option>
   <option value="merchant">Merchant</option>
   <option value="rider">Rider</option>
 </select>
@@ -286,26 +286,40 @@ textarea#output {
         <option value="2">2RC</option>
         <option value="3">3RC</option>
         <option value="3>">3RC></option>
+        <option value="3>">RED></option>
+        <option value="3>">Purble></option>
       </select>
 
       <label for="evidence">Evidence</label>
       <select id="evidence">
-        <option value="Clear" selected>Clear</option>
+        <option value="No" selected>No</option>
+        <option value="Clear" >Clear</option>
         <option value="Unclear">Unclear</option>
       </select>
 
       <label for="receipt">Receipt</label>
       <select id="receipt">
         <option value="yes">yes</option>
-        <option value="no">no</option>
-        <option value="need">need</option>
+        <option value="no" >no</option>
+        <option value="No need" selected>No need</option>
       </select>
        
-      <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
-      <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
+      <label for="refund">Refund</label>
+<select id="refund">
+  <option value="no refund">No refund</option>
+  <option value="partial refund">Partial Refund</option>
+  <option value="full refund">Full Refund</option>
+</select>
 
-      <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
-      <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
+     <label for="compensation">Compensation (اختر المبلغ أو اتركه بدون)</label>
+<select id="compensation">
+  <option value="">no compensation</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="25">25</option>
+  <option value="50">50</option>
+</select>
     </div>
 
     <div class="actions">
@@ -912,11 +926,9 @@ function buildTemplate() {
   let refund       = (el('refund').value || '').trim();
   let compensation = (el('compensation').value || '').trim();
 
-  if (!isNumericOrEmpty(refund)) {
-    alert('حقل Refund يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
-    el('refund').focus();
-    return;
-  }
+ if (!refund) {
+  refund = "no refund";
+}
   if (!isNumericOrEmpty(compensation)) {
     alert('حقل Compensation يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
     el('compensation').focus();
@@ -989,3 +1001,4 @@ function toggleCallInput(){
 
 </body>
 </html>
+
