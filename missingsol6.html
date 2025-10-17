@@ -5,33 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>اعتذارات وهولد</title>
 <style>
-  body {
-    margin: 0;
-    font-family: "Cairo", sans-serif;
-    background: linear-gradient(120deg,#e1ecff,#f5f8ff);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: start;
-    min-height: 100vh;
-    padding: 40px;
-    gap: 40px;
-    overflow-x: hidden;
-  }
-  h2{
-    text-align:center;
-    margin-bottom:10px;
-    color:#285eff;
-  }
-  .section {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,.08);
-    padding: 24px;
-    width: 430px;
-    transition: all .4s ease;
-    animation: fadeIn .8s ease;
-  }
+ .madeby {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #285eff; 
+  background: #ffffffcc; 
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  opacity: 0.9;
+  z-index: 99999;
+  transition: opacity .6s ease, transform .6s ease, background .3s;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.madeby:hover {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.madeby--hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
   @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
   button {
     background: linear-gradient(45deg,#4b8cff,#72a9ff);
@@ -231,6 +234,7 @@ textarea#output {
 </style>
 </head>
 <body>
+  <div class="madeby">Made by Abdelrahman & Reem</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
