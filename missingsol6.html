@@ -279,7 +279,38 @@ textarea#output {
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
-  
+  <!-- كروت سكربتات ثابتة للهولد -->
+<div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    راجع الطلب الآن وراح أبلغك بالتحديث فورًا.
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+    تم التأكد من التفاصيل، أبلغك بعد لحظات بالنتيجة.
+  </div>
+</div>
+
+<style>
+.fixed-hold-cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.hold-card {
+  flex: 1;
+  background: #f3f7ff;
+  border: 1px solid #d6e4ff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.hold-card:hover {
+  background: #e5efff;
+  transform: scale(1.03);
+}
+</style>
   <!-- قسم السولوشن -->
  <div class="card">
   <h2>قسم السولوشن </h2>
