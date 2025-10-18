@@ -279,6 +279,40 @@ textarea#output {
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
+  <!-- كروت سكربتات ثابتة للهولد -->
+<div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟
+شكراً على صبرك.
+
+
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me a minute to check on this for you? Thank you for your patience.
+  </div>
+</div>
+
+<style>
+.fixed-hold-cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.hold-card {
+  flex: 1;
+  background: #e8f1ff;
+  border: 1px solid #e5efff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.hold-card:hover {
+  background: #e5efff;
+  transform: scale(1.03);
+}
   <!-- قسم السولوشن -->
  <div class="card">
   <h2>قسم السولوشن </h2>
@@ -618,8 +652,7 @@ const shortApology = [
 ];
 
 const hold = [
-  // 🔟 الأصلية بدون أي تعديل
-  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
+  // 🔟 الأصلية بدون أي تعدي
   { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
   { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
