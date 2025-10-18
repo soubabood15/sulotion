@@ -280,68 +280,82 @@ textarea#output {
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
   <!-- قسم السولوشن -->
-  <div class="card">
-    <h2>قسم السولوشن (Scenario 1)</h2>
-    <div class="grid">
-     <!-- 🧩 Call Line -->
-<label for="callType">Call line</label>
-<select id="callType" onchange="toggleCallInput()">
-  <option value="none">اختر نوع المكالمة</option>
-  <option value="noneed"selected>No need</option>
-  <option value="merchant">Merchant</option>
-  <option value="rider">Rider</option>
-</select>
+ <div class="card">
+  <h2>قسم السولوشن (Scenario 1)</h2>
 
-<!-- هذا الحقل يظهر فقط إذا اختار Merchant أو Rider -->
-<div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
-  <label for="callResult">Call Result</label>
-  <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
-</div>
+  <div class="grid">
+    <!-- 🧩 Call Line -->
+    <label for="callType">Call line</label>
+    <select id="callType" onchange="toggleCallInput()">
+      <option value="none">اختر نوع المكالمة</option>
+      <option value="noneed"selected>No need</option>
+      <option value="merchant">Merchant</option>
+      <option value="rider">Rider</option>
+    </select>
 
-      <label for="riskLabel">Case Solution Risk Label</label>
-      <select id="riskLabel">
-        <option value="0">0RC</option>
-        <option value="1">1RC</option>
-        <option value="2">2RC</option>
-        <option value="3">3RC</option>
-        <option value="3>">3RC></option>
-        <option value="RED">RED></option>
-        <option value="Purble">Purple></option>
-      </select>
-
-      <label for="evidence">Evidence</label>
-      <select id="evidence">
-        <option value="No" selected>No</option>
-        <option value="Clear" >Clear</option>
-        <option value="Unclear">Unclear</option>
-      </select>
-
-      <label for="receipt">Receipt</label>
-      <select id="receipt">
-        <option value="yes">yes</option>
-        <option value="no" >no</option>
-        <option value="No need" selected>No need</option>
-      </select>
-       
-      <label for="refund">Refund</label>
-<select id="refund">
-  <option value="no refund">No refund</option>
-  <option value="partial refund">Partial Refund</option>
-  <option value="full refund">Full Refund</option>
-</select>
-
-     <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
-<input id="compensation" type="number" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
+    <div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
+      <label for="callResult">Call Result</label>
+      <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
     </div>
 
-    <div class="actions">
-      <button class="btn primary" id="build">صنع الحل</button>
-      <button class="btn" id="clear">مسح</button>
+    <!-- 🧩 Risk Label -->
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel" onchange="toggleRCOptions()">
+      <option value="">Select</option>
+      <option value="0RC"selected>0RC</option>
+      <option value="1RC">1RC</option>
+      <option value="2RC">2RC</option>
+      <option value="3RC">3RC</option>
+      <option value="3RC>">3RC></option>
+      <option value="Red">Red</option>
+      <option value="Purple">Purple</option>
+    </select>
+
+    <!-- 🔹 يظهر فقط مع Red أو Purple -->
+    <div id="rcOptions" style="display:none; grid-column:1 / span 2; margin-top:8px;">
+      <label style="font-weight:bold; color:#285eff;">اختر RC</label>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+        <label><input type="radio" name="subRC" value="0RC">0RC</label>
+        <label><input type="radio" name="subRC" value="1RC">1RC</label>
+        <label><input type="radio" name="subRC" value="2RC">2RC</label>
+        <label><input type="radio" name="subRC" value="3RC">3RC</label>
+        <label><input type="radio" name="subRC" value="3RC>">3RC></label>
+      </div>
     </div>
 
-    <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
-    <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear" >Clear</option>
+      <option value="Unclear"selected>Unclear</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="No need"selected>No need</option>
+    </select>
+
+    <label for="refund">Refund</label>
+    <select id="refund">
+      
+      <option value="No refund"selected>No refund</option>
+      <option value="Partial refund">Partial refund</option>
+      <option value="Full refund">Full refund</option>
+    </select>
+
+    <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+    <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
   </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build">صنع الحل</button>
+    <button class="btn" id="clear">مسح</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
+  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+</div>
  </div>
   <!-- القسم الثالث -->
 <!-- سكربتات المحادثة (نسخة مضغوطة) -->
@@ -679,7 +693,8 @@ function isNumericOrEmpty(v) {
 }
 
 function buildTemplate() {
-  const risk       = el('riskLabel').value;
+  const selectedRC = getSelectedRC();
+const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
   const evidence   = el('evidence').value;
   const receipt    = el('receipt').value;
   const callType   = el('callType').value;
@@ -700,25 +715,27 @@ function buildTemplate() {
   if (!compensation) compensation = "no compensation";
 
   // بناء نص الكول لاين
-  let callLine = "";
-  if (callType === "noneed") {
-    callLine = "Call merchant/Rider , Call result : No need";
-  } else if (callType === "merchant") {
-    if (!callResult) {
-      alert("اكتب نتيجة المكالمة مع التاجر.");
-      return;
-    }
-    callLine = `Call merchant , Call result : ${callResult}`;
-  } else if (callType === "rider") {
-    if (!callResult) {
-      alert("اكتب نتيجة المكالمة مع السائق.");
-      return;
-    }
-    callLine = `Call rider , Call result : ${callResult}`;
-  } else {
-    alert("اختَر نوع المكالمة أولاً.");
+  // بناء نص الكول لاين
+let callLine = "";
+let normalizedCall = callType.toLowerCase().replace(/\s+/g, "");
+
+if (normalizedCall === "noneed") {
+  callLine = "Call merchant/Rider , Call result : No need";
+} else if (normalizedCall === "merchant") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع التاجر.");
     return;
   }
+  callLine = `Call merchant , Call result : ${callResult}`;
+} else if (normalizedCall === "rider") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع السائق.");
+    return;
+  }
+  callLine = `Call rider , Call result : ${callResult}`;
+} else {
+  callLine = "Call merchant/Rider , Call result : No need";
+}
 
   const lines = [
     `Call line: ${callLine}`,
@@ -757,7 +774,123 @@ function toggleCallInput(){
     box.style.display = "none";
     el('callResult').value = "";
   }
+ function toggleCallInput() {
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if (callType === "merchant" || callType === "rider") {
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
 }
+
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'block';
+
+    // ✅ يحدد أول خيار (0RC) تلقائيًا
+    const firstRC = document.querySelector('input[name="subRC"][value="0RC"]');
+    if (firstRC) firstRC.checked = true;
+
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => (i.checked = false));
+  }
+}
+
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+  const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  const refund     = el('refund').value;
+  let compensation = (el('compensation').value || '').trim();
+
+  if (!compensation) compensation = "no compensation";
+
+  let callLine = "";
+  if (callType === "noneed") {
+    callLine = "Call merchant/Rider , Call result : No need";
+  } else if (callType === "merchant") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع التاجر.");
+      return;
+    }
+    callLine = `Call merchant , Call result : ${callResult}`;
+  } else if (callType === "rider") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع السائق.");
+      return;
+    }
+    callLine = `Call rider , Call result : ${callResult}`;
+  } else {
+    alert("اختَر نوع المكالمة أولاً.");
+    return;
+  }
+
+  const lines = [
+    `Call line: ${callLine}`,
+    riskLabelLine,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund})`,
+    `Compensation: (${compensation}) compensation`
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', () => {
+  el('riskLabel').value = '';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('compensation').value = '';
+  el('output').value = '';
+  toggleRCOptions(); // يخفي الحقل عند المسح
+});
+}
+// ✅ لإظهار حقل RC فقط عند اختيار Red أو Purple
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'grid';
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => i.checked = false);
+  }
+}
+
+// ✅ لبناء النص النهائي في التيمبليت
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("callType").value = "noneed";
+  toggleCallInput();
+});
 </script>
 
 </body>
