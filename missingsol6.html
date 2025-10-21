@@ -1283,5 +1283,64 @@ window.addEventListener("load", () => {
   document.addEventListener("copy", showCopiedNotice);
 });
 </script>
+ <!-- 🟦 نافذة التحديث (Popup) -->
+<div id="updatePopup" style="
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  font-family: 'Cairo', sans-serif;
+">
+  <div style="
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 14px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    width: 380px;
+    max-width: 90%;
+    text-align: center;
+    animation: fadeIn .4s ease;
+  ">
+  <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
+السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
+    <h2 style="color:#285eff; margin-bottom:10px;">شو عملنا جديد</h2>
+   <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
+      <li>ما في داعي تحدد اي سكربت عشان تنسخه فقط ضغطه عليه راح يتم نسخه</li>
+      <li> ضفنا قسم جديد الاسترداد والتعويض داخله حقول بتقدر تدخل القيمه وهو بحطها الك بالقوس</li>
+       <li>لما تضغط على اي سكربت راح يظهرلك اشعار نسخ</li>
+       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل  </li>
+</ul>
+    <button onclick="closePopup()" style="
+      background:#285eff;
+      color:#fff;
+      border:none;
+      padding:8px 18px;
+      border-radius:8px;
+      margin-top:15px;
+      cursor:pointer;
+      font-size:14px;
+    ">تخطي</button>
+  </div>
+</div>
+
+<script>
+  // 🎬 إغلاق النافذة عند الضغط على "تخطي"
+  function closePopup() {
+    const popup = document.getElementById('updatePopup');
+    popup.style.opacity = 0;
+    popup.style.pointerEvents = 'none';
+    setTimeout(() => popup.remove(), 400);
+  }
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
 </body>
 </html>
