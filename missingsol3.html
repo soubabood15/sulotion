@@ -201,12 +201,15 @@ textarea#output {
 }
 
 .main-sections {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px; /* قللنا المسافة بينهم */
-  width: 100%;
-  flex-wrap: wrap; /* يخليهم يتكيفوا في الشاشات الصغيرة */
+ display:flex;
+       flex-wrap:nowrap;
+       overflow-x:auto;
+       gap:25px;
+       justify-content:flex-start;
+       align-items:flex-start;
+       scroll-behavior:smooth;
+       padding-bottom:10px;
+      /* يخليهم يتكيفوا في الشاشات الصغيرة */
 }
 
 .section {
