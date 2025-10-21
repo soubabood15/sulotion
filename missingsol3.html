@@ -241,15 +241,15 @@ textarea#output {
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
-  <h2>قسم الاعتذارات</h2>
+  <h2 style="color:#285eff;">قسم الاعتذارات</h2>
 
-  <h3>الاعتذارات الطويلة</h3>
+  <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
   <button onclick="generate('longApology')">توليد اعتذار طويل</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
-  <h3>الاعتذارات القصيرة</h3>
+  <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
   <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
@@ -276,7 +276,7 @@ textarea#output {
 <!-- القسم الأيسر -->
  
 <div class="section" id="hold">
-  <h2>قسم الهولد</h2>
+  <h2 style="color:#285eff;">قسم الهولد</h2>
   <button onclick="generate('hold')">توليد هولد</button>
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
@@ -320,7 +320,7 @@ textarea#output {
   
   <!-- قسم السولوشن -->
  <div class="card">
-  <h2>قسم السولوشن (Scenario 1)</h2>
+  <h2 style="color:#285eff;">قسم السولوشن </h2>
 
   <div class="grid">
     <!-- 🧩 Call Line -->
@@ -506,7 +506,7 @@ function copyMsgWithRestaurant(el) {
 </script>
 <!-- 🟦 القسم الرابع: التعويض والاسترداد -->
 <div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
-  <h2 style="text-align:center; color:#285eff;">🎁 قسم التعويض والاسترداد</h2>
+  <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
 
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
     <button class="btn primary" onclick="startCompensation()">تعويض</button>
@@ -540,57 +540,132 @@ function copyMsg(el) {
 }
 
 // 🔹 تعويض فقط
+
 function startCompensation() {
   const box = document.getElementById('scriptBox');
   box.innerHTML = `
-    <h3 style="color:#285eff;">🎁 قسم التعويض</h3>
+    <h2 style="color:#285eff;"> قسم التعويض</h2>
 
-    <div class="msg" onclick="copyMsg(this)">
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
       نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.
     </div>
 
-    <input type="number" id="compValue" placeholder="قيمة التعويض (اختياري)"
-      style="margin-top:10px;padding:8px;border:1px solid #c9dafd;border-radius:8px;width:95%;">
-
-    <div class="msg" onclick="copyMsg(this)">
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
       Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.
     </div>
 
+    <!-- حقل القيمة -->
+    <input type="number" id="compValue" placeholder="قيمة التعويض (اختياري)" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔹 سكربتات المحفظة الخاصة بالتعويض -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      سيتم تحويل مبلغ التعويض مباشرة إلى محفظتك في التطبيق، 
+      ويمكنك استخدامه فورًا لأي طلب قادم.
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      The compensation amount will be added directly to your wallet in the app, 
+      and it will be available immediately for your next orders.
+    </div>
+
+    <!-- زر إعادة -->
     <div style="text-align:center;margin-top:15px;">
-      <button class="btn primary" onclick="resetComp()">🔄 إعادة من البداية</button>
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
     </div>
   `;
 }
 
+
 // 🔸 استرداد وتعويض
+
 function startRefund() {
   const box = document.getElementById('scriptBox');
   box.innerHTML = `
-    <h3 style="color:#285eff;">🎁 قسم الاسترداد والتعويض</h3>
+    <h2 style="color:#285eff;"> قسم الاسترداد والتعويض</h2>
 
-    <div class="msg" onclick="copyMsg(this)">
-      نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، 
+      مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
     </div>
 
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR 
+      and apply total of (      ) SAR compensation.
+    </div>
+
+    <!-- 🔹 الحقول -->
     <input type="number" id="refundValue" placeholder="قيمة الاسترداد" 
-      style="margin-top:8px;padding:8px;border:1px solid #c9dafd;border-radius:8px;width:95%;">
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
     <input type="number" id="compValue2" placeholder="قيمة التعويض" 
-      style="margin-top:8px;padding:8px;border:1px solid #c9dafd;border-radius:8px;width:95%;">
+      style="margin-top:8px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
 
-    <div class="msg" onclick="copyMsg(this)">
-      Sorry for the inconvenience. We can refund (      ) SAR and apply total of (      ) SAR compensation.
+    <!-- 🔴 السكربتات الجديدة (لون أحمر) -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
     </div>
 
-    <div style="margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-      <button class="btn primary" onclick="walletFlow()">محفظة</button>
-      <button class="btn" onclick="originalFlow()">الطريقة الأصلية</button>
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
     </div>
 
+    <!-- 🔘 الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="walletFlow()">محفظة</button>
+
+      <button class="btn secondary" 
+        style="background:#00b36b;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔁 زر إعادة -->
     <div style="text-align:center;margin-top:15px;">
-      <button class="btn primary" onclick="resetComp()">🔄 إعادة من البداية</button>
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
     </div>
   `;
 }
+
 
 // 🔹 خيار المحفظة
 function walletFlow() {
@@ -600,30 +675,78 @@ function walletFlow() {
   div.id = 'extraScripts';
   div.innerHTML = `
     <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
-      راح نرجع المبلغ إلى محفظتك، فتأكد من متابعة المحفظة.
+راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
     </div>
     <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
-      We will refund the amount to your wallet, please keep an eye out for it.
+Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
     </div>
   `;
   box.appendChild(div);
 }
 
 // 🔸 خيار الطريقة الأصلية
+
 function originalFlow() {
+  // نحذف أي سكربتات مضافة مسبقًا
   document.getElementById('extraScripts')?.remove();
+
   const box = document.getElementById('scriptBox');
+
+  // ننشئ الحاوية الجديدة
   const div = document.createElement('div');
   div.id = 'extraScripts';
-  div.innerHTML = `
-    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5;">
+  div.style.marginTop = '12px';
+  div.style.display = 'grid';
+  div.style.gap = '10px';
+
+  // سكربتات الطريقة الأصلية الأساسية
+  const mainScriptsHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
       سيتم إرجاع المبلغ على نفس وسيلة الدفع، وقد يستغرق ظهوره حتى 10 أيام عمل.
     </div>
-    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5;">
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
       The refund will be processed to your original payment method, and may take up to 10 business days.
     </div>
   `;
-  box.appendChild(div);
+
+  // ✅ سكربتات إضافية (لون أحمر - حالة الاسترداد)
+  const extraScriptHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      margin-top:18px;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      لا يزال الاسترداد ضمن فترة المعالجة، نرجو منك الانتظار بصبر. يمكنك أيضًا الحصول على رقم ARN/RRN من قسم "تتبع استردادي" للتواصل مع بنكك المصدر والتحقق من حالة المبلغ.
+    </div>
+
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      It's still within the refund process timeline, please wait patiently. You also can have the ARN/RRN in "track my refund" to contact your issuer bank to check the status of money.
+    </div>
+  `;
+
+  // نجمع الكل
+  div.innerHTML = mainScriptsHTML + extraScriptHTML;
+
+  // نضيفهم بعد أزرار المحفظة والطريقة الأصلية مباشرة
+  const buttons = box.querySelector('.action-buttons');
+  if (buttons) {
+    buttons.insertAdjacentElement('afterend', div);
+  } else {
+    box.appendChild(div);
+  }
 }
 
 // 🔁 إعادة من البداية
@@ -1064,6 +1187,64 @@ window.addEventListener("DOMContentLoaded", () => {
   toggleCallInput();
 });
 </script>
+<script>
+// ✅ إشعار "تم النسخ بنجاح" لكل الموقع + إصلاح النسخ في كل الأقسام
+window.addEventListener("load", () => {
+  // إنشاء الإشعار
+  let notice = document.createElement("div");
+  notice.id = "copyNotice";
+  notice.textContent = "✔ تم النسخ بنجاح";
+  Object.assign(notice.style, {
+    position: "fixed",
+    top: "45px",
+    right: "20px",
+    background: "#e8fff3",
+    color: "#00b36b",
+    padding: "8px 16px",
+    borderRadius: "8px",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+    fontSize: "13px",
+    fontFamily: "Cairo, sans-serif",
+    opacity: "0",
+    zIndex: "999999",
+    transition: "opacity 0.4s ease, transform 0.4s ease",
+    transform: "translateY(-10px)"
+  });
+  document.body.appendChild(notice);
 
+  // دالة عرض الإشعار
+  window.showCopiedNotice = function() {
+    notice.style.opacity = "1";
+    notice.style.transform = "translateY(0)";
+    clearTimeout(window.noticeTimeout);
+    window.noticeTimeout = setTimeout(() => {
+      notice.style.opacity = "0";
+      notice.style.transform = "translateY(-10px)";
+    }, 1000); // ← مدة الظهور = ثانية واحدة
+  };
+
+  // ✅ نربط الحدث لجميع العناصر القابلة للنسخ
+  function enableCopying() {
+    document.querySelectorAll(".msg, .msgBox, textarea#output, .fixed-msg").forEach(el => {
+      el.onclick = () => {
+        const text = el.value || el.textContent.trim();
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        showCopiedNotice();
+      };
+    });
+  }
+
+  // نفعّل النسخ أول مرة
+  enableCopying();
+
+  // 🎯 لو تمت إضافة عناصر جديدة (مثل عند إنشاء سكربت جديد)
+  const observer = new MutationObserver(enableCopying);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // ✅ لو أي نص انسخ بالطريقة العادية (Ctrl+C)
+  document.addEventListener("copy", showCopiedNotice);
+});
+</script>
 </body>
 </html>
