@@ -417,12 +417,21 @@ textarea#output {
   <!-- الاعتذار والتأكيد -->
   <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
-
+<div style="text-align:center; margin-bottom:15px;">
+  <label for="restaurantName" style="color:#285eff; font-weight:600;">حط اسم المطعم بتلاقيه جوا القوس جاهز</label><br>
+  <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
+         style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+</div>
    
     <div class="chat-row">
-      <div class="msg" onclick="copyMsgWithRestaurant(this)">اسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟</div>
-      <div class="msg" onclick="copyMsgWithRestaurant(this)">I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?</div>
-    </div>
+     <div class="msg" onclick="copyMsg(this)">
+  اسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+</div>
+
+<div class="msg" onclick="copyMsg(this)">
+  I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
+</div>
+</div>
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
       <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
@@ -945,7 +954,7 @@ const shortApology = [
 
 const hold = [
   // 🔟 الأصلية بدون أي تعديل
-  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
+  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
   { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
@@ -1343,4 +1352,51 @@ window.addEventListener("load", () => {
 }
 </style>
 </body>
+<script>
+document.addEventListener("click", function(e) {
+  const msg = e.target.closest(".msg");
+  if (!msg) return;
+
+  // نقرأ النص داخل الجملة
+  let text = msg.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restInput = document.getElementById("restaurantName");
+  const restName = restInput ? restInput.value.trim() : "";
+
+  // 🔹 استبدال الأقواس الفارغة باسم المطعم (أول زوج فقط)
+  if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
+  }
+
+  // نسخ النص المعدّل
+  navigator.clipboard.writeText(text);
+
+  // 🔔 إشعار "تم النسخ"
+  let note = document.getElementById("copyNoteFinal");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNoteFinal";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1000);
+});
+</script>
 </html>
