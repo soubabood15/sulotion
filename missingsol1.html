@@ -5,33 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>اعتذارات وهولد</title>
 <style>
-  body {
-    margin: 0;
-    font-family: "Cairo", sans-serif;
-    background: linear-gradient(120deg,#e1ecff,#f5f8ff);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: start;
-    min-height: 100vh;
-    padding: 40px;
-    gap: 40px;
-    overflow-x: hidden;
-  }
-  h2{
-    text-align:center;
-    margin-bottom:10px;
-    color:#285eff;
-  }
-  .section {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,.08);
-    padding: 24px;
-    width: 430px;
-    transition: all .4s ease;
-    animation: fadeIn .8s ease;
-  }
+ .madeby {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #285eff; 
+  background: #ffffffcc; 
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  opacity: 0.9;
+  z-index: 99999;
+  transition: opacity .6s ease, transform .6s ease, background .3s;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.madeby:hover {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.madeby--hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
   @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
   button {
     background: linear-gradient(45deg,#4b8cff,#72a9ff);
@@ -198,12 +201,15 @@ textarea#output {
 }
 
 .main-sections {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px; /* قللنا المسافة بينهم */
-  width: 100%;
-  flex-wrap: wrap; /* يخليهم يتكيفوا في الشاشات الصغيرة */
+ display:flex;
+       flex-wrap:nowrap;
+       overflow-x:auto;
+       gap:25px;
+       justify-content:flex-start;
+       align-items:flex-start;
+       scroll-behavior:smooth;
+       padding-bottom:10px;
+      /* يخليهم يتكيفوا في الشاشات الصغيرة */
 }
 
 .section {
@@ -231,455 +237,573 @@ textarea#output {
 </style>
 </head>
 <body>
+  <div class="madeby">Made by Abdelrahman & Tareq Almahameed</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
-  <h2>قسم الاعتذارات</h2>
+  <h2 style="color:#285eff;">قسم الاعتذارات</h2>
 
-  <h3>الاعتذارات الطويلة</h3>
+  <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
   <button onclick="generate('longApology')">توليد اعتذار طويل</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
-
-  <h3>الاعتذارات القصيرة</h3>
+  <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
   <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
+ 
+  </div>
+<!-- الآلة الحاسبة داخل قسم الاعتذارات -->
+<div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
+  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
+  <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+    <button onclick="calc(0.8)">Main dish</button>
+    <button onclick="calc(0.5)">Side dish</button>
+    <button onclick="calc(0.3)">Drink</button>
+    <button onclick="calc(0.1)">Cutlery</button>
+  </div>
+  <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
+    النتيجة: —
   </div>
 </div>
+</div>
+
 
 <!-- القسم الأيسر -->
  
 <div class="section" id="hold">
-  <h2>قسم الهولد</h2>
+  <h2 style="color:#285eff;">قسم الهولد</h2>
   <button onclick="generate('hold')">توليد هولد</button>
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
-  <!-- قسم السولوشن -->
-  <div class="card">
-    <h2>قسم السولوشن (Scenario 1)</h2>
-    <div class="grid">
-     <!-- 🧩 Call Line -->
-<label for="callType">Call line</label>
-<select id="callType" onchange="toggleCallInput()">
-  <option value="none">اختر نوع المكالمة</option>
-  <option value="noneed">No need</option>
-  <option value="merchant">Merchant</option>
-  <option value="rider">Rider</option>
-</select>
+  <!-- كروت سكربتات ثابتة للهولد -->
+<div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟
+شكراً على صبرك.
 
-<!-- هذا الحقل يظهر فقط إذا اختار Merchant أو Rider -->
-<div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
-  <label for="callResult">Call Result</label>
-  <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
+
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me a minute to check on this for you? Thank you for your patience.
+  </div>
 </div>
 
-      <label for="riskLabel">Case Solution Risk Label</label>
-      <select id="riskLabel">
-        <option value="0">0RC</option>
-        <option value="1">1RC</option>
-        <option value="2">2RC</option>
-        <option value="3">3RC</option>
-        <option value="3>">3RC></option>
-      </select>
+<style>
+.fixed-hold-cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.hold-card {
+  flex: 1;
+  background: #e8f1ff;
+  border: 1px solid #e5efff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.hold-card:hover {
+  background: #e5efff;
+  transform: scale(1.03);
+}
+</style>
+  
+  <!-- قسم السولوشن -->
+ <div class="card">
+  <h2 style="color:#285eff;">قسم السولوشن </h2>
 
-      <label for="evidence">Evidence</label>
-      <select id="evidence">
-        <option value="Clear" selected>Clear</option>
-        <option value="Unclear">Unclear</option>
-      </select>
+  <div class="grid">
+    <!-- 🧩 Call Line -->
+    <label for="callType">Call line</label>
+    <select id="callType" onchange="toggleCallInput()">
+      <option value="none">اختر نوع المكالمة</option>
+      <option value="noneed"selected>No need</option>
+      <option value="merchant">Merchant</option>
+      <option value="rider">Rider</option>
+    </select>
 
-      <label for="receipt">Receipt</label>
-      <select id="receipt">
-        <option value="yes">yes</option>
-        <option value="no">no</option>
-        <option value="need">need</option>
-      </select>
-       
-      <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
-      <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
-
-      <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
-      <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
+    <div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
+      <label for="callResult">Call Result</label>
+      <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
     </div>
 
-    <div class="actions">
-      <button class="btn primary" id="build">صنع الحل</button>
-      <button class="btn" id="clear">مسح</button>
+    <!-- 🧩 Risk Label -->
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel" onchange="toggleRCOptions()">
+      <option value="">Select</option>
+      <option value="0RC"selected>0RC</option>
+      <option value="1RC">1RC</option>
+      <option value="2RC">2RC</option>
+      <option value="3RC">3RC</option>
+      <option value="3RC>">3RC></option>
+      <option value="Red">Red</option>
+      <option value="Purple">Purple</option>
+    </select>
+
+    <!-- 🔹 يظهر فقط مع Red أو Purple -->
+    <div id="rcOptions" style="display:none; grid-column:1 / span 2; margin-top:8px;">
+      <label style="font-weight:bold; color:#285eff;">اختر RC</label>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+        <label><input type="radio" name="subRC" value="0RC">0RC</label>
+        <label><input type="radio" name="subRC" value="1RC">1RC</label>
+        <label><input type="radio" name="subRC" value="2RC">2RC</label>
+        <label><input type="radio" name="subRC" value="3RC">3RC</label>
+        <label><input type="radio" name="subRC" value="3RC>">3RC></label>
+      </div>
     </div>
 
-    <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
-    <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear" >Clear</option>
+      <option value="Unclear"selected>Unclear</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="No need"selected>No need</option>
+    </select>
+
+    <label for="refund">Refund</label>
+    <select id="refund">
+      
+      <option value="No refund"selected>No refund</option>
+      <option value="Partial refund">Partial refund</option>
+      <option value="Full refund">Full refund</option>
+    </select>
+
+    <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+    <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
   </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build">صنع الحل</button>
+    <button class="btn" id="clear">مسح</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
+  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+</div>
  </div>
   <!-- القسم الثالث -->
-<div class="section" id="thirdSection">
-  <h2>سكربتات المحادثة</h2>
+<!-- سكربتات المحادثة (نسخة مضغوطة) -->
+<div class="section" id="chatScriptsSimple" style="width:500px; padding:16px;">
+  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
 
-  <!-- الحقل يختفي بالبداية -->
-  <div id="restaurantBox" style="margin-bottom:15px;text-align:center;display:none;">
-    <label style="color:#285eff;font-weight:bold;">اسم المطعم (اختياري):</label>
-    <input id="restaurantName" type="text" placeholder="اكتب اسم المطعم هنا" style="padding:8px;border:1px solid #c9dafd;border-radius:8px;width:60%;margin-top:6px;text-align:center;">
-    
+  <!-- الترحيب -->
+  <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبا كيف بقدر اساعدك اليوم؟</div>
+      <div class="msg" onclick="copyMsg(this)">Hello, how can I help you today?</div>
+    </div>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبا انا هنا لمساعدتك</div>
+      <div class="msg" onclick="copyMsg(this)">Hello, I am here to help you.</div>
+    </div>
   </div>
 
-  <div id="batchContainer"></div>
+  <!-- الاعتذار والتأكيد -->
+  <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
+<div style="text-align:center; margin-bottom:15px;">
+  <label for="restaurantName" style="color:#285eff; font-weight:600;">حط اسم المطعم بتلاقيه جوا القوس جاهز</label><br>
+  <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
+         style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+</div>
+   
+    <div class="chat-row">
+     <div class="msg" onclick="copyMsg(this)">
+  اسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+</div>
 
-  <div style="text-align:center;margin-top:12px;">
-    <button onclick="resetBatches()">إعادة 🔁</button>
-    
+<div class="msg" onclick="copyMsg(this)">
+  I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
+</div>
+</div>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
+      <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
+    </div>
   </div>
+
+  <!-- أي خدمة إضافية -->
+  <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟</div>
+      <div class="msg" onclick="copyMsg(this)">Is there anything else I can help you with?</div>
+    </div>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبًا. لم نتلق ردك بعد، وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، لا تتردد بالتواصل معنا.</div>
+      <div class="msg" onclick="copyMsg(this)">Hello! We haven’t received your response yet. The chat will close soon. Feel free to contact us anytime.</div>
+    </div>
+  </div>
+
+  <!-- الختامية -->
+  <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
+    <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. نقدر تقييمك لخدمتنا ونتمنى لك يوماً سعيداً.</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We’d appreciate your feedback. Have a great day!</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.chat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.msg {
+  background: #fff;
+  border: 1px solid #d8e5ff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: 0.25s;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+}
+.msg:hover {
+  background: #e9f1ff;
+  transform: scale(1.02);
+}
+.chat-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+</style>
 
 <script>
-const batches = [
-  [
-    {ar:"مرحبا كيف بقدر اساعدك اليوم؟", en:"Hello, how can I help you today?"},
-    {ar:"مرحبا انا هنا لمساعدتك", en:"Hello, I am here to help you."}
-  ],
-  [
-    {ar:"اسف جدًا على أي إزعاج صار معك. يهمنا تجربتك ونحن هنا لمساعدتك . هل تقصد طلبك الأخير من مطعم (      ) ؟", 
-     en:"I’m very sorry for any inconvenience you’ve experienced. Your satisfaction matters to us, and we’re here to help. Are you referring to your most recent order from the restaurant (      )?"},
-    {ar:"أنا آسف جداً على المشكلة اللي حصل لك", en:"I am very sorry for the inconvenience you have experienced."}
-  ],
-  [
-    {ar:"اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟", en:"Is there anything else I can help you with?"},
-    {ar:"مرحبًا. لم نتلق ردك بعد، وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك", 
-     en:"Hello! We still have not received your response, our conversation will be closed very soon. If you have further inquiry please feel free to contact us. Thank you!"}
-  ],
-  [
-    {ar:"شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد.", 
-     en:"Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. Have a great day."}
-  ]
-];
-
-let currentBatch = 0;
-
-function renderBatch() {
-  const container = document.getElementById("batchContainer");
-  const restBox = document.getElementById("restaurantBox");
-  container.innerHTML = "";
-
-  // إظهار/إخفاء حقل المطعم حسب الدفعة
-  if (currentBatch === 1) {
-    restBox.style.display = "block";
-  } else {
-    restBox.style.display = "none";
-  }
-
-  if (currentBatch >= batches.length) {
-    container.innerHTML = "<p style='text-align:center;'>✅ انتهت كل السكربتات.</p>";
-    return;
-  }
-
-  const batch = batches[currentBatch];
-  const grid = document.createElement("div");
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "1fr 1fr";
-  grid.style.gap = "10px";
-
-  batch.forEach(script => {
-    const cardAr = document.createElement("div");
-    const cardEn = document.createElement("div");
-
-    cardAr.className = "msg";
-    cardEn.className = "msg";
-
-    cardAr.textContent = script.ar;
-    cardEn.textContent = script.en;
-
-    cardAr.onclick = () => copyScript(script.ar);
-    cardEn.onclick = () => copyScript(script.en);
-
-    grid.appendChild(cardAr);
-    grid.appendChild(cardEn);
-  });
-
-  container.appendChild(grid);
+function copyMsg(el) {
+  navigator.clipboard.writeText(el.textContent.trim());
+  el.style.background = "#cde6ff";
+  setTimeout(() => (el.style.background = "#fff"), 350);
 }
 
-function copyScript(text) {
-  const restaurant = document.getElementById("restaurantName").value.trim();
-  let finalText = text;
+function copyMsgWithRestaurant(el) {
+  const restaurant = document.getElementById('restaurantName').value.trim() || '';
+  let text = el.textContent;
   if (restaurant) {
-    finalText = text.replace("(      )", `(${restaurant})`);
+    text = text.replace('(      )', '(' + restaurant + ')');
   }
-  navigator.clipboard.writeText(finalText);
-  currentBatch++;
-  renderBatch();
+  navigator.clipboard.writeText(text.trim());
+  el.style.background = "#cde6ff";
+  setTimeout(() => (el.style.background = "#fff"), 350);
 }
-
-function resetBatches() {
-  currentBatch = 0;
-  document.getElementById("restaurantName").value = "";
-  renderBatch();
-}
-
-// أول تحميل
-renderBatch();
 </script>
- <!--التعويض-->
-  <div class="section" id="refundCompSection">
-  <h2>قسم الاسترداد والتعويض</h2>
+<!-- 🟦 القسم الرابع: التعويض والاسترداد -->
+<div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
+  <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
 
-  <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
-    <button onclick="startProject('comp')">تعويض</button>
-    <button onclick="startProject('refundComp')">استرداد وتعويض</button>
+  <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+    <button class="btn primary" onclick="startCompensation()">تعويض</button>
+    <button class="btn" onclick="startRefund()">استرداد وتعويض</button>
   </div>
 
-  <div id="compContainer"></div>
-
-  <div style="text-align:center; margin-top:15px;">
-    <button onclick="resetComp()">🔄 إعادة</button>
-  </div>
+  <div id="scriptBox" style="margin-top:10px;"></div>
 </div>
-  
-
 
 <script>
-let currentProj = null;
-let currentStep = 0;
+// دالة النسخ الذكية 👇
+document.addEventListener("click", function (e) {
+  const el = e.target.closest(".msgBox");
+  if (!el) return;
 
-const projects = {
-  comp: [
-    [
-      {
-        ar: "نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.",
-        en: "Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.",
-        inputs: ["comp"]
-      }
-    ],
-    [
-      {
-        ar: "راح نرجع المبلغ إلى محفظتك، فتأكد من متابعة المحفظة.",
-        en: "We will refund the amount to your wallet, so please keep an eye out for it."
-      }
-    ],
-    [
-      {
-        ar: "اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟",
-        en: "Is there anything else I can help you with?"
-      }
-    ],
-    [
-      {
-        ar: "شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد.",
-        en: "Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service have a great day."
-      }
-    ]
-  ],
+  // النص الأصلي
+  let text = el.textContent;
 
-  refundComp: [
-    [
-      {
-        ar: "نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض، وذلك لتقديم اعتذارنا.",
-        en: "Sorry for the inconvenience. We can refund (      ) SAR for your order right away and apply total of (      ) SAR compensation for you to express our apology.",
-        inputs: ["refund", "comp"]
-      }
-    ],
-    [
-      {
-        ar: "اختر طريقة الإرجاع:",
-        en: "Choose refund method:"
-      }
-    ],
-    [
-      {
-        ar: "اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟",
-        en: "Is there anything else I can help you with?"
-      }
-    ],
-    [
-      {
-        ar: "شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد.",
-        en: "Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service have a great day."
-      }
-    ]
-  ]
-};
+  // قراءة القيم من الحقول الحالية
+  const refVal = document.querySelector("#refundValue")?.value.trim() || "";
+  const compMain = document.querySelector("#compValue")?.value.trim() || "";
+  const compAlt = document.querySelector("#compValue2")?.value.trim() || "";
 
-function startProject(proj){
-  currentProj = proj;
-  currentStep = 0;
-  renderComp();
-}
-
-function renderComp(){
-  const container = document.getElementById("compContainer");
-  container.innerHTML = "";
-
-  if(!currentProj) return;
-
-  const step = projects[currentProj][currentStep];
-  if(!step){
-    container.innerHTML = "<p style='text-align:center;'>✅ انتهت كل المراحل.</p>";
-    return;
+  // استبدال الأقواس مهما كانت المسافات
+  const matches = [...text.matchAll(/\([\s\S]*?\)/g)];
+  if (matches.length) {
+    if (matches[0]) text = text.replace(matches[0][0], `(${refVal || compMain || "—"})`);
+    if (matches[1]) text = text.replace(matches[1][0], `(${compAlt || compMain || "—"})`);
   }
 
-  // إنشاء الكروت (السكربتات)
-  const grid = document.createElement("div");
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "1fr 1fr";
-  grid.style.gap = "10px";
+  // نسخ للنص النهائي
+  navigator.clipboard.writeText(text.trim());
 
-  step.forEach(script => {
-    const cardAr = document.createElement("div");
-    const cardEn = document.createElement("div");
-    cardAr.className = "msg";
-    cardEn.className = "msg";
-    cardAr.textContent = script.ar;
-    cardEn.textContent = script.en;
-    cardAr.onclick = () => copyComp(script.ar, script.inputs);
-    cardEn.onclick = () => copyComp(script.en, script.inputs);
-    grid.appendChild(cardAr);
-    grid.appendChild(cardEn);
-  });
+  // تأثير بسيط
+  el.style.background = "#cde6ff";
+  setTimeout(() => (el.style.background = "#fff"), 300);
 
-  container.appendChild(grid);
+  // إشعار النسخ
+  showCopyAlert(e.pageX, e.pageY);
+});
 
-  // 🔹 الحقول (قيمة التعويض / الاسترداد)
-  const inputs = step.find(s => s.inputs)?.inputs;
-  if(inputs){
-    const box = document.createElement("div");
-    box.style.marginTop = "12px";
-    box.style.textAlign = "center";
-    inputs.forEach(name=>{
-      const label = name==="comp"?"قيمة التعويض":"قيمة الاسترداد";
-      const input = document.createElement("input");
-      input.placeholder = label;
-      input.id = name;
-      input.type = "number";
-      input.style.margin="5px";
-      input.style.padding="8px";
-      input.style.border="1px solid #c9dafd";
-      input.style.borderRadius="8px";
-      box.appendChild(input);
+function showCopyAlert(x, y) {
+  let note = document.getElementById("copyAlert");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyAlert";
+    note.textContent = "✔ تم النسخ";
+    Object.assign(note.style, {
+      position: "absolute",
+      background: "#285eff",
+      color: "#fff",
+      padding: "5px 10px",
+      borderRadius: "6px",
+      fontSize: "13px",
+      fontFamily: "Cairo, sans-serif",
+      zIndex: "999999",
+      opacity: "0",
+      transition: "opacity .3s ease, transform .3s ease",
+      pointerEvents: "none",
     });
-    container.appendChild(box);
+    document.body.appendChild(note);
   }
 
-  // 🔸 فقط في الدفعه الثانية من "استرداد وتعويض" نعرض الزرين
-  if(currentProj === "refundComp" && currentStep === 1){
-    const optBox = document.createElement("div");
-    optBox.style.textAlign="center";
-    optBox.style.marginTop="12px";
+  note.style.left = `${x + 15}px`;
+  note.style.top = `${y - 10}px`;
+  note.style.opacity = "1";
+  note.style.transform = "translateY(-8px)";
+  setTimeout(() => {
+    note.style.opacity = "0";
+    note.style.transform = "translateY(0)";
+  }, 1000);
+}
 
-    const btnWallet = document.createElement("button");
-    btnWallet.textContent="محفظة";
-    btnWallet.onclick=()=> showWalletScript();
+// 🔹 تعويض فقط
 
-    const btnOrig = document.createElement("button");
-    btnOrig.textContent="الطريقة الأصلية";
-    btnOrig.onclick=()=> showOriginalScript();
+function startCompensation() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم التعويض</h2>
 
-    optBox.appendChild(btnWallet);
-    optBox.appendChild(btnOrig);
-    container.appendChild(optBox);
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.
+    </div>
+
+    <!-- حقل القيمة -->
+    <input type="number" id="compValue" placeholder="قيمة التعويض (اختياري)" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔹 سكربتات المحفظة الخاصة بالتعويض -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+
+    <!-- زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+// 🔸 استرداد وتعويض
+
+function startRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم الاسترداد والتعويض</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، 
+      مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR 
+      and apply total of (      ) SAR compensation.
+    </div>
+
+    <!-- 🔹 الحقول -->
+    <input type="number" id="refundValue" placeholder="قيمة الاسترداد" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+    <input type="number" id="compValue2" placeholder="قيمة التعويض" 
+      style="margin-top:8px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔴 السكربتات الجديدة (لون أحمر) -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- 🔘 الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="walletFlow()">محفظة</button>
+
+      <button class="btn secondary" 
+        style="background:#00b36b;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔁 زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+// 🔹 خيار المحفظة
+function walletFlow() {
+  document.getElementById('extraScripts')?.remove();
+  const box = document.getElementById('scriptBox');
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.innerHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+  `;
+  box.appendChild(div);
+}
+
+// 🔸 خيار الطريقة الأصلية
+
+function originalFlow() {
+  // نحذف أي سكربتات مضافة مسبقًا
+  document.getElementById('extraScripts')?.remove();
+
+  const box = document.getElementById('scriptBox');
+
+  // ننشئ الحاوية الجديدة
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.style.marginTop = '12px';
+  div.style.display = 'grid';
+  div.style.gap = '10px';
+
+  // سكربتات الطريقة الأصلية الأساسية
+  const mainScriptsHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+  تمام، الحين بنرجع لك مبلغ الاسترجاع والتعويض على طريقة الدفع اللي استخدمتها، وسيظهر المبلغ في حسابك خلال أيام، إذا لم يظهر المبلغ خلال 10 أيام، نرجو الاتصال بالبنك الخاصة بعملية الدفع لمساعدتك.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+     We will process the refund and compensation back to your original payment method. The amount would be reflected in your account within a few days. If it hasn't appeared within 10 days, please contact your payment provider for help
+    </div>
+  `;
+
+  // ✅ سكربتات إضافية (لون أحمر - حالة الاسترداد)
+  const extraScriptHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      margin-top:18px;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      لا يزال الاسترداد ضمن فترة المعالجة، نرجو منك الانتظار بصبر. يمكنك أيضًا الحصول على رقم ARN/RRN من قسم "تتبع استردادي" للتواصل مع بنكك المصدر والتحقق من حالة المبلغ.
+    </div>
+
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      It's still within the refund process timeline, please wait patiently. You also can have the ARN/RRN in "track my refund" to contact your issuer bank to check the status of money.
+    </div>
+  `;
+
+  // نجمع الكل
+  div.innerHTML = mainScriptsHTML + extraScriptHTML;
+
+  // نضيفهم بعد أزرار المحفظة والطريقة الأصلية مباشرة
+  const buttons = box.querySelector('.action-buttons');
+  if (buttons) {
+    buttons.insertAdjacentElement('afterend', div);
+  } else {
+    box.appendChild(div);
   }
 }
 
-function copyComp(text, inputs){
-  if(inputs){
-    inputs.forEach(id=>{
-      const val = document.getElementById(id)?.value?.trim() || "";
-      text = text.replace("(      )", val || "(      )");
-    });
-  }
-  navigator.clipboard.writeText(text);
-  nextStep();
-}
-
-function nextStep(){
-  currentStep++;
-  renderComp();
-}
-
-function resetComp(){
-  currentProj = null;
-  currentStep = 0;
-  document.getElementById("compContainer").innerHTML = "";
-}
-
-// 🟦 المحفظة
-function showWalletScript(){
-  const container = document.getElementById("compContainer");
-  container.innerHTML = "";
-
-  const walletScript = {
-    ar: "راح نرجع المبلغ إلى محفظتك، فتأكد من متابعة المحفظة.",
-    en: "We will refund the amount to your wallet, so please keep an eye out for it."
-  };
-
-  const grid = document.createElement("div");
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "1fr 1fr";
-  grid.style.gap = "10px";
-
-  const cardAr = document.createElement("div");
-  const cardEn = document.createElement("div");
-  cardAr.className = "msg";
-  cardEn.className = "msg";
-  cardAr.textContent = walletScript.ar;
-  cardEn.textContent = walletScript.en;
-
-  cardAr.onclick = () => { copyComp(walletScript.ar); currentStep = 2; renderComp(); };
-  cardEn.onclick = () => { copyComp(walletScript.en); currentStep = 2; renderComp(); };
-
-  grid.appendChild(cardAr);
-  grid.appendChild(cardEn);
-  container.appendChild(grid);
-}
-
-// 🟧 الطريقة الأصلية
-function showOriginalScript(){
-  const container = document.getElementById("compContainer");
-  container.innerHTML = "";
-
-  const origScript = {
-    ar: "تمام، الحين بنرجع لك مبلغ الاسترجاع والتعويض على طريقة الدفع اللي استخدمتها، وسيظهر المبلغ في حسابك خلال أيام، إذا لم يظهر المبلغ خلال 10 أيام، نرجو الاتصال بالبنك الخاصة بعملية الدفع لمساعدتك.",
-    en: "We will process the refund and compensation back to your original payment method. The amount would be reflected in your account within a few days. If it hasn't appeared within 10 days, please contact your payment provider for help."
-  };
-
-  const grid = document.createElement("div");
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "1fr 1fr";
-  grid.style.gap = "10px";
-
-  const cardAr = document.createElement("div");
-  const cardEn = document.createElement("div");
-  cardAr.className = "msg";
-  cardEn.className = "msg";
-  cardAr.textContent = origScript.ar;
-  cardEn.textContent = origScript.en;
-
-  cardAr.onclick = () => { copyComp(origScript.ar); currentStep = 2; renderComp(); };
-  cardEn.onclick = () => { copyComp(origScript.en); currentStep = 2; renderComp(); };
-
-  grid.appendChild(cardAr);
-  grid.appendChild(cardEn);
-  container.appendChild(grid);
+// 🔁 إعادة من البداية
+function resetComp() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = '';
 }
 </script>
-</div>
 </div> <!-- نهاية main-sections -->
 
-<div class="calculator-section">
-  <h2>الآلة الحاسبة</h2>
-  <div class="calc-box">
-    <input id="calcInput" type="number" placeholder="أدخل الرقم" />
-    <div class="calc-buttons">
-      <button onclick="calc(0.8)">Main dish</button>
-      <button onclick="calc(0.6)">Side dish</button>
-      <button onclick="calc(0.3)">Drink</button>
-      <button onclick="calc(0.1)">Cutlery</button>
-    </div>
-    <div id="calcResult" class="calc-result">النتيجة: —</div>
-  </div>
-</div>
+
 <!-- popup -->
 <div id="popup" class="popup hidden">
   <p id="popupMsg"></p>
@@ -829,21 +953,27 @@ const shortApology = [
 ];
 
 const hold = [
-{ar:`أحتاج دقيقة أتأكد لك من التفاصيل وأرجع لك فورًا، شاكر صبرك.`, en:`I just need a minute to confirm the details and I’ll be right back, thank you for your patience.`},
-{ar:`بس دقيقة أتأكد من الطلب بالنظام وبتحدثك مباشرة بعد ما أخلص.`, en:`Give me a minute to check your order in the system, I’ll update you right after.`},
-{ar:`راح أحتاج دقيقة أراجع الحالة بدقة وأرجع لك بالتحديث.`, en:`I’ll take a minute to review the case carefully and get back to you with an update.`},
-{ar:`دقيقة فقط أتأكد أن كل شيء واضح وأبلغك بالنتيجة.`, en:`Just a minute to make sure everything is clear, then I’ll let you know the result.`},
-{ar:`لحظة بسيطة أتأكد من التحديث الأخير وبتواصل معك فورًا.`, en:`One short moment to confirm the latest update and I’ll get back to you right away.`},
-{ar:`أحتاج دقيقة أشيّك على الملاحظات عشان أقدر أساعدك بدقة.`, en:`I need a minute to review the notes so I can assist you accurately.`},
-{ar:`دقيقة بس أتأكد من البيانات وأرجع لك بالرد النهائي.`, en:`Just a minute to double-check the information and I’ll get back to you with the final response.`},
-{ar:`راح أراجع الطلب دقيقة وحدة وأحدثك بأول ما أخلص.`, en:`I’ll review the request for one minute and update you as soon as I’m done.`},
-{ar:`أحتاج دقيقة إضافية أتأكد من النظام عشان أقدّم لك أدق معلومة.`, en:`I need an extra minute to check the system and provide you with the most accurate info.`},
-{ar:`دقيقة فقط أتأكد من الإجراء المطلوب وبتواصل معك بعدها مباشرة.`, en:`Just a minute to confirm the required action, I’ll contact you right after.`},
-{ar:`اسمح لي دقيقة أشيّك على التفاصيل عشان أتأكد من كل نقطة.`, en:`Allow me one minute to review the details and make sure everything is correct.`},
-{ar:`راح أحتاج دقيقة بسيطة أتأكد فيها من حالة الطلب بالنظام.`, en:`I’ll need a short minute to check the order status in the system.`},
-{ar:`دقيقة فقط أراجع البيانات المطلوبة وبتواصل معك بعدها فورًا.`, en:`Just a minute to review the needed data and I’ll reach back out immediately after.`},
-{ar:`أحتاج دقيقة أتأكد من التحديث وأعطيك الرد الأكيد بعدها.`, en:`I need one minute to verify the update and I’ll give you the confirmed answer right after.`},
-{ar:`دقيقة بس أتأكد أن الإجراء تم بالطريقة الصحيحة وراح أبلغك.`, en:`Just a minute to make sure the action went through correctly and I’ll let you know.`}
+  // 🔟 الأصلية بدون أي تعديل
+  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
+  { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
+  { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
+  { ar: `ما زال لدي بعض الأمور التي تحتاج إلى دقيقة أخرى للمراجعة، شاكر لتفهمك.`, en: `There are still some matters that require another minute for review. I appreciate your understanding.` },
+  { ar: `أحتاج إلى دقيقة أخرى في هذه المرحلة، وإذا احتجت وقتًا إضافيًا سأعلمك.`, en: `I need one more minute at this stage, and I will let you know if I require additional time.` },
+  { ar: `سأستغرق دقيقة أخرى في الوقت الحالي، وإذا احتجت إلى وقت إضافي سأخبرك.`, en: `I will take another minute for now, and I’ll inform you if I need more time.` },
+  { ar: `الرجاء الانتظار دقيقة أخرى حتى أتمكن من إنهاء العمل المطلوب بشكل دقيق، شكرًا لتفهمك.`, en: `Please wait one more minute so I can complete the task accurately. Thank you for your understanding.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، وإذا لم يكتمل الأمر فقد أطلب وقتًا إضافيًا لاحقًا.`, en: `I need an extra minute now, and if the matter is not completed, I may request additional time later.` },
+  { ar: `أحتاج إلى دقيقة أخرى لاستكمال العمل على أكمل وجه، واشكرك على تعاونك.`, en: `I need another minute to complete the task properly, and I appreciate your cooperation.` },
+
+  // ➕ إضافات جديدة بنفس الأسلوب
+  { ar: `ممكن دقيقة إضافية لو سمحت حتى أتأكد من التفاصيل النهائية.`, en: `May I please have another minute to double-check the final details?` },
+  { ar: `أحتاج دقيقة واحدة فقط لأراجع آخر التحديثات قبل ما أرجع لك.`, en: `I just need one minute to review the latest updates before I get back to you.` },
+  { ar: `ممكن دقيقة واحدة بس أتحقق من النظام وأوافيك بالنتيجة.`, en: `Could you please give me a minute to check the system and provide you the result?` },
+  { ar: `أحتاج دقيقة إضافية لأتأكد من جميع النقاط المطلوبة بدقة.`, en: `I need an extra minute to make sure all points are reviewed accurately.` },
+  { ar: `أشيّك على الحالة الآن، وراح أرجع لك بعد دقيقة بالتأكيد النهائي.`, en: `I’m checking the case now and will get back to you within a minute with the final confirmation.` },
+  { ar: `لو سمحت، أحتاج دقيقة إضافية للتأكد من الإجراءات الجارية.`, en: `Please, I need one more minute to confirm the ongoing process.` },
+  { ar: `أتحقق من الملاحظات الآن وراح أبلغك خلال دقيقة بالنتيجة.`, en: `I’m reviewing the notes now and will update you within a minute with the result.` },
+  { ar: `ممكن دقيقة فقط للتأكد من كل شيء قبل أبلغك بالتفاصيل النهائية.`, en: `Just one minute please to make sure everything is clear before I share the final details.` }
 ];
 
 let used = {longApology:[], shortApology:[], hold:[]};
@@ -904,7 +1034,8 @@ function isNumericOrEmpty(v) {
 }
 
 function buildTemplate() {
-  const risk       = el('riskLabel').value;
+  const selectedRC = getSelectedRC();
+const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
   const evidence   = el('evidence').value;
   const receipt    = el('receipt').value;
   const callType   = el('callType').value;
@@ -912,11 +1043,9 @@ function buildTemplate() {
   let refund       = (el('refund').value || '').trim();
   let compensation = (el('compensation').value || '').trim();
 
-  if (!isNumericOrEmpty(refund)) {
-    alert('حقل Refund يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
-    el('refund').focus();
-    return;
-  }
+ if (!refund) {
+  refund = "no refund";
+}
   if (!isNumericOrEmpty(compensation)) {
     alert('حقل Compensation يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
     el('compensation').focus();
@@ -927,33 +1056,35 @@ function buildTemplate() {
   if (!compensation) compensation = "no compensation";
 
   // بناء نص الكول لاين
-  let callLine = "";
-  if (callType === "noneed") {
-    callLine = "Call merchant/Rider , Call result : No need";
-  } else if (callType === "merchant") {
-    if (!callResult) {
-      alert("اكتب نتيجة المكالمة مع التاجر.");
-      return;
-    }
-    callLine = `Call merchant , Call result : ${callResult}`;
-  } else if (callType === "rider") {
-    if (!callResult) {
-      alert("اكتب نتيجة المكالمة مع السائق.");
-      return;
-    }
-    callLine = `Call rider , Call result : ${callResult}`;
-  } else {
-    alert("اختَر نوع المكالمة أولاً.");
+  // بناء نص الكول لاين
+let callLine = "";
+let normalizedCall = callType.toLowerCase().replace(/\s+/g, "");
+
+if (normalizedCall === "noneed") {
+  callLine = "Call merchant/Rider , Call result : No need";
+} else if (normalizedCall === "merchant") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع التاجر.");
     return;
   }
+  callLine = `Call merchant , Call result : ${callResult}`;
+} else if (normalizedCall === "rider") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع السائق.");
+    return;
+  }
+  callLine = `Call rider , Call result : ${callResult}`;
+} else {
+  callLine = "Call merchant/Rider , Call result : No need";
+}
 
   const lines = [
     `Call line: ${callLine}`,
     `Case Solution Risk Label: (${risk})RC`,
     `Evidence: ${evidence}`,
     `Receipt: ${receipt}`,
-    `Refund: (${refund}) refund`,
-    `Compensation: (${compensation}) compensation`
+    `Refund: (${refund}) `,
+    `Compensation: (${compensation}) `
   ];
 
   el('output').value = lines.join("\n");
@@ -984,8 +1115,288 @@ function toggleCallInput(){
     box.style.display = "none";
     el('callResult').value = "";
   }
+ function toggleCallInput() {
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if (callType === "merchant" || callType === "rider") {
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
 }
+
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'block';
+
+    // ✅ يحدد أول خيار (0RC) تلقائيًا
+    const firstRC = document.querySelector('input[name="subRC"][value="0RC"]');
+    if (firstRC) firstRC.checked = true;
+
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => (i.checked = false));
+  }
+}
+
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+  const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  const refund     = el('refund').value;
+  let compensation = (el('compensation').value || '').trim();
+
+  if (!compensation) compensation = "no compensation";
+
+  let callLine = "";
+  if (callType === "noneed") {
+    callLine = "Call merchant/Rider , Call result : No need";
+  } else if (callType === "merchant") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع التاجر.");
+      return;
+    }
+    callLine = `Call merchant , Call result : ${callResult}`;
+  } else if (callType === "rider") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع السائق.");
+      return;
+    }
+    callLine = `Call rider , Call result : ${callResult}`;
+  } else {
+    alert("اختَر نوع المكالمة أولاً.");
+    return;
+  }
+
+  const lines = [
+    ` ${callLine}`,
+    riskLabelLine,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund})`,
+    `Compensation: (${compensation}) compensation`
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', () => {
+  el('riskLabel').value = '';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('compensation').value = '';
+  el('output').value = '';
+  toggleRCOptions(); // يخفي الحقل عند المسح
+});
+}
+// ✅ لإظهار حقل RC فقط عند اختيار Red أو Purple
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'grid';
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => i.checked = false);
+  }
+}
+
+// ✅ لبناء النص النهائي في التيمبليت
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("callType").value = "noneed";
+  toggleCallInput();
+});
+</script>
+<script>
+// ✅ إشعار "تم النسخ بنجاح" لكل الموقع + إصلاح النسخ في كل الأقسام
+window.addEventListener("load", () => {
+  // إنشاء الإشعار
+  let notice = document.createElement("div");
+  notice.id = "copyNotice";
+  notice.textContent = "✔ تم النسخ بنجاح";
+  Object.assign(notice.style, {
+    position: "fixed",
+    top: "45px",
+    right: "20px",
+    background: "#e8fff3",
+    color: "#00b36b",
+    padding: "8px 16px",
+    borderRadius: "8px",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+    fontSize: "13px",
+    fontFamily: "Cairo, sans-serif",
+    opacity: "0",
+    zIndex: "999999",
+    transition: "opacity 0.4s ease, transform 0.4s ease",
+    transform: "translateY(-10px)"
+  });
+  document.body.appendChild(notice);
+
+  // دالة عرض الإشعار
+  window.showCopiedNotice = function() {
+    notice.style.opacity = "1";
+    notice.style.transform = "translateY(0)";
+    clearTimeout(window.noticeTimeout);
+    window.noticeTimeout = setTimeout(() => {
+      notice.style.opacity = "0";
+      notice.style.transform = "translateY(-10px)";
+    }, 1000); // ← مدة الظهور = ثانية واحدة
+  };
+
+  // ✅ نربط الحدث لجميع العناصر القابلة للنسخ
+  function enableCopying() {
+    document.querySelectorAll(".msg, .msgBox, textarea#output, .fixed-msg").forEach(el => {
+      el.onclick = () => {
+        const text = el.value || el.textContent.trim();
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        showCopiedNotice();
+      };
+    });
+  }
+
+  // نفعّل النسخ أول مرة
+  enableCopying();
+
+  // 🎯 لو تمت إضافة عناصر جديدة (مثل عند إنشاء سكربت جديد)
+  const observer = new MutationObserver(enableCopying);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // ✅ لو أي نص انسخ بالطريقة العادية (Ctrl+C)
+  document.addEventListener("copy", showCopiedNotice);
+});
+</script>
+ <!-- 🟦 نافذة التحديث (Popup) -->
+<div id="updatePopup" style="
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  font-family: 'Cairo', sans-serif;
+">
+  <div style="
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 14px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    width: 380px;
+    max-width: 90%;
+    text-align: center;
+    animation: fadeIn .4s ease;
+  ">
+  <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
+السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
+    <h2 style="color:#285eff; margin-bottom:10px;">عدلنا سكربتات الدفع </h2>
+   <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
+      <li>ما في داعي تحدد اي سكربت عشان تنسخه فقط ضغطه عليه راح يتم نسخه</li>
+      <li> ضفنا قسم جديد الاسترداد والتعويض داخله حقول بتقدر تدخل القيمه وهو بحطها الك بالقوس</li>
+       <li>لما تضغط على اي سكربت راح يظهرلك اشعار نسخ</li>
+       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل  </li>
+</ul>
+    <button onclick="closePopup()" style="
+      background:#285eff;
+      color:#fff;
+      border:none;
+      padding:8px 18px;
+      border-radius:8px;
+      margin-top:15px;
+      cursor:pointer;
+      font-size:14px;
+    ">تخطي</button>
+  </div>
+</div>
+
+<script>
+  // 🎬 إغلاق النافذة عند الضغط على "تخطي"
+  function closePopup() {
+    const popup = document.getElementById('updatePopup');
+    popup.style.opacity = 0;
+    popup.style.pointerEvents = 'none';
+    setTimeout(() => popup.remove(), 400);
+  }
 </script>
 
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
 </body>
+<script>
+document.addEventListener("click", function(e) {
+  const msg = e.target.closest(".msg");
+  if (!msg) return;
+
+  // نقرأ النص داخل الجملة
+  let text = msg.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restInput = document.getElementById("restaurantName");
+  const restName = restInput ? restInput.value.trim() : "";
+
+  // 🔹 استبدال الأقواس الفارغة باسم المطعم (أول زوج فقط)
+  if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
+  }
+
+  // نسخ النص المعدّل
+  navigator.clipboard.writeText(text);
+
+  // 🔔 إشعار "تم النسخ"
+  let note = document.getElementById("copyNoteFinal");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNoteFinal";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1000);
+});
+</script>
 </html>
