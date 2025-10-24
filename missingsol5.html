@@ -1,131 +1,1649 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Case Template Generator — Scenario 5</title>
-  <style>
-    body{
-      font-family:system-ui,Arial,sans-serif;
-      max-width:900px;margin:24px auto;padding:0 16px;line-height:1.7;
-      background:#2980B9; color:#fff; /* خلفية أزرق */
-    }
-    h1{font-size:20px;margin:0 0 16px;text-align:center}
-    .grid{display:grid;grid-template-columns:1fr 2fr;gap:12px 16px;align-items:center}
-    label{font-weight:600;color:#fff}
-    select,input,button,textarea{
-      font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;
-      background:#fff; color:#000; /* الحقول بيضاء */
-    }
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-    .btn{cursor:pointer;border:1px solid #222;border-radius:10px;padding:10px 14px}
-    .btn.primary{background:#222;color:#fff}
-    #output{
-      width:100%;min-height:160px;resize:none;white-space:pre-wrap
-    }
-    .hint{font-size:.85em;color:#eee}
-    .call-box{padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#000;direction:ltr}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>اعتذارات وهولد</title>
+<style>
+ .madeby {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #285eff; 
+  background: #ffffffcc; 
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  opacity: 0.9;
+  z-index: 99999;
+  transition: opacity .6s ease, transform .6s ease, background .3s;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.madeby:hover {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.madeby--hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
+  @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  button {
+    background: linear-gradient(45deg,#4b8cff,#72a9ff);
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .3s;
+  }
+  button:hover { transform: scale(1.05); background: linear-gradient(45deg,#3f7eff,#609dff); }
+  .box {
+    margin-top:14px;
+    display: flex;
+    justify-content: space-between;
+    gap:10px;
+  }
+  .msg {
+    background:#f3f7ff;
+    border:1px solid #d8e5ff;
+    border-radius:10px;
+    padding:12px;
+    flex:1;
+    cursor:pointer;
+    transition:.2s;
+    min-height:90px;
+    overflow-y:auto;
+  }
+  .msg:hover { background:#e9f1ff; }
+  .popup {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    padding:30px 40px;
+    text-align:center;
+    z-index:999;
+    animation: pop .5s ease;
+  }
+  @keyframes pop {from{opacity:0;transform:translate(-50%,-60%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .hidden{display:none;}
+  .popup button{margin-top:20px;}
+  .calc-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.calc-box input {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #c9dafd;
+  outline: none;
+  text-align: center;
+  transition: .3s;
+}
+.calc-box input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 3px #5b8def22;
+}
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+.calc-result {
+  background: #f3f7ff;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #e1e9ff;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px 16px;
+  align-items: center;
+}
+.call-box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  direction: ltr;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.btn {
+  cursor: pointer;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.btn.primary {
+  background: #285eff;
+  color: #fff;
+  border: none;
+}
+textarea#output {
+  width: 100%;
+  min-height: 160px;
+  resize: none;
+  white-space: pre-wrap;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #d8e5ff;
+}
+
+.solution {
+  margin-top: 10px;
+}
+
+.solution-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.solution-grid label {
+  font-weight: 600;
+  color: #285eff;
+}
+
+.solution-grid select,
+.solution-grid input {
+  padding: 8px;
+  border: 1px solid #c9dafd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.solution-grid select:focus,
+.solution-grid input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 2px #5b8def33;
+}
+
+.solution textarea {
+  width: 100%;
+  margin-top: 12px;
+  min-height: 90px;
+  resize: none;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.main-sections {
+ display:flex;
+ flex-wrap:nowrap; /* ✅ هذا هو التغيير المهم */
+ gap:25px;
+ justify-content:center;
+ align-items:flex-start;
+ scroll-behavior:smooth;
+ padding-bottom:10px;
+}
+
+.section {
+  flex: 1 1 300px; /* يخلي كل قسم ياخذ عرض مرن من 300px إلى المساحة المتاحة */
+  max-width: 360px; /* كان 430، صغرناه */
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+  padding: 24px;
+  transition: all .4s ease;
+  animation: fadeIn .8s ease;
+}
+
+.calculator-section {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+  padding: 24px;
+  animation: fadeIn .8s ease;
+}
+
+</style>
 </head>
 <body>
-  <h1>مولّد القالب — Case Solution (Scenario 5)</h1>
+  <div class="madeby">Made by Abdelrahman & Reem</div>
+<div class="main-sections">
+<!-- القسم الأيمن -->
+<div class="section" id="apology">
+  <h2 style="color:#285eff;">قسم الاعتذارات</h2>
+
+  <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
+  <button onclick="generate('longApology')">توليد اعتذار طويل</button>
+  <div class="box">
+    <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
+    <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
+  </div>
+  <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
+  <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
+  <div class="box">
+    <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
+    <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
+ 
+  </div>
+  
+  <!-- 💬 سكربتات جاهزة تحت الاعتذارات القصيرة -->
+<div class="section" id="quickScripts" style="background:#f9fbff; margin-top:20px;">
+  <h2 style="color:#285eff; text-align:center;">💬 سكربتات جاهزة</h2>
+
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;">
+    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات تسأل العميل عن الخطأ أو المفقود</h3>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'apology')"> العميل ما رسل صورة</button>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'delay')">Wrong items</button>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'followup')">Missing items </button>
+     <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'spillage')">spillage </button>
+      <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'packages')">packages </button>
+    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات هولد المكالمات</h3>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callmer')">هولد مكالمه مطعم</button>
+        <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callrid')">هولد مكالمه سائق</button>
+        <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات مهمه مشكله</h3>
+         <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'noresref')">مارد وله تعويض</button>
+          <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'Escalation')"> Escalation </button>
+                    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'nextday')"> مشكله لها اكثر من يوم </button>
+                    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات  الطلب على ملاحظه</h3>
+                              <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'acceptnote')"> المطعم وافق </button>
+                                               <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'rejectnote')"> المطعم رفض </button>
+                                                                <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'holdtnote')"> هولد الملاحظه </button>
+                                                                 <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات الغاء الطلب  </h3>
+                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'canelorder')">   وافق  </button>
+                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'refusecanelorder')">   رفض  </button>
+
+  </div>
+
+  <div id="scriptArea" style="margin-top:15px;"></div>
+</div>
+
+</div>
+
+
+<!-- القسم الأيسر -->
+ 
+<div class="section" id="hold">
+  <h2 style="color:#285eff;">قسم الهولد</h2>
+  <button onclick="generate('hold')">توليد هولد</button>
+  <div class="box">
+    <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
+    <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
+  </div>
+  <!-- كروت سكربتات ثابتة للهولد -->
+<div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟
+شكراً على صبرك.
+
+
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me a minute to check on this for you? Thank you for your patience.
+  </div>
+</div>
+
+<style>
+.fixed-hold-cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.hold-card {
+  flex: 1;
+  background: #e8f1ff;
+  border: 1px solid #e5efff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.hold-card:hover {
+  background: #e5efff;
+  transform: scale(1.03);
+}
+</style>
+  
+  <!-- قسم السولوشن -->
+ <div class="card">
+  <h2 style="color:#285eff;">قسم السولوشن </h2>
 
   <div class="grid">
-    <label>Call line</label>
-    <div class="call-box">
-      Call merchant ,call results ;  needed Restaurant didn't answer
+    <!-- 🧩 Call Line -->
+    <label for="callType">Call line</label>
+    <select id="callType" onchange="toggleCallInput()">
+      <option value="none">اختر نوع المكالمة</option>
+      <option value="noneed"selected>No need</option>
+      <option value="merchant">Merchant</option>
+      <option value="rider">Rider</option>
+    </select>
+
+    <div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
+      <label for="callResult">Call Result</label>
+      <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
     </div>
 
+    <!-- 🧩 Risk Label -->
     <label for="riskLabel">Case Solution Risk Label</label>
-    <select id="riskLabel">
-      <option value="0">0RC</option>
-      <option value="1">1RC</option>
-      <option value="2">2RC</option>
-      <option value="3">3RC</option>
-      <option value="3>">3RC></option>
+    <select id="riskLabel" onchange="toggleRCOptions()">
+      <option value="">Select</option>
+      <option value="0RC"selected>0RC</option>
+      <option value="1RC">1RC</option>
+      <option value="2RC">2RC</option>
+      <option value="3RC">3RC</option>
+      <option value="3RC>">3RC></option>
+      <option value="Red">Red</option>
+      <option value="Purple">Purple</option>
     </select>
+
+    <!-- 🔹 يظهر فقط مع Red أو Purple -->
+    <div id="rcOptions" style="display:none; grid-column:1 / span 2; margin-top:8px;">
+      <label style="font-weight:bold; color:#285eff;">اختر RC</label>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+        <label><input type="radio" name="subRC" value="0RC">0RC</label>
+        <label><input type="radio" name="subRC" value="1RC">1RC</label>
+        <label><input type="radio" name="subRC" value="2RC">2RC</label>
+        <label><input type="radio" name="subRC" value="3RC">3RC</label>
+        <label><input type="radio" name="subRC" value="3RC>">3RC></label>
+      </div>
+    </div>
 
     <label for="evidence">Evidence</label>
     <select id="evidence">
-      <option value="Clear">Clear</option>
-      <option value="Unclear" selected>Unclear</option>
+      <option value="Clear" >Clear</option>
+      <option value="Unclear"selected>Unclear</option>
     </select>
 
     <label for="receipt">Receipt</label>
     <select id="receipt">
       <option value="yes">yes</option>
       <option value="no">no</option>
-      <option value="need" selected>need</option>
+      <option value="No need"selected>No need</option>
     </select>
 
-    <label for="refund">Refund (رقم فقط / أو يترك فارغ)</label>
-    <input id="refund" type="text" inputmode="decimal" placeholder="مثال: 15.75" />
+    <label for="refund">Refund</label>
+    <select id="refund">
+      
+      <option value="No refund"selected>No refund</option>
+      <option value="Partial refund">Partial refund</option>
+      <option value="Full refund">Full refund</option>
+    </select>
+
+    <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+    <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
   </div>
 
   <div class="actions">
-    <button class="btn primary" id="build">توليد القالب</button>
-    <button class="btn" id="clear">تفريغ الحقول</button>
+    <button class="btn primary" id="build">صنع الحل</button>
+    <button class="btn" id="clear">مسح</button>
   </div>
 
-  <textarea id="output" readonly placeholder="النتيجة ستظهر هنا..."></textarea>
-  <div class="hint">⬆ اضغط على المربع لنسخ النتيجة كاملة</div>
+  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
+  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+</div>
+ </div>
+  <!-- القسم الثالث -->
+<!-- سكربتات المحادثة (نسخة مضغوطة) -->
+<div class="section" id="chatScriptsSimple" style="width:500px; padding:16px;">
+  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
 
-  <script>
-    const el = (id) => document.getElementById(id);
-    const CALL_LINE = "Call merchant ,call results ;  needed Restaurant didn't answer";
-    const COMP_LINE = "no Compensation";
+  <!-- الترحيب -->
+  <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبا كيف بقدر اساعدك اليوم؟</div>
+      <div class="msg" onclick="copyMsg(this)">Hello, how can I help you today?</div>
+    </div>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبا انا هنا لمساعدتك</div>
+      <div class="msg" onclick="copyMsg(this)">Hello, I am here to help you.</div>
+    </div>
+  </div>
 
-    // التحقق من أن القيمة رقم صحيح أو عشري أو فارغ
-    function isNumericOrEmpty(v) {
-      if (!v) return true; // فارغ مقبول
-      return /^-?\d+(\.\d+)?$/.test(v.trim());
-    }
+  <!-- الاعتذار والتأكيد -->
+  <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
+<div style="text-align:center; margin-bottom:15px;">
+  <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
+  <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
+         style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+</div>
+   
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">
+  آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+</div>
 
-    function buildTemplate() {
-      const risk     = el('riskLabel').value;
-      const evidence = el('evidence').value;
-      const receipt  = el('receipt').value;
-      let refund     = (el('refund').value || '').trim();
+<div class="msg" onclick="copyMsg(this)">
+  I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
+</div>
+</div>  
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
+      <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
+    </div>
+  </div>
 
-      if (!isNumericOrEmpty(refund)) {
-        alert('حقل Refund يجب أن يحتوي رقمًا فقط (صحيح أو عشري) أو يترك فارغًا.');
-        el('refund').focus();
-        return;
-      }
+  <!-- أي خدمة إضافية -->
+  <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟</div>
+      <div class="msg" onclick="copyMsg(this)">Is there anything else I can help you with?</div>
+    </div>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبًا. لم نتلق ردك بعد، وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، لا تتردد بالتواصل معنا.</div>
+      <div class="msg" onclick="copyMsg(this)">Hello! We haven’t received your response yet. The chat will close soon. Feel free to contact us anytime.</div>
+    </div>
+  </div>
 
-      // لو فاضي نكتب no refund
-      if (!refund) {
-        refund = "no refund";
-      }
+  <!-- الختامية -->
+  <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
+    <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. نقدر تقييمك لخدمتنا ونتمنى لك يوماً سعيداً.</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We’d appreciate your feedback. Have a great day!</div>
+    </div>
+  </div>
+</div>
 
-      const lines = [
-        `Call line: ${CALL_LINE}`,
-        `Case Solution Risk Label: (${risk})RC`,
-        `Evidence: ${evidence}`,
-        `Receipt: ${receipt}`,
-        `Refund: (${refund}) refund`,
-        `Compensation: ${COMP_LINE}`
-      ];
+<style>
+.chat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.msg {
+  background: #fff;
+  border: 1px solid #d8e5ff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: 0.25s;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+}
+.msg:hover {
+  background: #e9f1ff;
+  transform: scale(1.02);
+}
+.chat-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+</style>
 
-      el('output').value = lines.join("\n");
-    }
+<script>
+// 🎯 دالة النسخ الذكية (تتعامل مع كل أنواع الأقواس)
+function copyMsg(el) {
+  // ناخذ النص داخل العنصر
+  let text = el.textContent.trim();
 
-    function clearAll() {
-      el('riskLabel').value = '0';
-      el('evidence').value = 'Unclear';
-      el('receipt').value = 'need';
-      el('refund').value = '';
-      el('output').value = '';
-    }
+  // نجيب اسم المطعم من الحقل
+  const restaurantField = document.getElementById("restaurantName");
+  const restaurant = restaurantField ? restaurantField.value.trim() : "";
 
-    el('output').addEventListener('click', () => {
-      el('output').select();
-      document.execCommand('copy');
-      alert("✔ تم نسخ القالب كامل");
+  // 🔹 نستبدل أي أقواس فيها فراغات أو شرطات أو نقاط أو خطوط تحت
+  if (restaurant) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restaurant + ")");
+  }
+
+  // نسخ النص
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار تم النسخ
+  showCopiedNotice();
+}
+
+// 🎯 دالة عرض الإشعار
+function showCopiedNotice() {
+  let note = document.getElementById("copyNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNotice";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
     });
+    document.body.appendChild(note);
+  }
 
-    el('build').addEventListener('click', buildTemplate);
-    el('clear').addEventListener('click', clearAll);
-  </script>
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1200);
+}
+</script>
+<!-- 🟦 القسم الرابع: التعويض والاسترداد -->
+<div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
+  <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
+
+  <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+    <button class="btn primary" onclick="startCompensation()">تعويض</button>
+    <button class="btn" onclick="startRefund()">استرداد وتعويض</button>
+    <button class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <div id="scriptBox" style="margin-top:10px;"></div>
+  </div>
+
+<!-- الآلة الحاسبة داخل قسم الاعتذارات -->
+ 
+<div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
+  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
+  <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+    <button onclick="calc(0.8)">Main dish</button>
+    <button onclick="calc(0.5)">Side dish</button>
+    <button onclick="calc(0.3)">Drink</button>
+    <button onclick="calc(0.1)">Cutlery</button>
+  </div>
+  <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
+    النتيجة: —
+  </div>
+
+</div>
+<script>
+// دالة النسخ الذكية 👇
+document.addEventListener("click", function (e) {
+  const el = e.target.closest(".msgBox");
+  if (!el) return;
+
+  // النص الأصلي
+  let text = el.textContent;
+
+  // قراءة القيم من الحقول الحالية
+  const refVal = document.querySelector("#refundValue")?.value.trim() || "";
+  const compMain = document.querySelector("#compValue")?.value.trim() || "";
+  const compAlt = document.querySelector("#compValue2")?.value.trim() || "";
+
+  // استبدال الأقواس مهما كانت المسافات
+  const matches = [...text.matchAll(/\([\s\S]*?\)/g)];
+  if (matches.length) {
+    if (matches[0]) text = text.replace(matches[0][0], `(${refVal || compMain || "—"})`);
+    if (matches[1]) text = text.replace(matches[1][0], `(${compAlt || compMain || "—"})`);
+  }
+
+  // نسخ للنص النهائي
+  navigator.clipboard.writeText(text.trim());
+
+  // تأثير بسيط
+  el.style.background = "#cde6ff";
+  setTimeout(() => (el.style.background = "#fff"), 300);
+
+  // إشعار النسخ
+  showCopyAlert(e.pageX, e.pageY);
+});
+
+function showCopyAlert(x, y) {
+  let note = document.getElementById("copyAlert");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyAlert";
+    note.textContent = "✔ تم النسخ";
+    Object.assign(note.style, {
+      position: "absolute",
+      background: "#285eff",
+      color: "#fff",
+      padding: "5px 10px",
+      borderRadius: "6px",
+      fontSize: "13px",
+      fontFamily: "Cairo, sans-serif",
+      zIndex: "999999",
+      opacity: "0",
+      transition: "opacity .3s ease, transform .3s ease",
+      pointerEvents: "none",
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.left = `${x + 15}px`;
+  note.style.top = `${y - 10}px`;
+  note.style.opacity = "1";
+  note.style.transform = "translateY(-8px)";
+  setTimeout(() => {
+    note.style.opacity = "0";
+    note.style.transform = "translateY(0)";
+  }, 1000);
+}
+
+// 🔹 تعويض فقط
+
+function startCompensation() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم التعويض</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.
+    </div>
+
+    <!-- حقل القيمة -->
+    <input type="number" id="compValue" placeholder="قيمة التعويض (اختياري)" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔹 سكربتات المحفظة الخاصة بالتعويض -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+
+    <!-- زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+// 🔸 استرداد وتعويض
+
+function startRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم الاسترداد والتعويض</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، 
+      مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR 
+      and apply total of (      ) SAR compensation.
+    </div>
+
+    <!-- 🔹 الحقول -->
+    <input type="number" id="refundValue" placeholder="قيمة الاسترداد" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+    <input type="number" id="compValue2" placeholder="قيمة التعويض" 
+      style="margin-top:8px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔴 السكربتات الجديدة (لون أحمر) -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- 🔘 الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="walletFlow()">محفظة</button>
+
+      <button class="btn secondary" 
+        style="background:#00b36b;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔁 زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+
+// 🔹 خيار المحفظة
+function walletFlow() {
+  document.getElementById('extraScripts')?.remove();
+  const box = document.getElementById('scriptBox');
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.innerHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+  `;
+  box.appendChild(div);
+}
+
+// 🔸 خيار الطريقة الأصلية
+
+function originalFlow() {
+  // نحذف أي سكربتات مضافة مسبقًا
+  document.getElementById('extraScripts')?.remove();
+
+  const box = document.getElementById('scriptBox');
+
+  // ننشئ الحاوية الجديدة
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.style.marginTop = '12px';
+  div.style.display = 'grid';
+  div.style.gap = '10px';
+
+  // سكربتات الطريقة الأصلية الأساسية
+  const mainScriptsHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+  تمام، الحين بنرجع لك مبلغ الاسترجاع والتعويض على طريقة الدفع اللي استخدمتها، وسيظهر المبلغ في حسابك خلال أيام، إذا لم يظهر المبلغ خلال 10 أيام، نرجو الاتصال بالبنك الخاصة بعملية الدفع لمساعدتك.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+     We will process the refund and compensation back to your original payment method. The amount would be reflected in your account within a few days. If it hasn't appeared within 10 days, please contact your payment provider for help
+    </div>
+  `;
+
+  // ✅ سكربتات إضافية (لون أحمر - حالة الاسترداد)
+  const extraScriptHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      margin-top:18px;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      لا يزال الاسترداد ضمن فترة المعالجة، نرجو منك الانتظار بصبر. يمكنك أيضًا الحصول على رقم ARN/RRN من قسم "تتبع استردادي" للتواصل مع بنكك المصدر والتحقق من حالة المبلغ.
+    </div>
+
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      It's still within the refund process timeline, please wait patiently. You also can have the ARN/RRN in "track my refund" to contact your issuer bank to check the status of money.
+    </div>
+  `;
+
+  // نجمع الكل
+  div.innerHTML = mainScriptsHTML + extraScriptHTML;
+
+  // نضيفهم بعد أزرار المحفظة والطريقة الأصلية مباشرة
+  const buttons = box.querySelector('.action-buttons');
+  if (buttons) {
+    buttons.insertAdjacentElement('afterend', div);
+  } else {
+    box.appendChild(div);
+  }
+}
+
+// 🔁 إعادة من البداية
+function resetComp() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = '';
+}
+// 🟩 قسم "استرداد فقط"
+// 🟩 قسم "استرداد فقط" بدون حقل، مع فاصل بين العادي والحمر
+// 🟩 قسم "استرداد فقط" (بدون حقل، مع فاصل وزر إعادة)
+function startOnlyRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;">قسم الاسترداد فقط</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (      ) ريال سعودي لطلبك
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR for your order right away
+    </div>
+
+    <!-- 🔹 فاصل أنيق -->
+    <hr style="border:none; border-top:1px dashed #ccc; margin:18px 0;">
+
+    <!-- سكربتات الحمراء -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" style="background:#285eff;color:#fff;" onclick="walletFlow()">محفظة</button>
+      <button class="btn secondary" style="background:#00b36b;color:#fff;" onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔄 زر إعادة من البداية -->
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 البدء من جديد</button>
+    </div>
+  `;
+}
+
+</script>
+
+
+
+</div> <!-- نهاية main-sections -->
+
+
+<!-- popup -->
+<div id="popup" class="popup hidden">
+  <p id="popupMsg"></p>
+  <button onclick="resetLists()">🔄 توليد من البداية</button>
+</div>
+
+<script>
+const longApology = [
+  {ar:`نعتذر من أعماق قلبنا عن أي إزعاج قد تسببت به تجربتك، ونحن نقدر تماماً مشاعرك. نحن نأخذ ملاحظاتك بكل جدية ونعمل جاهدين على نقلها إلى المطعم لتحسين الخدمة وتقديم الأفضل دائمًا. هدفنا هو أن نمنحك تجربة استثنائية تتناسب مع توقعاتك وتفوقها في المستقبل. نحن نسعى دائماً لإرضائك، ونتمنى أن نتمكن من استعادة ثقتك الغالية فينا. شكراً لك على دعمك وصبرك، وسنواصل العمل بجد ليكون مستوى تجربتك القادمة أفضل إن شاء الله.`, en:`We sincerely apologize for any inconvenience your experience may have caused, and we deeply value your feelings. We take your feedback very seriously and are working hard to pass it on to the restaurant to improve the service and provide the best at all times. Our aim is to offer you an exceptional experience that meets and exceeds your expectations in the future. We always strive to satisfy you, and we hope to regain your valuable trust in us. Thank you for your support and patience, and we will continue working hard so that your next experience will be at a better level, God willing.`},
+  {ar:` نعتذر بصدق عن أي إزعاج قد تسببت به تجربتك معنا، ونقدر ملاحظاتك التي تساعدنا في التحسين. سيتم نقلها إلى المطعم للمساهمة في تقديم خدمة أفضل إن شاء الله. هدفنا هو أن نمنحك تجربة مميزة، ونسعى جاهدين لاستعادة ثقتك بنا. شكرًا لصبرك ودعمك، ونتطلع إلى خدمتك مجددًا بتجربة أفضل.`, en:`We sincerely apologize for any inconvenience your experience with us may have caused, and we truly value your feedback that helps us improve. It will be shared with the restaurant to contribute to providing better service, God willing. Our aim is to offer you a special experience that exceeds your expectations, and we strive to regain your trust. Thank you for your patience and support, and we look forward to serving you again with an even better experience.`},
+  {ar:`نأسف لعدم تلبية توقعاتك هذه المرة، ونشكرك على إبلاغنا بملاحظاتك. نأخذ كل الملاحظات على محمل الجد ونعمل على تحسين خدماتنا باستمرار. نأمل أن تمنحنا فرصة أخرى لنقدم لك تجربة تفوق تطلعاتك في المستقبل. `, en:` We truly apologize if your experience did not meet your expectations. Customer satisfaction is at the heart of what we do, and we are constantly working on refining our service. We hope to have the opportunity to serve you again under better circumstances.`},
+  {ar:`نحن آسفون لأن تجربتك لم تكن بالمستوى الذي نطمح إليه. نقدر ملاحظاتك ونعمل باستمرار على تطوير الخدمة. شكراً على تفهمك، ونتمنى أن نراك قريبًا بتجربة أكثر تميزًا`, en:`We are sorry that your experience was not at the level we strive for. We appreciate your feedback and continuously work on improving our service. Thank you for your understanding, and we hope to see you again soon with a more distinguished experience. `},
+  {ar:` نعتذر من أعماق قلبنا عن أي إزعاج قد تسببت به تجربتك، ونحن نقدر تماماً مشاعرك. نحن نأخذ ملاحظاتك بكل جدية ونعمل جاهدين على نقلها إلى المطعم لتحسين الخدمة وتقديم الأفضل دائمًا. هدفنا هو أن نمنحك تجربة استثنائية تتناسب مع توقعاتك وتفوقها في المستقبل ان شاء الله.
+
+`, en:`We sincerely apologize from the bottom of our hearts for any inconvenience your experience may have caused, and we truly value your feelings. We take your feedback very seriously and are working diligently to share it with the restaurant to improve the service and always deliver the best. Our goal is to provide you with an exceptional experience that meets and, God willing, exceeds your expectations in the future.
+
+ `},
+  {ar:`بنعتذر من حضرتك عميلنا العزيز نحن ملتزمون تماماً لإرضائك، ونتمنى أن نتمكن من استعادة ثقتك الغالية فينا. شكراً لك على دعمك وصبرك، وسنحرص على العمل بجد لتكون تجربتك القادمة أفضل ان شاء الله.
+
+ `, en:`We sincerely apologize to you, our valued customer. We are fully committed to your satisfaction and hope to regain your precious trust in us. Thank you for your support and patience, and we promise to keep working hard to ensure that, God willing, your next experience will be much better.
+
+ `},
+  {ar:`اؤكد بأنني متفهم استياء حضرتك على التجربة الغير مرضية ونحن نقدم لك كامل الاعتذار، لقد تم أخذ ملاحظتك بعين الاعتبار، بتمنى تقبل اعتذارنا و ان لا يعكس أي انطباع سلبي. سنعمل على تحسين الخدمة بإذن الله عز وجل لك في المرات القادمة
+
+ `, en:` We sincerely apologize for any inconvenience or disappointment you have encountered. We appreciate the time you took to share your feedback, as it helps us enhance our service. We hope to have the opportunity to serve you better in the future.
+
+`},
+  {ar:`نأسف لأن تجربتك لم تكن كما توقعت، فنحن نحرص على تقديم الأفضل دائمًا. ملاحظاتك ستساعدنا في التحسين، وسنسعى جاهدين لإرضائك. شكرًا لدعمك، ونتمنى أن تكون تجربتك القادمة أكثر راحة وسعادة.
+
+ `, en:` We are sorry that your experience was not as you expected, as we always strive to provide the best. Your feedback will help us improve, and we will do our best to satisfy you. Thank you for your support, and we hope your next experience will be more comfortable and enjoyable.
+
+`},
+  {ar:`نعتذر عن أي إزعاج قد تسببت به هذه التجربة، فهدفنا هو تقديم خدمة ترضيك بالكامل. نحن نأخذ ملاحظاتك على محمل الجد ونعمل على تحسين الجودة باستمرار. شكراً لتفهمك، وسنبذل جهدنا لجعل تجربتك القادمة أكثر إرضاءً.
+
+ `, en:` We are truly sorry for any disappointment you may have felt. Your experience is important to us, and we are implementing necessary improvements to prevent any recurrence of this issue. Thank you for your feedback and for allowing us the chance to enhance our service.
+
+`},
+  {ar:` نأسف لأي إزعاج قد واجهته، ونشكرك على ملاحظاتك القيمة. نحن نأخذ رضاك بجدية ونعمل باستمرار على تحسين مستوى الخدمة. نأمل أن تمنحنا فرصة أخرى لنقدم لك تجربة أفضل في المستقبل.
+
+`, en:`We regret that your experience did not reflect the high standards we strive for. Please rest assured that we are working hard to prevent similar occurrences in the future. We greatly appreciate your understanding and the opportunity to make things better.
+
+ `},
+  {ar:`نعتذر عن أي تقصير حدث، ونتفهم أهمية تجربتك معنا. نحن نأخذ ملاحظاتك بعين الاعتبار لتحسين خدماتنا. شكراً لدعمك، ونسعى جاهدين لإرضائك مستقبلاً.
+
+ `, en:` We apologize for any shortcomings and understand the importance of your experience with us. We take your feedback into account to improve our services. Thank you for your support, and we will strive to satisfy you in the future.
+
+`},
+  {ar:`نحن نأسف لأي تجربة غير مرضية، فهدفنا هو توفير خدمة ترقى إلى مستوى توقعاتك. نقدر ملاحظاتك وسنعمل على التحسين المستمر لإرضائك في المستقبل. شكراً لتفهمك، ونتمنى أن نراك قريبًا.
+
+ `, en:` We apologize for any unsatisfactory experience, as our goal is to provide service that meets your expectations. We value your feedback and will work on continuous improvement to satisfy you in the future. Thank you for your understanding, and we hope to see you soon.
+
+`},
+  {ar:`نعتذر بصدق إذا لم تكن تجربتك بالمستوى الذي تأملته. نؤكد لك أن ملاحظاتك مهمة لنا، وسنعمل على تحسين الأمور لتكون تجربتك القادمة أفضل. نشكرك على دعمك ونتطلع إلى خدمتك مرة أخرى قريبًا.
+
+ `, en:`We sincerely apologize if your experience was not at the level you expected. Please know that your feedback is important to us, and we will work on improving things to make your next experience better. Thank you for your support, and we look forward to serving you again soon.
+
+ `},
+  {ar:`نأسف لأي تجربة غير مرضية مررت بها. نحن ملتزمون بتقديم أفضل خدمة ممكنة وسنعمل على تحسينها بناءً على ملاحظاتك. نشكرك على ثقتك بنا ونتمنى أن نراك قريبًا بتجربة أكثر راحة وسعادة.
+
+ `, en:` We deeply regret that we were unable to provide the seamless experience that you deserve. Please know that we are actively working to resolve any issues and ensure that future experiences meet and exceed your expectations. We truly appreciate your patience.
+
+`},
+  {ar:` نحن آسفون لأن تجربتك لم تكن بالمستوى الذي نطمح إليه. شكرًا لملاحظاتك، وهي محل اهتمامنا لتحسين جودة الخدمات. نقدر تفهمك ونتمنى أن تمنحنا فرصة لنقدم لك تجربة أفضل مستقبلاً.
+
+`, en:` We understand that your time and satisfaction are valuable, and we apologize for any inconvenience you may have encountered. Please know that we take all feedback seriously and are continuously working to enhance our service to better meet your needs.
+
+`},
+  {ar:`نعتذر عن أي خلل قد واجهته خلال تجربتك، ونشكرك على إبلاغنا بذلك. رضاك هو أولويتنا ونسعى جاهدين لتحسين الخدمة مستقبلاً. نتمنى أن تمنحنا فرصة أخرى لنثبت لك مدى التزامنا برضاك.
+
+ `, en:` We apologize for any issues you encountered during your experience, and we thank you for bringing them to our attention. Your satisfaction is our priority, and we strive to improve our service in the future. We hope you give us another opportunity to show you our commitment to your satisfaction.
+
+`},
+  {ar:` نأسف لأي تقصير قد حدث، فهدفنا هو توفير تجربة مثالية لعملائنا. نحن نعمل بجد لتحسين الخدمة بناءً على ملاحظاتك. شكراً لصبرك، ونتمنى أن تكون تجربتك القادمة أكثر راحة ان شاء الله.
+
+`, en:`We apologize for any shortcomings that may have occurred, as our goal is to provide an ideal experience for our customers. We are working hard to improve the service based on your feedback. Thank you for your patience, and we hope your next experience will be more comfortable.
+
+ `},
+  {ar:`نعتذر بصدق عن أي إزعاج حدث خلال طلبك، فنحن نسعى دائمًا لتقديم الأفضل. ملاحظاتك محل اهتمامنا، وسنسعى لتحسين التجربة لإرضائك مستقبلاً. شكراً لدعمك، ونتمنى أن نراك قريبًا.
+
+ `, en:` We sincerely apologize for any inconvenience during your order, as we always strive to provide the best. Your feedback is important to us, and we will work to improve the experience to satisfy you in the future. Thank you for your support, and we hope to see you soon.
+
+`},
+  {ar:`نأسف لأن تجربتك لم تكن كما توقعت، وسنعمل على تحسين خدماتنا لتفادي تكرار ذلك إن شاء الله. شكراً لوقتك وثقتك بنا، وسنسعى جاهدين لتقديم تجربة مرضية لك مستقبلاً.
+
+ `, en:`We are sorry that your experience was not as you expected, and we will work on improving our services to prevent this from happening again, God willing. Thank you for your time and trust in us, and we will strive to provide you with a satisfactory experience in the future.
+
+ `},
+  {ar:`نعتذر عن أي تجربة غير مرضية قد مررت بها، ونعمل على تحسين الخدمة بناءً على ملاحظاتك. نشكرك على تفهمك، و سنحرص على أن تكون تجربتك القادمة أكثر راحة.
+
+ `, en:`  We’re truly sorry for any inconvenience caused. We understand this wasn’t ideal and are committed to improving your experience next time. Thank you for trusting us.
+
+`},
+  {ar:`نعتذر عن أي تقصير قد واجهته، وسنعمل على تحسين خدماتنا لإرضائك قدر الإمكان. شكراً لك على ملاحظاتك القيمة، ونتمنى أن تمنحنا فرصة أخرى لخدمتك بشكل أفضل.
+
+ `, en:` We apologize for any shortcomings you may have experienced, and we will work on improving our services to satisfy you as much as possible. Thank you for your valuable feedback, and we hope you give us another opportunity to serve you better.
+
+`},
+  {ar:`نأسف لأي إزعاج قد سبّبته تجربتك معنا، وسنسعى بتحسين الخدمة لتكون على مستوى توقعاتك. نشكر لك تفهمك، ونتمنى أن نراك مجددًا في تجربة أكثر راحة وسعادة.
+
+ `, en:` We are truly sorry that your recent order did not go as expected. Your trust is important to us, and we are dedicated to improving our service based on your valuable feedback. Please accept our apologies, and we hope to provide you with a much smoother experience in the future.
+
+`},
+  {ar:` نحن نأسف لأي قصور قد حدث أثناء تجربتك، وندرك تمامًا مدى أهمية تقديم خدمة مميزة تلبي تطلعاتك. رضاك هو حجر الأساس الذي نبني عليه خدماتنا، ولذلك فإننا نأخذ جميع الملاحظات على محمل الجد ونعمل جاهدين على تحسين التجربة لتقديم مستوى عالٍ من الجودة مستقبلاً. نشكر لك تفهمك وثقتك بنا، ونسعى باستمرار لجعل كل تجربة لك معنا أفضل من السابقة.
+
+`, en:` We are sorry for any shortcomings you may have experienced, and we fully recognize the importance of providing outstanding service that meets your expectations. Your satisfaction is the foundation upon which we build our services, which is why we take all feedback seriously and work hard to improve the experience to deliver a high level of quality in the future. Thank you for your understanding and trust, and we continuously strive to make each experience with us better than the last.
+
+`},
+  {ar:`نأسف بشدة لأي تجربة غير مرضية قد واجهتها، ونتفهم تمامًا مدى الإحباط الذي قد تشعر به عند عدم الحصول على الخدمة بالمستوى المتوقع. نحن نعمل بجد لتحسين الجودة والاستجابة السريعة للملاحظات الخاصة بعملائنا، وسنسعى جاهدين لجعل تجربتك القادمة أكثر سلاسة وراحة. نشكرك على تفهمك، ونتطلع إلى خدمتك قريبًا بطريقة تليق بثقتك بنا.
+
+ `, en:` We deeply regret any unsatisfactory experience you may have had, and we fully understand the frustration of not receiving service at the expected level. We are working hard to improve quality and respond promptly to our customers’ feedback, and we will strive to make your next experience smoother and more comfortable. Thank you for your understanding, and we look forward to serving you soon in a manner worthy of your trust.
+
+`},
+  {ar:`نتفهم تمامًا أنك كنت تتوقع تجربة أفضل، ونحن نأسف لأننا لم نرتقِ إلى مستوى تطلعاتك هذه المرة. نقدّر صبرك وملاحظاتك التي تساعدنا على التطوير، ونعمل بلا توقف لتحسين الخدمة لتكون أكثر سلاسة وجودة إن شاء الله. نأمل أن تمنحنا فرصة أخرى لنثبت لك أننا نستحق ثقتك، ونتطلع لأن تكون تجربتك القادمة معنا أكثر راحة ورضا.
+
+ `, en:` We fully understand that you expected a better experience, and we are sorry that we did not meet your expectations this time. We appreciate your patience and feedback, which help us improve, and we continuously work to enhance the service to make it smoother and of higher quality, God willing. We hope you give us another opportunity to show that we deserve your trust, and we look forward to your next experience with us being more comfortable and satisfying.
+
+`},
+];
+
+const shortApology = [
+ {ar:`نعتذر يا الغالي عن التجربة اللي ما كانت بالمستوى، وراح نحرص تكون القادمة أفضل بإذن الله.`, en:`We’re sorry your experience wasn’t great, we’ll make sure the next one is better insha’Allah.`},
+{ar:`آسفين إذا واجهت أي إزعاج، ملاحظتك تهمنا وراح نحسن الخدمة للأفضل.`, en:`Sorry for the inconvenience — your feedback matters and we’ll improve our service.`},
+{ar:`نأسف إن التجربة ما كانت مثل توقعاتك، وراح نعمل على تحسينها مستقبلاً.`, en:`We’re sorry it didn’t meet your expectations, we’ll make it better next time.`},
+{ar:`نعتذر عن القصور، ونتفهم ملاحظاتك وراح نطور الخدمة قريب إن شاء الله.`, en:`We apologize for the shortfall and we’ll work on improving soon, God willing.`},
+{ar:`نأسف لو سبّبنا لك أي إزعاج، هدفنا دايمًا رضاك وتقديم الأفضل.`, en:`We’re sorry for any inconvenience — our goal is always your satisfaction.`},
+{ar:`نعتذر منك، بنحرص نكسب رضاك ونستعيد ثقتك فينا.`, en:`Our apologies, we’ll work to regain your trust and satisfaction.`},
+{ar:`نأسف على التجربة، وراح نراجع الملاحظات لضمان تحسين الخدمة.`, en:`Sorry about your experience — we’ll review your feedback to improve our service.`},
+{ar:`نعتذر عن اللي صار، وراح نسعى تكون تجربتك القادمة أسهل وأفضل.`, en:`We’re sorry about what happened — we’ll make your next experience smoother.`},
+{ar:`نأسف لأي تقصير، بنشتغل دايم على رفع الجودة وتطوير الخدمة.`, en:`Apologies for the shortfall — we’re constantly improving our quality.`},
+{ar:`آسفين على اللي صار، وشاكرين ملاحظاتك اللي تساعدنا نتحسن.`, en:`Sorry about what happened, your feedback helps us improve.`},
+{ar:`نعتذر على أي خلل، وراح نعمل على تحسين تجربتك القادمة بإذن الله.`, en:`We apologize for any issue and we’ll improve your next experience insha’Allah.`},
+{ar:`نأسف على التجربة الغير مرضية، وراح نعمل على تطوير الخدمة بشكل مستمر.`, en:`Sorry for the unsatisfactory experience — we’ll keep improving our service.`},
+{ar:`نعتذر إذا ما كانت التجربة بالمستوى، وراح نحسن الأمور لرضاك.`, en:`Sorry if it wasn’t as expected — we’ll make things right for you.`},
+{ar:`نأسف على أي إزعاج، وراح نتابع الملاحظات لضمان الأفضل.`, en:`Apologies for any inconvenience — we’ll follow up to ensure better service.`},
+{ar:`نعتذر عن التقصير، وملاحظتك بتفيدنا في تحسين الخدمة أكثر.`, en:`Sorry for any shortcomings — your feedback helps us get better.`},
+{ar:`آسفين على التجربة، وشكرًا لتفهمك وثقتك.`, en:`Sorry about the experience, and thank you for your understanding and trust.`},
+{ar:`نعتذر إذا واجهت مشكلة، ونعمل نتأكد إنها ما تتكرر.`, en:`We’re sorry for the issue and will make sure it doesn’t happen again.`},
+{ar:`نأسف لأي قصور، وبنحرص تكون المرات الجاية مرضية لك أكثر.`, en:`Apologies for any shortfall — we’ll make sure next time is better.`},
+{ar:`نعتذر عن الإزعاج، وملاحظتك محل اهتمام الفريق.`, en:`Sorry for the inconvenience — your feedback is being reviewed by the team.`},
+{ar:`نأسف إذا التجربة ما كانت بالمستوى، ونتمنى فرصة نعوضك فيها.`, en:`We’re sorry it wasn’t up to standards — we hope to make it up to you.`},
+{ar:`نعتذر عن أي تقصير، وراح نطور الأداء بناءً على ملاحظتك.`, en:`We apologize for any shortfall — we’ll improve our performance accordingly.`},
+{ar:`نأسف لو الخدمة ما كانت ترضيك، وراح نحرص تكون الجاية أريح وأسرع.`, en:`Sorry if the service wasn’t satisfying — we’ll make it smoother next time.`},
+{ar:`نعتذر على التجربة الغير مرضية، وهدفنا نخدمك بشكل أفضل الجاية.`, en:`Sorry for the disappointing experience — our goal is to serve you better next time.`},
+{ar:`نأسف لأي خلل صار، ونعمل على تحسين التجربة القادمة.`, en:`We’re sorry for any issue, and we’ll enhance your next experience.`},
+{ar:`نعتذر على اللي حصل، وثقتك تهمنا ونسعى نحافظ عليها.`, en:`Apologies for what happened — your trust matters and we’ll keep it.`},
+{ar:`نأسف إن التجربة ما كانت مثالية، ووعدنا لك إن الجاية تكون أفضل بإذن الله.`, en:`Sorry the experience wasn’t perfect — we promise the next one will be better, God willing.`}
+];
+
+const hold = [
+  // 🔟 الأصلية بدون أي تعديل
+  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
+  { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
+  { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
+  { ar: `ما زال لدي بعض الأمور التي تحتاج إلى دقيقة أخرى للمراجعة، شاكر لتفهمك.`, en: `There are still some matters that require another minute for review. I appreciate your understanding.` },
+  { ar: `أحتاج إلى دقيقة أخرى في هذه المرحلة، وإذا احتجت وقتًا إضافيًا سأعلمك.`, en: `I need one more minute at this stage, and I will let you know if I require additional time.` },
+  { ar: `سأستغرق دقيقة أخرى في الوقت الحالي، وإذا احتجت إلى وقت إضافي سأخبرك.`, en: `I will take another minute for now, and I’ll inform you if I need more time.` },
+  { ar: `الرجاء الانتظار دقيقة أخرى حتى أتمكن من إنهاء العمل المطلوب بشكل دقيق، شكرًا لتفهمك.`, en: `Please wait one more minute so I can complete the task accurately. Thank you for your understanding.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، وإذا لم يكتمل الأمر فقد أطلب وقتًا إضافيًا لاحقًا.`, en: `I need an extra minute now, and if the matter is not completed, I may request additional time later.` },
+  { ar: `أحتاج إلى دقيقة أخرى لاستكمال العمل على أكمل وجه، واشكرك على تعاونك.`, en: `I need another minute to complete the task properly, and I appreciate your cooperation.` },
+
+  // ➕ إضافات جديدة بنفس الأسلوب
+  { ar: `ممكن دقيقة إضافية لو سمحت حتى أتأكد من التفاصيل النهائية.`, en: `May I please have another minute to double-check the final details?` },
+  { ar: `أحتاج دقيقة واحدة فقط لأراجع آخر التحديثات قبل ما أرجع لك.`, en: `I just need one minute to review the latest updates before I get back to you.` },
+  { ar: `ممكن دقيقة واحدة بس أتحقق من النظام وأوافيك بالنتيجة.`, en: `Could you please give me a minute to check the system and provide you the result?` },
+  { ar: `أحتاج دقيقة إضافية لأتأكد من جميع النقاط المطلوبة بدقة.`, en: `I need an extra minute to make sure all points are reviewed accurately.` },
+  { ar: `أشيّك على الحالة الآن، وراح أرجع لك بعد دقيقة بالتأكيد النهائي.`, en: `I’m checking the case now and will get back to you within a minute with the final confirmation.` },
+  { ar: `لو سمحت، أحتاج دقيقة إضافية للتأكد من الإجراءات الجارية.`, en: `Please, I need one more minute to confirm the ongoing process.` },
+  { ar: `أتحقق من الملاحظات الآن وراح أبلغك خلال دقيقة بالنتيجة.`, en: `I’m reviewing the notes now and will update you within a minute with the result.` },
+  { ar: `ممكن دقيقة فقط للتأكد من كل شيء قبل أبلغك بالتفاصيل النهائية.`, en: `Just one minute please to make sure everything is clear before I share the final details.` }
+];
+
+let used = {longApology:[], shortApology:[], hold:[]};
+
+function generate(type){
+  let list = eval(type);
+  let remain = list.filter((_,i)=>!used[type].includes(i));
+  if(remain.length===0){
+    document.getElementById('popup').classList.remove('hidden');
+    document.getElementById('popupMsg').textContent = `🎉 تم عرض كل ${type==='hold'?'الهولد':'الاعتذارات'}، يمكنك البدء من جديد.`;
+    return;
+  }
+  let randomIndex = Math.floor(Math.random()*remain.length);
+  let idx = list.indexOf(remain[randomIndex]);
+  used[type].push(idx);
+  if(type==='hold'){
+    showText('holdAr','holdEn',list[idx]);
+  }else if(type==='shortApology'){
+    showText('shortAr','shortEn',list[idx]);
+  }else{
+    showText('longAr','longEn',list[idx]);
+  }
+}
+
+function showText(idAr,idEn,obj){
+  document.getElementById(idAr).textContent=obj.ar;
+  document.getElementById(idEn).textContent=obj.en;
+}
+
+function copyText(id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent);
+  el.style.background="#d8ecff";
+  setTimeout(()=>el.style.background="#f3f7ff",400);
+}
+
+function resetLists(){
+  used={longApology:[], shortApology:[], hold:[]};
+  document.getElementById('popup').classList.add('hidden');
+}
+function calc(rate){
+  const input = document.getElementById('calcInput').value;
+  const result = document.getElementById('calcResult');
+  if(!input || isNaN(input)){
+    result.textContent = 'الرجاء إدخال رقم صالح';
+    return;
+  }
+  const total = (input * rate).toFixed(2);
+  result.textContent = `النتيجة: ${total}`;
+}
+  const el = (id) => document.getElementById(id);
+const CALL_LINE = "Call merchant ,call results ; needed Restaurant admitted the mistake";
+const COMP_LINE = "no Compensation";
+
+function isNumericOrEmpty(v) {
+  if (!v) return true;
+  return /^-?\d+(\.\d+)?$/.test(v.trim());
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  let refund       = (el('refund').value || '').trim();
+  let compensation = (el('compensation').value || '').trim();
+
+ if (!refund) {
+  refund = "no refund";
+}
+  if (!isNumericOrEmpty(compensation)) {
+    alert('حقل Compensation يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
+    el('compensation').focus();
+    return;
+  }
+
+  if (!refund) refund = "no refund";
+  if (!compensation) compensation = "no compensation";
+
+  // بناء نص الكول لاين
+  // بناء نص الكول لاين
+let callLine = "";
+let normalizedCall = callType.toLowerCase().replace(/\s+/g, "");
+
+if (normalizedCall === "noneed") {
+  callLine = "Call merchant/Rider , Call result : No need";
+} else if (normalizedCall === "merchant") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع التاجر.");
+    return;
+  }
+  callLine = `Call merchant , Call result : ${callResult}`;
+} else if (normalizedCall === "rider") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع السائق.");
+    return;
+  }
+  callLine = `Call rider , Call result : ${callResult}`;
+} else {
+  callLine = "Call merchant/Rider , Call result : No need";
+}
+
+  const lines = [
+    `Call line: ${callLine}`,
+    `Case Solution Risk Label: (${risk})RC`,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund}) `,
+    `Compensation: (${compensation}) `
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+function clearAll() {
+  el('riskLabel').value = '0';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('output').value = '';
+}
+
+el('output').addEventListener('click', () => {
+  el('output').select();
+  document.execCommand('copy');
+  alert("✔ تم النسخ بنجاح");
+});
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', clearAll);
+function toggleCallInput(){
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if(callType === "merchant" || callType === "rider"){
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
+ function toggleCallInput() {
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if (callType === "merchant" || callType === "rider") {
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
+}
+
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'block';
+
+    // ✅ يحدد أول خيار (0RC) تلقائيًا
+    const firstRC = document.querySelector('input[name="subRC"][value="0RC"]');
+    if (firstRC) firstRC.checked = true;
+
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => (i.checked = false));
+  }
+}
+
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+  const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  const refund     = el('refund').value;
+  let compensation = (el('compensation').value || '').trim();
+
+  if (!compensation) compensation = "no compensation";
+
+  let callLine = "";
+  if (callType === "noneed") {
+    callLine = "Call merchant/Rider , Call result : No need";
+  } else if (callType === "merchant") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع التاجر.");
+      return;
+    }
+    callLine = `Call merchant , Call result : ${callResult}`;
+  } else if (callType === "rider") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع السائق.");
+      return;
+    }
+    callLine = `Call rider , Call result : ${callResult}`;
+  } else {
+    alert("اختَر نوع المكالمة أولاً.");
+    return;
+  }
+
+  const lines = [
+    ` ${callLine}`,
+    riskLabelLine,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund})`,
+    `Compensation: (${compensation}) compensation`
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', () => {
+  el('riskLabel').value = '';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('compensation').value = '';
+  el('output').value = '';
+  toggleRCOptions(); // يخفي الحقل عند المسح
+});
+}
+// ✅ لإظهار حقل RC فقط عند اختيار Red أو Purple
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'grid';
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => i.checked = false);
+  }
+}
+
+// ✅ لبناء النص النهائي في التيمبليت
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("callType").value = "noneed";
+  toggleCallInput();
+});
+</script>
+<script>
+// ✅ إشعار "تم النسخ بنجاح" لكل الموقع + إصلاح النسخ في كل الأقسام
+window.addEventListener("load", () => {
+  // إنشاء الإشعار
+  let notice = document.createElement("div");
+  notice.id = "copyNotice";
+  notice.textContent = "✔ تم النسخ بنجاح";
+  Object.assign(notice.style, {
+    position: "fixed",
+    top: "45px",
+    right: "20px",
+    background: "#e8fff3",
+    color: "#00b36b",
+    padding: "8px 16px",
+    borderRadius: "8px",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+    fontSize: "13px",
+    fontFamily: "Cairo, sans-serif",
+    opacity: "0",
+    zIndex: "999999",
+    transition: "opacity 0.4s ease, transform 0.4s ease",
+    transform: "translateY(-10px)"
+  });
+  document.body.appendChild(notice);
+
+  // دالة عرض الإشعار
+  window.showCopiedNotice = function() {
+    notice.style.opacity = "1";
+    notice.style.transform = "translateY(0)";
+    clearTimeout(window.noticeTimeout);
+    window.noticeTimeout = setTimeout(() => {
+      notice.style.opacity = "0";
+      notice.style.transform = "translateY(-10px)";
+    }, 1000); // ← مدة الظهور = ثانية واحدة
+  };
+
+  // ✅ نربط الحدث لجميع العناصر القابلة للنسخ
+  function enableCopying() {
+    document.querySelectorAll(".msg, .msgBox, textarea#output, .fixed-msg").forEach(el => {
+      el.onclick = () => {
+        const text = el.value || el.textContent.trim();
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        showCopiedNotice();
+      };
+    });
+  }
+
+  // نفعّل النسخ أول مرة
+  enableCopying();
+
+  // 🎯 لو تمت إضافة عناصر جديدة (مثل عند إنشاء سكربت جديد)
+  const observer = new MutationObserver(enableCopying);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // ✅ لو أي نص انسخ بالطريقة العادية (Ctrl+C)
+  document.addEventListener("copy", showCopiedNotice);
+});
+</script>
+ <!-- 🟦 نافذة التحديث (Popup) -->
+<div id="updatePopup" style="
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  font-family: 'Cairo', sans-serif;
+">
+  <div style="
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 14px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    width: 380px;
+    max-width: 90%;
+    text-align: center;
+    animation: fadeIn .4s ease;
+  ">
+  <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
+السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
+    <h2 style="color:#285eff; margin-bottom:10px;"> شو ضفنا جديد  </h2>
+   <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
+    <li> ضفنا سكربتات مهمه بالحل الكم اكبس عربي انجليزي للنسخ</li>
+    <li> ضفنا قسم الاسترداد </li>
+     <li>رجعنا حقل المطعم </li>
+       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل 0779622690 </li>
+</ul>
+    <button onclick="closePopup()" style="
+      background:#285eff;
+      color:#fff;
+      border:none;
+      padding:8px 18px;
+      border-radius:8px;
+      margin-top:15px;
+      cursor:pointer;
+      font-size:14px;
+    ">تخطي</button>
+  </div>
+</div>
+
+<script>
+  // 🎬 إغلاق النافذة عند الضغط على "تخطي"
+  function closePopup() {
+    const popup = document.getElementById('updatePopup');
+    popup.style.opacity = 0;
+    popup.style.pointerEvents = 'none';
+    setTimeout(() => popup.remove(), 400);
+  }
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
+<script>
+const scripts = {
+  apology: {
+    ar: "شكرًا على ملاحظاتك. للأسف، بدون صور للطعام ، ما نقدر نحدد تفاصيل المشكلة. في المستقبل، يرجى الاحتفاظ بأي دليل يساعدنا في حل المشكلة بشكل أكثر فعالية. شكرًا لك",
+    en: "Thank you for your feedback. Unfortunately, without photos of the food, we can't determine the details of the issue. In the future, please keep any evidence that can help us resolve the issue more effectively. Thank you."
+  },
+  delay: {
+    ar: "نأسف على المشكلة. ممكن أعرف أي صنف كان خاطئ؟ تقدر ترسل صورة للصنف مع الوصل؟ شكرًا لك!",
+    en: "Sorry to hear that, please let me know which item is wrong Please provide a photo of the receipt and the food together."
+  },
+  spillage: {
+    ar: "عزيزي العميل نأسف على المشكلة التي حدثت هل يمكنك إرسال صورة الأكل المسكوب؟ شكراً على تعاونك.",
+    en: "We apologize for the bad experience. Can you send a picture of the food spillage? Thanks for your cooperation."
+  },
+   packages: {
+    ar: "علشان نقدر نشوف الموضوع زين ونفهمه صح، ممكن الله لا يهينك ترسل لنا صورة واضحة لوصل الطلب، وصورة ثانية للأكل اللي فيه المشكلة (تكون مبينة التغليف والمشكلة نفسها بوضوح)؟",
+    en: "To investigate this thoroughly, could you kindly share a clear photo of the order receipt and the affected food item (showing the packaging and the issue clearly)?"
+  },
+  followup: {
+    ar: "نأسف على المشكله، ما هي الاصناف الناقصة؟ لو سمحت عزيزي العميل ان تقوم بتصوير المنتجات التي استلمتها مع الوصل بجانب بعضهم البعض؟",
+    en: "Sorry to hear that, please let me know which items are missing? Could you please take a photo showing both the receipt and the food you received together? This will help us better understand the issue and assist you more efficiently. Thank you!"
+  },
+  callmer: {
+    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.",
+    en: "Could you please give me 2–3 minutes to contact the the merchant ? Thank you for your understanding and patience"
+  },
+  callrid: {
+    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.",
+    en: "Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience"
+  },
+  //3done
+  noresref: {
+    ar: "مرحبا عميلنا العزيز سيتم تعويضك تلقائيا على (طريقة دفعك الأصلية) وذلك لانه لم اتلقى منك رد وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك",
+    en: "Hello dear customer, you will be automatically compensated through your (primary payment method) as I haven't received a response from you. The conversation will be closed soon. If you have any further inquiries, feel free to reach out to us. Thank you!"
+  },
+  Escalation: {
+    ar: "نعتذر على الإزعاج. سنتابع مشكلتك وسيقوم أحد أعضاء الفريق بالتواصل معك قريباً. إذا كان لديك أي أسئلة أخرى، لا تتردد في التواصل معنا مرة أخرى. أتمنى لك يوماً سعيداً، وإلى اللقاء",
+    en: "We’re sorry for the inconvenience. We’ll keep track of your issue and a team member will reach out to you soon. If you have any other questions, feel free to reach out to us again. Have a great day and goodbye"
+  },
+  nextday: {
+    ar: "أعتذر بشدة على المشكلة التي واجهتك، فأنت عميل محترم وعزيز علينا. ربي يسلمك، وكنت أتمنى تواصلك معنا في وقت أبكر حتى نتمكن من حل المشكلة فورًا وتقديم أفضل خدمة لك.",
+    en: "I sincerely apologize for the issue you faced. You are a valued and respected customer. God bless you, and I truly wish you had contacted us earlier so we could have resolved the issue immediately and provided you with the best possible service."
+  },
+///4done
+acceptnote: {
+    ar: "بعد ما تفاهمت مع المطعم، قبل الملاحظة. الأكل بتجهز حسب الملاحظة.",
+    en: "After negotiating with the restaurant, the restaurant accepted the note. The food will be perpared as the note."
+  },
+  rejectnote: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، المطعم ما قبل الملاحظة.",
+    en: "We apologize that the merchant didn't accept the note."
+  },
+   holdtnote: {
+    ar: "يرجى الانتظار دقيقة بينما أحاول التواصل مع المطعم لمعرفة ما إذا كان بالإمكان إضافة ملاحظة حضرتك للطلب",
+    en: "Please wait a moment while I try to contact the restaurant to see if your note can be added to the order."
+  },
+  //5done
+  canelorder: {
+    ar: "بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.",
+    en: "After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order."
+  },
+  refusecanelorder: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه",
+    en: "We apologize, but the merchant has already started preparing the food, so the order cannot be canceled"
+  },
+
+};
+
+function toggleScript(btn, key) {
+  // إذا كان في خيارات مفتوحة تحت الزر نفسه، نحذفها (إغلاق)
+  const next = btn.nextElementSibling;
+  if (next && next.classList.contains("lang-options")) {
+    next.remove();
+    return;
+  }
+
+  // نحذف أي خيارات مفتوحة تحت أزرار أخرى
+  document.querySelectorAll(".lang-options").forEach(el => el.remove());
+
+  // ننشئ خانات اللغات تحت الزر مباشرة
+  const div = document.createElement("div");
+  div.className = "lang-options";
+  div.innerHTML = `
+    <button class="lang-btn ar" onclick="copyScript('${key}','ar', event)">🇸🇦 عربي</button>
+    <button class="lang-btn en" onclick="copyScript('${key}','en', event)">🇬🇧 English</button>
+  `;
+  btn.insertAdjacentElement("afterend", div);
+}
+
+
+function copyScript(key, lang, e) {
+  const text = scripts[key][lang];
+  navigator.clipboard.writeText(text);
+
+  const notice = document.createElement("div");
+  notice.textContent = "✅ تم النسخ";
+  Object.assign(notice.style, {
+    position: "absolute",
+    background: "#285eff",
+    color: "#fff",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    opacity: "0",
+    transition: "opacity .3s ease, transform .3s ease",
+    zIndex: "999999"
+  });
+  document.body.appendChild(notice);
+  notice.style.left = e.pageX + "px";
+  notice.style.top = e.pageY - 20 + "px";
+  setTimeout(() => (notice.style.opacity = "1"), 50);
+  setTimeout(() => {
+    notice.style.opacity = "0";
+    setTimeout(() => notice.remove(), 300);
+  }, 1000);
+
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active"));
+  document.getElementById("scriptArea").innerHTML = "";
+}
+</script>
+<script>
+document.addEventListener("click", function(e) {
+  const msg = e.target.closest(".msg");
+  if (!msg) return;
+
+  // نقرأ النص الأصلي
+  let text = msg.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restInput = document.getElementById("restaurantName");
+  const restName = restInput ? restInput.value.trim() : "";
+
+  // 🔹 لو فيه اسم مطعم نستبدله داخل أول قوسين فقط
+  if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
+  }
+
+  // نسخ النص إلى الكليب بورد
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار بسيط
+  let note = document.getElementById("copyNoteFinal");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNoteFinal";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1000);
+});
+</script>
 </body>
 </html>
