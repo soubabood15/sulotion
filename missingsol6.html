@@ -202,14 +202,12 @@ textarea#output {
 
 .main-sections {
  display:flex;
-       flex-wrap:nowrap;
-       overflow-x:auto;
-       gap:25px;
-       justify-content:flex-start;
-       align-items:flex-start;
-       scroll-behavior:smooth;
-       padding-bottom:10px;
-      /* يخليهم يتكيفوا في الشاشات الصغيرة */
+ flex-wrap:nowrap; /* ✅ هذا هو التغيير المهم */
+ gap:25px;
+ justify-content:center;
+ align-items:flex-start;
+ scroll-behavior:smooth;
+ padding-bottom:10px;
 }
 
 .section {
@@ -237,7 +235,7 @@ textarea#output {
 </style>
 </head>
 <body>
-  <div class="madeby">Made by Abdelrahman & Tareq Almahameed</div>
+  <div class="madeby">Made by Abdelrahman & Reem</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
@@ -256,20 +254,38 @@ textarea#output {
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
  
   </div>
-<!-- الآلة الحاسبة داخل قسم الاعتذارات -->
-<div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
-  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
-  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
-  <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
-    <button onclick="calc(0.8)">Main dish</button>
-    <button onclick="calc(0.5)">Side dish</button>
-    <button onclick="calc(0.3)">Drink</button>
-    <button onclick="calc(0.1)">Cutlery</button>
+  
+  <!-- 💬 سكربتات جاهزة تحت الاعتذارات القصيرة -->
+<div class="section" id="quickScripts" style="background:#f9fbff; margin-top:20px;">
+  <h2 style="color:#285eff; text-align:center;">💬 سكربتات جاهزة</h2>
+
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;">
+    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات تسأل العميل عن الخطأ أو المفقود</h3>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'apology')"> العميل ما رسل صورة</button>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'delay')">Wrong items</button>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'followup')">Missing items </button>
+     <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'spillage')">spillage </button>
+      <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'packages')">packages </button>
+    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات هولد المكالمات</h3>
+    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callmer')">هولد مكالمه مطعم</button>
+        <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callrid')">هولد مكالمه سائق</button>
+        <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات مهمه مشكله</h3>
+         <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'noresref')">مارد وله تعويض</button>
+          <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'Escalation')"> Escalation </button>
+                    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'nextday')"> مشكله لها اكثر من يوم </button>
+                    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات  الطلب على ملاحظه</h3>
+                              <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'acceptnote')"> المطعم وافق </button>
+                                               <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'rejectnote')"> المطعم رفض </button>
+                                                                <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'holdtnote')"> هولد الملاحظه </button>
+                                                                 <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات الغاء الطلب  </h3>
+                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'canelorder')">   وافق  </button>
+                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'refusecanelorder')">   رفض  </button>
+
   </div>
-  <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
-    النتيجة: —
-  </div>
+
+  <div id="scriptArea" style="margin-top:15px;"></div>
 </div>
+
 </div>
 
 
@@ -418,20 +434,20 @@ textarea#output {
   <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
 <div style="text-align:center; margin-bottom:15px;">
-  <label for="restaurantName" style="color:#285eff; font-weight:600;">حط اسم المطعم بتلاقيه جوا القوس جاهز</label><br>
+  <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
   <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
          style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
 </div>
    
     <div class="chat-row">
-     <div class="msg" onclick="copyMsg(this)">
-  اسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+      <div class="msg" onclick="copyMsg(this)">
+  آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
 </div>
 
 <div class="msg" onclick="copyMsg(this)">
   I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
 </div>
-</div>
+</div>  
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
       <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
@@ -494,21 +510,53 @@ textarea#output {
 </style>
 
 <script>
+// 🎯 دالة النسخ الذكية (تتعامل مع كل أنواع الأقواس)
 function copyMsg(el) {
-  navigator.clipboard.writeText(el.textContent.trim());
-  el.style.background = "#cde6ff";
-  setTimeout(() => (el.style.background = "#fff"), 350);
+  // ناخذ النص داخل العنصر
+  let text = el.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restaurantField = document.getElementById("restaurantName");
+  const restaurant = restaurantField ? restaurantField.value.trim() : "";
+
+  // 🔹 نستبدل أي أقواس فيها فراغات أو شرطات أو نقاط أو خطوط تحت
+  if (restaurant) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restaurant + ")");
+  }
+
+  // نسخ النص
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار تم النسخ
+  showCopiedNotice();
 }
 
-function copyMsgWithRestaurant(el) {
-  const restaurant = document.getElementById('restaurantName').value.trim() || '';
-  let text = el.textContent;
-  if (restaurant) {
-    text = text.replace('(      )', '(' + restaurant + ')');
+// 🎯 دالة عرض الإشعار
+function showCopiedNotice() {
+  let note = document.getElementById("copyNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNotice";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
   }
-  navigator.clipboard.writeText(text.trim());
-  el.style.background = "#cde6ff";
-  setTimeout(() => (el.style.background = "#fff"), 350);
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1200);
 }
 </script>
 <!-- 🟦 القسم الرابع: التعويض والاسترداد -->
@@ -518,11 +566,26 @@ function copyMsgWithRestaurant(el) {
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
     <button class="btn primary" onclick="startCompensation()">تعويض</button>
     <button class="btn" onclick="startRefund()">استرداد وتعويض</button>
+    <button class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <div id="scriptBox" style="margin-top:10px;"></div>
   </div>
 
-  <div id="scriptBox" style="margin-top:10px;"></div>
-</div>
+<!-- الآلة الحاسبة داخل قسم الاعتذارات -->
+ 
+<div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
+  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
+  <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+    <button onclick="calc(0.8)">Main dish</button>
+    <button onclick="calc(0.5)">Side dish</button>
+    <button onclick="calc(0.3)">Drink</button>
+    <button onclick="calc(0.1)">Cutlery</button>
+  </div>
+  <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
+    النتيجة: —
+  </div>
 
+</div>
 <script>
 // دالة النسخ الذكية 👇
 document.addEventListener("click", function (e) {
@@ -713,6 +776,7 @@ function startRefund() {
 }
 
 
+
 // 🔹 خيار المحفظة
 function walletFlow() {
   document.getElementById('extraScripts')?.remove();
@@ -800,7 +864,70 @@ function resetComp() {
   const box = document.getElementById('scriptBox');
   box.innerHTML = '';
 }
+// 🟩 قسم "استرداد فقط"
+// 🟩 قسم "استرداد فقط" بدون حقل، مع فاصل بين العادي والحمر
+// 🟩 قسم "استرداد فقط" (بدون حقل، مع فاصل وزر إعادة)
+function startOnlyRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;">قسم الاسترداد فقط</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (      ) ريال سعودي لطلبك
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR for your order right away
+    </div>
+
+    <!-- 🔹 فاصل أنيق -->
+    <hr style="border:none; border-top:1px dashed #ccc; margin:18px 0;">
+
+    <!-- سكربتات الحمراء -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" style="background:#285eff;color:#fff;" onclick="walletFlow()">محفظة</button>
+      <button class="btn secondary" style="background:#00b36b;color:#fff;" onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔄 زر إعادة من البداية -->
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 البدء من جديد</button>
+    </div>
+  `;
+}
+
 </script>
+
+
+
 </div> <!-- نهاية main-sections -->
 
 
@@ -954,7 +1081,7 @@ const shortApology = [
 
 const hold = [
   // 🔟 الأصلية بدون أي تعديل
-  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
+  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
   { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
@@ -1315,12 +1442,12 @@ window.addEventListener("load", () => {
   ">
   <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
 السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
-    <h2 style="color:#285eff; margin-bottom:10px;">عدلنا سكربتات الدفع </h2>
+    <h2 style="color:#285eff; margin-bottom:10px;"> شو ضفنا جديد  </h2>
    <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
-      <li>ما في داعي تحدد اي سكربت عشان تنسخه فقط ضغطه عليه راح يتم نسخه</li>
-      <li> ضفنا قسم جديد الاسترداد والتعويض داخله حقول بتقدر تدخل القيمه وهو بحطها الك بالقوس</li>
-       <li>لما تضغط على اي سكربت راح يظهرلك اشعار نسخ</li>
-       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل  </li>
+    <li> ضفنا سكربتات مهمه بالحل الكم اكبس عربي انجليزي للنسخ</li>
+    <li> ضفنا قسم الاسترداد </li>
+     <li>رجعنا حقل المطعم </li>
+       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل 0779622690 </li>
 </ul>
     <button onclick="closePopup()" style="
       background:#285eff;
@@ -1351,28 +1478,147 @@ window.addEventListener("load", () => {
   to {opacity: 1; transform: scale(1);}
 }
 </style>
-</body>
+<script>
+const scripts = {
+  apology: {
+    ar: "شكرًا على ملاحظاتك. للأسف، بدون صور للطعام ، ما نقدر نحدد تفاصيل المشكلة. في المستقبل، يرجى الاحتفاظ بأي دليل يساعدنا في حل المشكلة بشكل أكثر فعالية. شكرًا لك",
+    en: "Thank you for your feedback. Unfortunately, without photos of the food, we can't determine the details of the issue. In the future, please keep any evidence that can help us resolve the issue more effectively. Thank you."
+  },
+  delay: {
+    ar: "نأسف على المشكلة. ممكن أعرف أي صنف كان خاطئ؟ تقدر ترسل صورة للصنف مع الوصل؟ شكرًا لك!",
+    en: "Sorry to hear that, please let me know which item is wrong Please provide a photo of the receipt and the food together."
+  },
+  spillage: {
+    ar: "عزيزي العميل نأسف على المشكلة التي حدثت هل يمكنك إرسال صورة الأكل المسكوب؟ شكراً على تعاونك.",
+    en: "We apologize for the bad experience. Can you send a picture of the food spillage? Thanks for your cooperation."
+  },
+   packages: {
+    ar: "علشان نقدر نشوف الموضوع زين ونفهمه صح، ممكن الله لا يهينك ترسل لنا صورة واضحة لوصل الطلب، وصورة ثانية للأكل اللي فيه المشكلة (تكون مبينة التغليف والمشكلة نفسها بوضوح)؟",
+    en: "To investigate this thoroughly, could you kindly share a clear photo of the order receipt and the affected food item (showing the packaging and the issue clearly)?"
+  },
+  followup: {
+    ar: "نأسف على المشكله، ما هي الاصناف الناقصة؟ لو سمحت عزيزي العميل ان تقوم بتصوير المنتجات التي استلمتها مع الوصل بجانب بعضهم البعض؟",
+    en: "Sorry to hear that, please let me know which items are missing? Could you please take a photo showing both the receipt and the food you received together? This will help us better understand the issue and assist you more efficiently. Thank you!"
+  },
+  callmer: {
+    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.",
+    en: "Could you please give me 2–3 minutes to contact the the merchant ? Thank you for your understanding and patience"
+  },
+  callrid: {
+    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.",
+    en: "Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience"
+  },
+  //3done
+  noresref: {
+    ar: "مرحبا عميلنا العزيز سيتم تعويضك تلقائيا على (طريقة دفعك الأصلية) وذلك لانه لم اتلقى منك رد وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك",
+    en: "Hello dear customer, you will be automatically compensated through your (primary payment method) as I haven't received a response from you. The conversation will be closed soon. If you have any further inquiries, feel free to reach out to us. Thank you!"
+  },
+  Escalation: {
+    ar: "نعتذر على الإزعاج. سنتابع مشكلتك وسيقوم أحد أعضاء الفريق بالتواصل معك قريباً. إذا كان لديك أي أسئلة أخرى، لا تتردد في التواصل معنا مرة أخرى. أتمنى لك يوماً سعيداً، وإلى اللقاء",
+    en: "We’re sorry for the inconvenience. We’ll keep track of your issue and a team member will reach out to you soon. If you have any other questions, feel free to reach out to us again. Have a great day and goodbye"
+  },
+  nextday: {
+    ar: "أعتذر بشدة على المشكلة التي واجهتك، فأنت عميل محترم وعزيز علينا. ربي يسلمك، وكنت أتمنى تواصلك معنا في وقت أبكر حتى نتمكن من حل المشكلة فورًا وتقديم أفضل خدمة لك.",
+    en: "I sincerely apologize for the issue you faced. You are a valued and respected customer. God bless you, and I truly wish you had contacted us earlier so we could have resolved the issue immediately and provided you with the best possible service."
+  },
+///4done
+acceptnote: {
+    ar: "بعد ما تفاهمت مع المطعم، قبل الملاحظة. الأكل بتجهز حسب الملاحظة.",
+    en: "After negotiating with the restaurant, the restaurant accepted the note. The food will be perpared as the note."
+  },
+  rejectnote: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، المطعم ما قبل الملاحظة.",
+    en: "We apologize that the merchant didn't accept the note."
+  },
+   holdtnote: {
+    ar: "يرجى الانتظار دقيقة بينما أحاول التواصل مع المطعم لمعرفة ما إذا كان بالإمكان إضافة ملاحظة حضرتك للطلب",
+    en: "Please wait a moment while I try to contact the restaurant to see if your note can be added to the order."
+  },
+  //5done
+  canelorder: {
+    ar: "بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.",
+    en: "After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order."
+  },
+  refusecanelorder: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه",
+    en: "We apologize, but the merchant has already started preparing the food, so the order cannot be canceled"
+  },
+
+};
+
+function toggleScript(btn, key) {
+  // إذا كان في خيارات مفتوحة تحت الزر نفسه، نحذفها (إغلاق)
+  const next = btn.nextElementSibling;
+  if (next && next.classList.contains("lang-options")) {
+    next.remove();
+    return;
+  }
+
+  // نحذف أي خيارات مفتوحة تحت أزرار أخرى
+  document.querySelectorAll(".lang-options").forEach(el => el.remove());
+
+  // ننشئ خانات اللغات تحت الزر مباشرة
+  const div = document.createElement("div");
+  div.className = "lang-options";
+  div.innerHTML = `
+    <button class="lang-btn ar" onclick="copyScript('${key}','ar', event)">🇸🇦 عربي</button>
+    <button class="lang-btn en" onclick="copyScript('${key}','en', event)">🇬🇧 English</button>
+  `;
+  btn.insertAdjacentElement("afterend", div);
+}
+
+
+function copyScript(key, lang, e) {
+  const text = scripts[key][lang];
+  navigator.clipboard.writeText(text);
+
+  const notice = document.createElement("div");
+  notice.textContent = "✅ تم النسخ";
+  Object.assign(notice.style, {
+    position: "absolute",
+    background: "#285eff",
+    color: "#fff",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    opacity: "0",
+    transition: "opacity .3s ease, transform .3s ease",
+    zIndex: "999999"
+  });
+  document.body.appendChild(notice);
+  notice.style.left = e.pageX + "px";
+  notice.style.top = e.pageY - 20 + "px";
+  setTimeout(() => (notice.style.opacity = "1"), 50);
+  setTimeout(() => {
+    notice.style.opacity = "0";
+    setTimeout(() => notice.remove(), 300);
+  }, 1000);
+
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active"));
+  document.getElementById("scriptArea").innerHTML = "";
+}
+</script>
 <script>
 document.addEventListener("click", function(e) {
   const msg = e.target.closest(".msg");
   if (!msg) return;
 
-  // نقرأ النص داخل الجملة
+  // نقرأ النص الأصلي
   let text = msg.textContent.trim();
 
   // نجيب اسم المطعم من الحقل
   const restInput = document.getElementById("restaurantName");
   const restName = restInput ? restInput.value.trim() : "";
 
-  // 🔹 استبدال الأقواس الفارغة باسم المطعم (أول زوج فقط)
+  // 🔹 لو فيه اسم مطعم نستبدله داخل أول قوسين فقط
   if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
     text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
   }
 
-  // نسخ النص المعدّل
+  // نسخ النص إلى الكليب بورد
   navigator.clipboard.writeText(text);
 
-  // 🔔 إشعار "تم النسخ"
+  // إظهار إشعار بسيط
   let note = document.getElementById("copyNoteFinal");
   if (!note) {
     note = document.createElement("div");
@@ -1399,4 +1645,5 @@ document.addEventListener("click", function(e) {
   setTimeout(() => (note.style.opacity = "0"), 1000);
 });
 </script>
+</body>
 </html>
