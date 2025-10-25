@@ -341,6 +341,14 @@ textarea#output {
    Could you please give me a minute to check on this for you? Thank you for your patience.
   </div>
 </div>
+  <div style="color:#9a1b1b;" class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+   شكرا على صبرك
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+ Thank you for your patience
+  </div>
+</div>
 
 <style>
 .fixed-hold-cards {
@@ -413,6 +421,7 @@ textarea#output {
     <select id="evidence">
       <option value="Clear" >Clear</option>
       <option value="Unclear"selected>Unclear</option>
+      <option value="No need"selected>No need</option>
     </select>
 
     <label for="receipt">Receipt</label>
@@ -502,9 +511,13 @@ textarea#output {
   <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
     <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
     <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. نقدر تقييمك لخدمتنا ونتمنى لك يوماً سعيداً.</div>
-      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We’d appreciate your feedback. Have a great day!</div>
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
     </div>
+<div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)">سُعدتُ بخدمتك اليوم. بعد انتهاء المحادثة سيظهر لك إشعار لتقييم تجربتك معنا، ونود إبلاغك أن التقييم يكون من 1 إلى 5، حيث 5 هو أعلى تقييم و1 هو الأقل. نشكر تواصلك مع كيتا ونتمنى لك يوماً سعيداً. </div>
+      <div class="msg" onclick="copyMsg(this)">I am happy to serve you today. After the end of the conversation,a message will appear to evaluate your experience, and it will inform you that the rating will be from 1 to 5, where 5 is the highest rating and 1 is the lowest. Thank you for contacting Keeta and I wish you a happy day.</div>
+</div>
   </div>
 </div>
 
@@ -1112,7 +1125,6 @@ const shortApology = [
 
 const hold = [
   // 🔟 الأصلية بدون أي تعديل
-  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
   { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
@@ -1451,56 +1463,121 @@ window.addEventListener("load", () => {
 });
 </script>
  <!-- 🟦 نافذة التحديث (Popup) -->
-<div id="updatePopup" style="
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999;
-  font-family: 'Cairo', sans-serif;
-">
-  <div style="
-    background: #fff;
-    padding: 25px 30px;
-    border-radius: 14px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-    width: 380px;
-    max-width: 90%;
-    text-align: center;
-    animation: fadeIn .4s ease;
-  ">
-  <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
-السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
-    <h2 style="color:#285eff; margin-bottom:10px;"> شو ضفنا جديد  </h2>
-   <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
-    <li> ضفنا سكربتات مهمه بالحل الكم اكبس عربي انجليزي للنسخ</li>
-    <li> ضفنا قسم الاسترداد </li>
-     <li>رجعنا حقل المطعم </li>
-       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل 0779622690 </li>
-</ul>
-    <button onclick="closePopup()" style="
-      background:#285eff;
-      color:#fff;
-      border:none;
-      padding:8px 18px;
-      border-radius:8px;
-      margin-top:15px;
-      cursor:pointer;
-      font-size:14px;
-    ">تخطي</button>
+<!-- 🩵 نافذة التحديثات الجميلة -->
+<div id="updatePopup" class="update-popup">
+  <div class="popup-box">
+    <h2>اللهم هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم<br>السلام على غزّة بما فيها، بكل ما فيها 💙</h2>
+    <h3>📢 شو ضفنا جديد</h3>
+    <ul id="updateText">
+      <li>📌 ضفنا سكربتات مهمة بالحل – اكبس عربي أو إنجليزي للنسخ.</li>
+      <li>💰 أضفنا قسم الاسترداد الجديد.</li>
+      <li>🍽️ رجعنا حقل المطعم.</li>
+      <li>📞 بتقدر تتواصل معي لأي فكرة أو ملاحظة: <b>0779622690</b></li>
+    </ul>
+    <button onclick="closePopup()">🚀 تخطي</button>
   </div>
 </div>
 
+<style>
+/* الخلفية */
+.update-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e3eeff, #f9fcff);
+  z-index: 999999;
+  font-family: "Cairo", sans-serif;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* الصندوق */
+.popup-box {
+  background: rgba(255, 255, 255, 0.97);
+  padding: 35px 40px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  transform: scale(0.9);
+  opacity: 0;
+  animation: slideUp 0.6s ease 0.2s forwards;
+  backdrop-filter: blur(8px);
+}
+
+/* العناوين */
+.popup-box h2 {
+  color: #285eff;
+  font-size: 18px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.popup-box h3 {
+  color: #285eff;
+  margin-top: 10px;
+  font-size: 17px;
+}
+
+/* النصوص */
+#updateText {
+  text-align: right;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.8;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-top: 10px;
+}
+
+/* الزر */
+.popup-box button {
+  background: linear-gradient(90deg, #285eff, #6a8dff);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  margin-top: 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(40, 94, 255, 0.3);
+}
+.popup-box button:hover {
+  transform: scale(1.05);
+}
+
+/* الحركات */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(40px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+</style>
+
 <script>
-  // 🎬 إغلاق النافذة عند الضغط على "تخطي"
-  function closePopup() {
-    const popup = document.getElementById('updatePopup');
-    popup.style.opacity = 0;
-    popup.style.pointerEvents = 'none';
-    setTimeout(() => popup.remove(), 400);
-  }
+function closePopup() {
+  const popup = document.getElementById("updatePopup");
+  const box = popup.querySelector(".popup-box");
+
+  // نبدأ حركة الخروج
+  box.style.animation = "fadeOut 0.5s ease forwards";
+  popup.style.transition = "opacity 0.6s ease";
+  popup.style.opacity = "0";
+
+  // نحذفها بعد ما تخلص الحركة
+  setTimeout(() => popup.remove(), 600);
+}
 </script>
 
 <style>
@@ -1676,5 +1753,159 @@ document.addEventListener("click", function(e) {
   setTimeout(() => (note.style.opacity = "0"), 1000);
 });
 </script>
+<!-- 🐍 لعبة الحية -->
+<canvas id="snakeGame" width="300" height="300"
+  style="
+    display:none;
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    background:#111;
+    border:3px solid #285eff;
+    border-radius:10px;
+    z-index:999999;
+    cursor: move;
+  ">
+</canvas>
+
+<script>
+let snakeVisible = false;
+let gameInterval;
+let snake, food, direction, ctx, score;
+
+const GRID = 20;
+const CELL = 15;
+const W = GRID * CELL;
+const H = GRID * CELL;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "a") {
+    snakeVisible = !snakeVisible;
+    const canvas = document.getElementById("snakeGame");
+
+    if (snakeVisible) {
+      canvas.style.display = "block";
+      startSnakeGame();
+    } else {
+      canvas.style.display = "none";
+      clearInterval(gameInterval);
+      window.removeEventListener("keydown", preventScroll, { passive:false });
+      document.removeEventListener("keydown", directionHandler);
+    }
+  }
+});
+
+function startSnakeGame() {
+  const canvas = document.getElementById("snakeGame");
+  ctx = canvas.getContext("2d");
+
+  snake = [{ x: 9 * CELL, y: 10 * CELL }];
+  food = randomFood();
+  direction = "RIGHT";
+  score = 0;
+
+  document.addEventListener("keydown", directionHandler);
+  window.addEventListener("keydown", preventScroll, { passive:false });
+
+  clearInterval(gameInterval);
+  gameInterval = setInterval(draw, 120);
+}
+
+function randomFood() {
+  return {
+    x: Math.floor(Math.random() * GRID) * CELL,
+    y: Math.floor(Math.random() * GRID) * CELL
+  };
+}
+
+function directionHandler(event) {
+  const key = event.keyCode;
+  if (key === 37 && direction !== "RIGHT") direction = "LEFT";
+  else if (key === 38 && direction !== "DOWN") direction = "UP";
+  else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
+  else if (key === 40 && direction !== "UP") direction = "DOWN";
+}
+
+function draw() {
+  ctx.fillStyle = "#111";
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 14px Cairo, sans-serif";
+  ctx.fillText("Score: " + score, 8, 18);
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(food.x, food.y, CELL - 1, CELL - 1);
+
+  for (let i = 0; i < snake.length; i++) {
+    ctx.fillStyle = i === 0 ? "#285eff" : "#6a8dff";
+    ctx.fillRect(snake[i].x, snake[i].y, CELL - 1, CELL - 1);
+  }
+
+  let snakeX = snake[0].x;
+  let snakeY = snake[0].y;
+
+  if (direction === "LEFT") snakeX -= CELL;
+  if (direction === "UP") snakeY -= CELL;
+  if (direction === "RIGHT") snakeX += CELL;
+  if (direction === "DOWN") snakeY += CELL;
+
+  if (snakeX === food.x && snakeY === food.y) {
+    score += 1;
+    food = randomFood();
+  } else {
+    snake.pop();
+  }
+
+  const newHead = { x: snakeX, y: snakeY };
+  const hitWall = snakeX < 0 || snakeY < 0 || snakeX > W - CELL || snakeY > H - CELL;
+
+  if (hitWall || collision(newHead, snake)) {
+    clearInterval(gameInterval);
+    window.removeEventListener("keydown", preventScroll, { passive:false });
+    document.removeEventListener("keydown", directionHandler);
+    alert("💀 انتهت اللعبة!\nScore: " + score + "\nاضغط A لإخفائها أو لإعادة اللعب.");
+    return;
+  }
+
+  snake.unshift(newHead);
+}
+
+function collision(head, array) {
+  return array.some(seg => seg.x === head.x && seg.y === head.y);
+}
+
+function preventScroll(e) {
+  if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) {
+    e.preventDefault();
+  }
+}
+
+/* 🖱️ السحب بالماوس */
+(function enableDrag() {
+  const canvas = document.getElementById("snakeGame");
+  let offsetX, offsetY, dragging = false;
+
+  canvas.addEventListener("mousedown", (e) => {
+    dragging = true;
+    offsetX = e.clientX - canvas.offsetLeft;
+    offsetY = e.clientY - canvas.offsetTop;
+    canvas.style.opacity = "0.85";
+  });
+
+  window.addEventListener("mouseup", () => {
+    dragging = false;
+    canvas.style.opacity = "1";
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    canvas.style.left = `${e.clientX - offsetX}px`;
+    canvas.style.top = `${e.clientY - offsetY}px`;
+    canvas.style.bottom = "auto"; // يلغي التثبيت السفلي
+  });
+})();
+</script>
 </body>
+
 </html>
