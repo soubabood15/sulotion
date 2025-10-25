@@ -259,29 +259,60 @@ textarea#output {
 <div class="section" id="quickScripts" style="background:#f9fbff; margin-top:20px;">
   <h2 style="color:#285eff; text-align:center;">💬 سكربتات جاهزة</h2>
 
-  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;">
-    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات تسأل العميل عن الخطأ أو المفقود</h3>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'apology')"> العميل ما رسل صورة</button>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'delay')">Wrong items</button>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'followup')">Missing items </button>
-     <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'spillage')">spillage </button>
-      <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'packages')">packages </button>
-    <h4 style="color:#285eff;margin-top:20px;">🔹 سكربتات هولد المكالمات</h4>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callmer')">هولد مكالمه مطعم</button>
-        <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callrid')">هولد مكالمه سائق</button>
-        <h5 style="color:#285eff;margin-top:20px;">🔹 سكربتات مهمه مشكله</h5>
-         <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'noresref')">مارد وله تعويض</button>
-          <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'Escalation')"> Escalation </button>
-                    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'nextday')"> مشكله لها اكثر من يوم </button>
-                    <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات  الطلب على ملاحظه</h3>
-                              <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'acceptnote')"> المطعم وافق </button>
-                                               <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'rejectnote')"> المطعم رفض </button>
-                                                                <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'holdtnote')"> هولد الملاحظه </button>
-                                                                 <h3 style="color:#285eff;margin-top:20px;">🔹 سكربتات الغاء الطلب  </h3>
-                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'canelorder')">   وافق  </button>
-                                                                 <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'refusecanelorder')">   رفض  </button>
+ <div id="scriptGroups" style="display:flex;flex-direction:column;gap:18px;margin-top:15px;">
 
+  <!-- 🔹 سكربتات مشاكل الطلب -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات مشاكل الطلب</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'apology')">العميل ما رسل صورة</button>
+      <button class="qbtn" onclick="toggleScript(this, 'delay')">Wrong items</button>
+      <button class="qbtn" onclick="toggleScript(this, 'followup')">Missing items</button>
+      <button class="qbtn" onclick="toggleScript(this, 'spillage')">Spillage</button>
+      <button class="qbtn" onclick="toggleScript(this, 'packages')">Packages</button>
+    </div>
   </div>
+
+  <!-- 🔹 سكربتات هولد المكالمات -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات هولد المكالمات</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'callmer')">هولد مكالمة مطعم</button>
+      <button class="qbtn" onclick="toggleScript(this, 'callrid')">هولد مكالمة سائق</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات مهمة -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات مهمة (مشاكل)</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'noresref')">ما رد وله تعويض</button>
+      <button class="qbtn" onclick="toggleScript(this, 'Escalation')">Escalation</button>
+      <button class="qbtn" onclick="toggleScript(this, 'nextday')">مشكلة لها أكثر من يوم</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات الطلب على ملاحظة -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات الطلب على ملاحظة</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'acceptnote')">المطعم وافق</button>
+      <button class="qbtn" onclick="toggleScript(this, 'rejectnote')">المطعم رفض</button>
+      <button class="qbtn" onclick="toggleScript(this, 'holdtnote')">هولد الملاحظة</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات إلغاء الطلب -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات إلغاء الطلب</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'canelorder')">وافق</button>
+      <button class="qbtn" onclick="toggleScript(this, 'refusecanelorder')">رفض</button>
+    </div>
+  </div>
+
+</div>
+  
 
   <div id="scriptArea" style="margin-top:15px;"></div>
 </div>
@@ -471,8 +502,8 @@ textarea#output {
   <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
     <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
     <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">  شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد.  .</div>
-      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service have a great day.</div>
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. نقدر تقييمك لخدمتنا ونتمنى لك يوماً سعيداً.</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We’d appreciate your feedback. Have a great day!</div>
     </div>
   </div>
 </div>
