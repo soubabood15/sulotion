@@ -1753,69 +1753,93 @@ document.addEventListener("click", function(e) {
   setTimeout(() => (note.style.opacity = "0"), 1000);
 });
 </script>
-<!-- 🐍 لعبة الحية -->
+<!-- 🐍 لعبة الحية المتطورة -->
 <canvas id="snakeGame" width="300" height="300"
   style="
     display:none;
     position:fixed;
     bottom:20px;
     left:20px;
-    background:#111;
+    background:radial-gradient(circle at 100px 100px, #0c0c1b, #000);
     border:3px solid #285eff;
-    border-radius:10px;
+    border-radius:14px;
     z-index:999999;
+    box-shadow:0 0 25px rgba(40,94,255,0.4);
     cursor: move;
   ">
 </canvas>
 
+<button id="restartSnake" style="
+  display:none;
+  position:fixed;
+  bottom:335px;
+  left:20px;
+  background:#285eff;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'Cairo',sans-serif;
+  z-index:1000000;
+  box-shadow:0 3px 10px rgba(0,0,0,0.3);
+">🔁 إعادة اللعب</button>
+
 <script>
 let snakeVisible = false;
-let gameInterval;
-let snake, food, direction, ctx, score;
-
-const GRID = 20;
-const CELL = 15;
-const W = GRID * CELL;
-const H = GRID * CELL;
+let snake, food, direction, ctx, score, animFrame, floatingTexts = [];
+const GRID = 20, CELL = 15, W = GRID * CELL, H = GRID * CELL;
+let flash = 0;
 
 document.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === "a") {
-    snakeVisible = !snakeVisible;
-    const canvas = document.getElementById("snakeGame");
-
-    if (snakeVisible) {
-      canvas.style.display = "block";
-      startSnakeGame();
-    } else {
-      canvas.style.display = "none";
-      clearInterval(gameInterval);
-      window.removeEventListener("keydown", preventScroll, { passive:false });
-      document.removeEventListener("keydown", directionHandler);
-    }
-  }
+  if (e.key.toLowerCase() === "a") toggleSnakeGame();
 });
+
+document.getElementById("restartSnake").addEventListener("click", startSnakeGame);
+
+function toggleSnakeGame(){
+  const canvas = document.getElementById("snakeGame");
+  const restartBtn = document.getElementById("restartSnake");
+  snakeVisible = !snakeVisible;
+
+  if (snakeVisible) {
+    canvas.style.display = "block";
+    restartBtn.style.display = "block";
+    startSnakeGame();
+  } else {
+    canvas.style.display = "none";
+    restartBtn.style.display = "none";
+    cancelAnimationFrame(animFrame);
+    window.removeEventListener("keydown", preventScroll, { passive:false });
+    document.removeEventListener("keydown", directionHandler);
+  }
+}
 
 function startSnakeGame() {
   const canvas = document.getElementById("snakeGame");
   ctx = canvas.getContext("2d");
-
   snake = [{ x: 9 * CELL, y: 10 * CELL }];
   food = randomFood();
   direction = "RIGHT";
   score = 0;
+  flash = 0;
+  floatingTexts = [];
 
   document.addEventListener("keydown", directionHandler);
   window.addEventListener("keydown", preventScroll, { passive:false });
-
-  clearInterval(gameInterval);
-  gameInterval = setInterval(draw, 120);
+  cancelAnimationFrame(animFrame);
+  draw();
 }
 
 function randomFood() {
-  return {
-    x: Math.floor(Math.random() * GRID) * CELL,
-    y: Math.floor(Math.random() * GRID) * CELL
-  };
+  let f;
+  do {
+    f = {
+      x: Math.floor(Math.random() * GRID) * CELL,
+      y: Math.floor(Math.random() * GRID) * CELL
+    };
+  } while (snake.some(seg => seg.x === f.x && seg.y === f.y));
+  return f;
 }
 
 function directionHandler(event) {
@@ -1827,32 +1851,48 @@ function directionHandler(event) {
 }
 
 function draw() {
-  ctx.fillStyle = "#111";
+  ctx.fillStyle = flash > 0 ? `rgba(255,255,255,${flash/10})` : "#000";
   ctx.fillRect(0, 0, W, H);
+  if (flash > 0) flash--;
 
   ctx.fillStyle = "#fff";
   ctx.font = "bold 14px Cairo, sans-serif";
   ctx.fillText("Score: " + score, 8, 18);
 
-  ctx.fillStyle = "red";
-  ctx.fillRect(food.x, food.y, CELL - 1, CELL - 1);
+  // طعام مع تأثير
+  const pulse = Math.sin(Date.now() / 150) * 3 + 8;
+  ctx.beginPath();
+  ctx.arc(food.x + CELL/2, food.y + CELL/2, pulse, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,60,60,0.25)";
+  ctx.fill();
 
+  const grd = ctx.createRadialGradient(food.x + 5, food.y + 5, 2, food.x + 7, food.y + 7, 10);
+  grd.addColorStop(0, "#ff9999");
+  grd.addColorStop(1, "#ff0000");
+  ctx.fillStyle = grd;
+  ctx.fillRect(food.x, food.y, CELL, CELL);
+
+  // الثعبان
   for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "#285eff" : "#6a8dff";
+    const shade = Math.max(0.3, 1 - i * 0.03);
+    ctx.fillStyle = `rgba(40,94,255,${shade})`;
     ctx.fillRect(snake[i].x, snake[i].y, CELL - 1, CELL - 1);
+    ctx.shadowColor = "#285eff";
+    ctx.shadowBlur = 4;
   }
 
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
-
   if (direction === "LEFT") snakeX -= CELL;
   if (direction === "UP") snakeY -= CELL;
   if (direction === "RIGHT") snakeX += CELL;
   if (direction === "DOWN") snakeY += CELL;
 
   if (snakeX === food.x && snakeY === food.y) {
-    score += 1;
+    score++;
+    flash = 8;
     food = randomFood();
+    floatingTexts.push({x: food.x, y: food.y, text: "+1 💥", alpha:1});
   } else {
     snake.pop();
   }
@@ -1861,14 +1901,40 @@ function draw() {
   const hitWall = snakeX < 0 || snakeY < 0 || snakeX > W - CELL || snakeY > H - CELL;
 
   if (hitWall || collision(newHead, snake)) {
-    clearInterval(gameInterval);
-    window.removeEventListener("keydown", preventScroll, { passive:false });
-    document.removeEventListener("keydown", directionHandler);
-    alert("💀 انتهت اللعبة!\nScore: " + score + "\nاضغط A لإخفائها أو لإعادة اللعب.");
+    gameOverEffect();
     return;
   }
 
   snake.unshift(newHead);
+
+  // +1 تأثير
+  floatingTexts.forEach((f,i)=>{
+    ctx.globalAlpha = f.alpha;
+    ctx.fillStyle = "#00ff99";
+    ctx.font = "bold 13px Arial";
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.globalAlpha = 1;
+    f.y -= 0.8;
+    f.alpha -= 0.02;
+    if(f.alpha <= 0) floatingTexts.splice(i,1);
+  });
+
+  setTimeout(() => animFrame = requestAnimationFrame(draw), 100);
+}
+
+function gameOverEffect() {
+  cancelAnimationFrame(animFrame);
+  let i = 0;
+  const flashEnd = setInterval(() => {
+    ctx.fillStyle = `rgba(255,0,0,${0.1 + (i%2)*0.5})`;
+    ctx.fillRect(0,0,W,H);
+    if (i++ > 5) {
+      clearInterval(flashEnd);
+      alert(`💀 انتهت اللعبة!\nScore: ${score}`);
+    }
+  }, 200);
+  window.removeEventListener("keydown", preventScroll, { passive:false });
+  document.removeEventListener("keydown", directionHandler);
 }
 
 function collision(head, array) {
@@ -1876,14 +1942,13 @@ function collision(head, array) {
 }
 
 function preventScroll(e) {
-  if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) {
-    e.preventDefault();
-  }
+  if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
 }
 
 /* 🖱️ السحب بالماوس */
 (function enableDrag() {
   const canvas = document.getElementById("snakeGame");
+  const btn = document.getElementById("restartSnake");
   let offsetX, offsetY, dragging = false;
 
   canvas.addEventListener("mousedown", (e) => {
@@ -1900,9 +1965,13 @@ function preventScroll(e) {
 
   window.addEventListener("mousemove", (e) => {
     if (!dragging) return;
-    canvas.style.left = `${e.clientX - offsetX}px`;
-    canvas.style.top = `${e.clientY - offsetY}px`;
-    canvas.style.bottom = "auto"; // يلغي التثبيت السفلي
+    const newLeft = e.clientX - offsetX;
+    const newTop = e.clientY - offsetY;
+    canvas.style.left = `${newLeft}px`;
+    canvas.style.top = `${newTop}px`;
+    canvas.style.bottom = "auto";
+    btn.style.left = `${newLeft}px`;
+    btn.style.bottom = `${window.innerHeight - newTop + 15}px`;
   });
 })();
 </script>
