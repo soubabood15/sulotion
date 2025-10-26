@@ -253,73 +253,46 @@ textarea#output {
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
- 
+ </div>
+
+  <h2>🔹 هولد المطعم</h2>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me 2–3 minutes to contact the the merchant ? Thank you for your understanding and patience</div>
+
+</div>
+
+ <h2>🔹 هولد المندوب</h2>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+  Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience</div>
+   
+</div>
+<h3>🔹 الغاء الطلب </h3>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+  After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order.</div>
   </div>
   
-  <!-- 💬 سكربتات جاهزة تحت الاعتذارات القصيرة -->
-<div class="section" id="quickScripts" style="background:#f9fbff; margin-top:20px;">
-  <h2 style="color:#285eff; text-align:center;">💬 سكربتات جاهزة</h2>
+   <h5>🔹 ماوافق  </h5>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه</div>
 
- <div id="scriptGroups" style="display:flex;flex-direction:column;gap:18px;margin-top:15px;">
-
-  <!-- 🔹 سكربتات مشاكل الطلب -->
-  <div class="script-box">
-    <h3 class="script-title">🔹 سكربتات مشاكل الطلب</h3>
-    <div class="btn-group">
-      <button class="qbtn" onclick="toggleScript(this, 'apology')">العميل ما رسل صورة</button>
-      <button class="qbtn" onclick="toggleScript(this, 'delay')">Wrong items</button>
-      <button class="qbtn" onclick="toggleScript(this, 'followup')">Missing items</button>
-      <button class="qbtn" onclick="toggleScript(this, 'spillage')">Spillage</button>
-      <button class="qbtn" onclick="toggleScript(this, 'packages')">Packages</button>
-    </div>
-  </div>
-
-  <!-- 🔹 سكربتات هولد المكالمات -->
-  <div class="script-box">
-    <h3 class="script-title">🔹 سكربتات هولد المكالمات</h3>
-    <div class="btn-group">
-      <button class="qbtn" onclick="toggleScript(this, 'callmer')">هولد مكالمة مطعم</button>
-      <button class="qbtn" onclick="toggleScript(this, 'callrid')">هولد مكالمة سائق</button>
-    </div>
-  </div>
-
-  <!-- 🔹 سكربتات مهمة -->
-  <div class="script-box">
-    <h3 class="script-title">🔹 سكربتات مهمة (مشاكل)</h3>
-    <div class="btn-group">
-      <button class="qbtn" onclick="toggleScript(this, 'noresref')">ما رد وله تعويض</button>
-      <button class="qbtn" onclick="toggleScript(this, 'Escalation')">Escalation</button>
-      <button class="qbtn" onclick="toggleScript(this, 'nextday')">مشكلة لها أكثر من يوم</button>
-    </div>
-  </div>
-
-  <!-- 🔹 سكربتات الطلب على ملاحظة -->
-  <div class="script-box">
-    <h3 class="script-title">🔹 سكربتات الطلب على ملاحظة</h3>
-    <div class="btn-group">
-      <button class="qbtn" onclick="toggleScript(this, 'acceptnote')">المطعم وافق</button>
-      <button class="qbtn" onclick="toggleScript(this, 'rejectnote')">المطعم رفض</button>
-      <button class="qbtn" onclick="toggleScript(this, 'holdtnote')">هولد الملاحظة</button>
-    </div>
-  </div>
-
-  <!-- 🔹 سكربتات إلغاء الطلب -->
-  <div class="script-box">
-    <h3 class="script-title">🔹 سكربتات إلغاء الطلب</h3>
-    <div class="btn-group">
-      <button class="qbtn" onclick="toggleScript(this, 'canelorder')">وافق</button>
-      <button class="qbtn" onclick="toggleScript(this, 'refusecanelorder')">رفض</button>
-    </div>
-  </div>
-
-</div>
+  <div class="hold-card" onclick="copyMsg(this)">
+  We apologize, but the merchant has already started preparing the food, so the order cannot be canceled</div>
+   </div>
   
-
-  <div id="scriptArea" style="margin-top:15px;"></div>
 </div>
-
-</div>
-
 
 <!-- القسم الأيسر -->
  
@@ -342,6 +315,7 @@ textarea#output {
    Could you please give me a minute to check on this for you? Thank you for your patience.
   </div>
 </div>
+
   <div style="color:#9a1b1b;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
    شكرا على صبرك
@@ -1587,126 +1561,6 @@ function closePopup() {
   to {opacity: 1; transform: scale(1);}
 }
 </style>
-<script>
-const scripts = {
-  apology: {
-    ar: "شكرًا على ملاحظاتك. للأسف، بدون صور للطعام ، ما نقدر نحدد تفاصيل المشكلة. في المستقبل، يرجى الاحتفاظ بأي دليل يساعدنا في حل المشكلة بشكل أكثر فعالية. شكرًا لك",
-    en: "Thank you for your feedback. Unfortunately, without photos of the food, we can't determine the details of the issue. In the future, please keep any evidence that can help us resolve the issue more effectively. Thank you."
-  },
-  delay: {
-    ar: "نأسف على المشكلة. ممكن أعرف أي صنف كان خاطئ؟ تقدر ترسل صورة للصنف مع الوصل؟ شكرًا لك!",
-    en: "Sorry to hear that, please let me know which item is wrong Please provide a photo of the receipt and the food together."
-  },
-  spillage: {
-    ar: "عزيزي العميل نأسف على المشكلة التي حدثت هل يمكنك إرسال صورة الأكل المسكوب؟ شكراً على تعاونك.",
-    en: "We apologize for the bad experience. Can you send a picture of the food spillage? Thanks for your cooperation."
-  },
-   packages: {
-    ar: "علشان نقدر نشوف الموضوع زين ونفهمه صح، ممكن الله لا يهينك ترسل لنا صورة واضحة لوصل الطلب، وصورة ثانية للأكل اللي فيه المشكلة (تكون مبينة التغليف والمشكلة نفسها بوضوح)؟",
-    en: "To investigate this thoroughly, could you kindly share a clear photo of the order receipt and the affected food item (showing the packaging and the issue clearly)?"
-  },
-  followup: {
-    ar: "نأسف على المشكله، ما هي الاصناف الناقصة؟ لو سمحت عزيزي العميل ان تقوم بتصوير المنتجات التي استلمتها مع الوصل بجانب بعضهم البعض؟",
-    en: "Sorry to hear that, please let me know which items are missing? Could you please take a photo showing both the receipt and the food you received together? This will help us better understand the issue and assist you more efficiently. Thank you!"
-  },
-  callmer: {
-    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.",
-    en: "Could you please give me 2–3 minutes to contact the the merchant ? Thank you for your understanding and patience"
-  },
-  callrid: {
-    ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.",
-    en: "Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience"
-  },
-  //3done
-  noresref: {
-    ar: "مرحبا عميلنا العزيز سيتم تعويضك تلقائيا على (طريقة دفعك الأصلية) وذلك لانه لم اتلقى منك رد وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك",
-    en: "Hello dear customer, you will be automatically compensated through your (primary payment method) as I haven't received a response from you. The conversation will be closed soon. If you have any further inquiries, feel free to reach out to us. Thank you!"
-  },
-  Escalation: {
-    ar: "نعتذر على الإزعاج. سنتابع مشكلتك وسيقوم أحد أعضاء الفريق بالتواصل معك قريباً. إذا كان لديك أي أسئلة أخرى، لا تتردد في التواصل معنا مرة أخرى. أتمنى لك يوماً سعيداً، وإلى اللقاء",
-    en: "We’re sorry for the inconvenience. We’ll keep track of your issue and a team member will reach out to you soon. If you have any other questions, feel free to reach out to us again. Have a great day and goodbye"
-  },
-  nextday: {
-    ar: "أعتذر بشدة على المشكلة التي واجهتك، فأنت عميل محترم وعزيز علينا. ربي يسلمك، وكنت أتمنى تواصلك معنا في وقت أبكر حتى نتمكن من حل المشكلة فورًا وتقديم أفضل خدمة لك.",
-    en: "I sincerely apologize for the issue you faced. You are a valued and respected customer. God bless you, and I truly wish you had contacted us earlier so we could have resolved the issue immediately and provided you with the best possible service."
-  },
-///4done
-acceptnote: {
-    ar: "بعد ما تفاهمت مع المطعم، قبل الملاحظة. الأكل بتجهز حسب الملاحظة.",
-    en: "After negotiating with the restaurant, the restaurant accepted the note. The food will be perpared as the note."
-  },
-  rejectnote: {
-    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، المطعم ما قبل الملاحظة.",
-    en: "We apologize that the merchant didn't accept the note."
-  },
-   holdtnote: {
-    ar: "يرجى الانتظار دقيقة بينما أحاول التواصل مع المطعم لمعرفة ما إذا كان بالإمكان إضافة ملاحظة حضرتك للطلب",
-    en: "Please wait a moment while I try to contact the restaurant to see if your note can be added to the order."
-  },
-  //5done
-  canelorder: {
-    ar: "بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.",
-    en: "After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order."
-  },
-  refusecanelorder: {
-    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه",
-    en: "We apologize, but the merchant has already started preparing the food, so the order cannot be canceled"
-  },
-
-};
-
-function toggleScript(btn, key) {
-  // إذا كان في خيارات مفتوحة تحت الزر نفسه، نحذفها (إغلاق)
-  const next = btn.nextElementSibling;
-  if (next && next.classList.contains("lang-options")) {
-    next.remove();
-    return;
-  }
-
-  // نحذف أي خيارات مفتوحة تحت أزرار أخرى
-  document.querySelectorAll(".lang-options").forEach(el => el.remove());
-
-  // ننشئ خانات اللغات تحت الزر مباشرة
-  const div = document.createElement("div");
-  div.className = "lang-options";
-  div.innerHTML = `
-    <button class="lang-btn ar" onclick="copyScript('${key}','ar', event)">🇸🇦 عربي</button>
-    <button class="lang-btn en" onclick="copyScript('${key}','en', event)">🇬🇧 English</button>
-  `;
-  btn.insertAdjacentElement("afterend", div);
-}
-
-
-function copyScript(key, lang, e) {
-  const text = scripts[key][lang];
-  navigator.clipboard.writeText(text);
-
-  const notice = document.createElement("div");
-  notice.textContent = "✅ تم النسخ";
-  Object.assign(notice.style, {
-    position: "absolute",
-    background: "#285eff",
-    color: "#fff",
-    padding: "6px 10px",
-    borderRadius: "8px",
-    fontSize: "13px",
-    opacity: "0",
-    transition: "opacity .3s ease, transform .3s ease",
-    zIndex: "999999"
-  });
-  document.body.appendChild(notice);
-  notice.style.left = e.pageX + "px";
-  notice.style.top = e.pageY - 20 + "px";
-  setTimeout(() => (notice.style.opacity = "1"), 50);
-  setTimeout(() => {
-    notice.style.opacity = "0";
-    setTimeout(() => notice.remove(), 300);
-  }, 1000);
-
-  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active"));
-  document.getElementById("scriptArea").innerHTML = "";
-}
-</script>
 <script>
 document.addEventListener("click", function(e) {
   const msg = e.target.closest(".msg");
