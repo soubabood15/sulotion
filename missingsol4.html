@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>اعتذارات وهولد</title>
@@ -235,7 +236,7 @@ textarea#output {
 </style>
 </head>
 <body>
-  <div class="madeby">Made by Tareq AlMahameed</div>
+  <div class="madeby">Made by Abdelrahman & Reem</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
@@ -254,17 +255,65 @@ textarea#output {
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
  
   </div>
+  
   <!-- 💬 سكربتات جاهزة تحت الاعتذارات القصيرة -->
 <div class="section" id="quickScripts" style="background:#f9fbff; margin-top:20px;">
   <h2 style="color:#285eff; text-align:center;">💬 سكربتات جاهزة</h2>
 
-  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;">
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'apology')">مابعث صورة</button>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'delay')">رونق</button>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'followup')">ميسينق </button>
-    <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callmer')">هولد مكالمه مطعم</button>
-        <button class="qbtn" style="background:#285eff;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;" onclick="toggleScript(this, 'callrid')">هولد مكالمه سائق</button>
+ <div id="scriptGroups" style="display:flex;flex-direction:column;gap:18px;margin-top:15px;">
+
+  <!-- 🔹 سكربتات مشاكل الطلب -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات مشاكل الطلب</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'apology')">العميل ما رسل صورة</button>
+      <button class="qbtn" onclick="toggleScript(this, 'delay')">Wrong items</button>
+      <button class="qbtn" onclick="toggleScript(this, 'followup')">Missing items</button>
+      <button class="qbtn" onclick="toggleScript(this, 'spillage')">Spillage</button>
+      <button class="qbtn" onclick="toggleScript(this, 'packages')">Packages</button>
+    </div>
   </div>
+
+  <!-- 🔹 سكربتات هولد المكالمات -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات هولد المكالمات</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'callmer')">هولد مكالمة مطعم</button>
+      <button class="qbtn" onclick="toggleScript(this, 'callrid')">هولد مكالمة سائق</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات مهمة -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات مهمة (مشاكل)</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'noresref')">ما رد وله تعويض</button>
+      <button class="qbtn" onclick="toggleScript(this, 'Escalation')">Escalation</button>
+      <button class="qbtn" onclick="toggleScript(this, 'nextday')">مشكلة لها أكثر من يوم</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات الطلب على ملاحظة -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات الطلب على ملاحظة</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'acceptnote')">المطعم وافق</button>
+      <button class="qbtn" onclick="toggleScript(this, 'rejectnote')">المطعم رفض</button>
+      <button class="qbtn" onclick="toggleScript(this, 'holdtnote')">هولد الملاحظة</button>
+    </div>
+  </div>
+
+  <!-- 🔹 سكربتات إلغاء الطلب -->
+  <div class="script-box">
+    <h3 class="script-title">🔹 سكربتات إلغاء الطلب</h3>
+    <div class="btn-group">
+      <button class="qbtn" onclick="toggleScript(this, 'canelorder')">وافق</button>
+      <button class="qbtn" onclick="toggleScript(this, 'refusecanelorder')">رفض</button>
+    </div>
+  </div>
+
+</div>
+  
 
   <div id="scriptArea" style="margin-top:15px;"></div>
 </div>
@@ -291,6 +340,14 @@ textarea#output {
   </div>
   <div class="hold-card" onclick="copyMsg(this)">
    Could you please give me a minute to check on this for you? Thank you for your patience.
+  </div>
+</div>
+  <div style="color:#9a1b1b;" class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+   شكرا على صبرك
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+ Thank you for your patience
   </div>
 </div>
 
@@ -365,6 +422,7 @@ textarea#output {
     <select id="evidence">
       <option value="Clear" >Clear</option>
       <option value="Unclear"selected>Unclear</option>
+      <option value="No need"selected>No need</option>
     </select>
 
     <label for="receipt">Receipt</label>
@@ -416,12 +474,21 @@ textarea#output {
   <!-- الاعتذار والتأكيد -->
   <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
-
+<div style="text-align:center; margin-bottom:15px;">
+  <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
+  <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
+         style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+</div>
    
     <div class="chat-row">
-      <div class="msg" onclick="copyMsgWithRestaurant(this)">اسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟</div>
-      <div class="msg" onclick="copyMsgWithRestaurant(this)">I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?</div>
-    </div>
+      <div class="msg" onclick="copyMsg(this)">
+  آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+</div>
+
+<div class="msg" onclick="copyMsg(this)">
+  I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
+</div>
+</div>  
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
       <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
@@ -445,9 +512,13 @@ textarea#output {
   <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
     <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
     <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. نقدر تقييمك لخدمتنا ونتمنى لك يوماً سعيداً.</div>
-      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We’d appreciate your feedback. Have a great day!</div>
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
     </div>
+<div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)">سُعدتُ بخدمتك اليوم. بعد انتهاء المحادثة سيظهر لك إشعار لتقييم تجربتك معنا، ونود إبلاغك أن التقييم يكون من 1 إلى 5، حيث 5 هو أعلى تقييم و1 هو الأقل. نشكر تواصلك مع كيتا ونتمنى لك يوماً سعيداً. </div>
+      <div class="msg" onclick="copyMsg(this)">I am happy to serve you today. After the end of the conversation,a message will appear to evaluate your experience, and it will inform you that the rating will be from 1 to 5, where 5 is the highest rating and 1 is the lowest. Thank you for contacting Keeta and I wish you a happy day.</div>
+</div>
   </div>
 </div>
 
@@ -484,21 +555,53 @@ textarea#output {
 </style>
 
 <script>
+// 🎯 دالة النسخ الذكية (تتعامل مع كل أنواع الأقواس)
 function copyMsg(el) {
-  navigator.clipboard.writeText(el.textContent.trim());
-  el.style.background = "#cde6ff";
-  setTimeout(() => (el.style.background = "#fff"), 350);
+  // ناخذ النص داخل العنصر
+  let text = el.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restaurantField = document.getElementById("restaurantName");
+  const restaurant = restaurantField ? restaurantField.value.trim() : "";
+
+  // 🔹 نستبدل أي أقواس فيها فراغات أو شرطات أو نقاط أو خطوط تحت
+  if (restaurant) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restaurant + ")");
+  }
+
+  // نسخ النص
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار تم النسخ
+  showCopiedNotice();
 }
 
-function copyMsgWithRestaurant(el) {
-  const restaurant = document.getElementById('restaurantName').value.trim() || '';
-  let text = el.textContent;
-  if (restaurant) {
-    text = text.replace('(      )', '(' + restaurant + ')');
+// 🎯 دالة عرض الإشعار
+function showCopiedNotice() {
+  let note = document.getElementById("copyNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNotice";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
   }
-  navigator.clipboard.writeText(text.trim());
-  el.style.background = "#cde6ff";
-  setTimeout(() => (el.style.background = "#fff"), 350);
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1200);
 }
 </script>
 <!-- 🟦 القسم الرابع: التعويض والاسترداد -->
@@ -508,8 +611,12 @@ function copyMsgWithRestaurant(el) {
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
     <button class="btn primary" onclick="startCompensation()">تعويض</button>
     <button class="btn" onclick="startRefund()">استرداد وتعويض</button>
+    <button class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <div id="scriptBox" style="margin-top:10px;"></div>
   </div>
+
 <!-- الآلة الحاسبة داخل قسم الاعتذارات -->
+ 
 <div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
   <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
   <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
@@ -522,11 +629,8 @@ function copyMsgWithRestaurant(el) {
   <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
     النتيجة: —
   </div>
-</div>
-  <div id="scriptBox" style="margin-top:10px;"></div>
-</div>
 
-
+</div>
 <script>
 // دالة النسخ الذكية 👇
 document.addEventListener("click", function (e) {
@@ -717,6 +821,7 @@ function startRefund() {
 }
 
 
+
 // 🔹 خيار المحفظة
 function walletFlow() {
   document.getElementById('extraScripts')?.remove();
@@ -804,6 +909,66 @@ function resetComp() {
   const box = document.getElementById('scriptBox');
   box.innerHTML = '';
 }
+// 🟩 قسم "استرداد فقط"
+// 🟩 قسم "استرداد فقط" بدون حقل، مع فاصل بين العادي والحمر
+// 🟩 قسم "استرداد فقط" (بدون حقل، مع فاصل وزر إعادة)
+function startOnlyRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;">قسم الاسترداد فقط</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (      ) ريال سعودي لطلبك
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR for your order right away
+    </div>
+
+    <!-- 🔹 فاصل أنيق -->
+    <hr style="border:none; border-top:1px dashed #ccc; margin:18px 0;">
+
+    <!-- سكربتات الحمراء -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" style="background:#285eff;color:#fff;" onclick="walletFlow()">محفظة</button>
+      <button class="btn secondary" style="background:#00b36b;color:#fff;" onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔄 زر إعادة من البداية -->
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 البدء من جديد</button>
+    </div>
+  `;
+}
+
 </script>
 
 
@@ -961,7 +1126,6 @@ const shortApology = [
 
 const hold = [
   // 🔟 الأصلية بدون أي تعديل
-  { ar: `ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟ شكراً على صبرك.`, en: `Could you please give me a minute to check on this for you? Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
   { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
   { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
@@ -1300,56 +1464,121 @@ window.addEventListener("load", () => {
 });
 </script>
  <!-- 🟦 نافذة التحديث (Popup) -->
-<div id="updatePopup" style="
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999;
-  font-family: 'Cairo', sans-serif;
-">
-  <div style="
-    background: #fff;
-    padding: 25px 30px;
-    border-radius: 14px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-    width: 380px;
-    max-width: 90%;
-    text-align: center;
-    animation: fadeIn .4s ease;
-  ">
-  <h2 style="color:#285eff; margin-bottom:10px;">اللهم  هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
-السلام  عَلى غزَّة بِما فيها، بِكُل ما فيها</h2>
-    <h2 style="color:#285eff; margin-bottom:10px;">عدلنا سكربتات الدفع </h2>
-   <ul id="updateText" style="color:#333; font-size:14px; line-height:1.8; text-align:right; list-style-position: inside;">
-      <li>ما في داعي تحدد اي سكربت عشان تنسخه فقط ضغطه عليه راح يتم نسخه</li>
-      <li> ضفنا قسم جديد الاسترداد والتعويض داخله حقول بتقدر تدخل القيمه وهو بحطها الك بالقوس</li>
-       <li>لما تضغط على اي سكربت راح يظهرلك اشعار نسخ</li>
-       <li>بتقدر تتواصل معي باي وقت بخصوص اي فكره ممكن تساعدنا بالشغل  </li>
-</ul>
-    <button onclick="closePopup()" style="
-      background:#285eff;
-      color:#fff;
-      border:none;
-      padding:8px 18px;
-      border-radius:8px;
-      margin-top:15px;
-      cursor:pointer;
-      font-size:14px;
-    ">تخطي</button>
+<!-- 🩵 نافذة التحديثات الجميلة -->
+<div id="updatePopup" class="update-popup">
+  <div class="popup-box">
+    <h2>اللهم هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم<br>السلام على غزّة بما فيها، بكل ما فيها 💙</h2>
+    <h3>📢 شو ضفنا جديد</h3>
+    <ul id="updateText">
+      <li>📌 ضفنا سكربتات مهمة بالحل – اكبس عربي أو إنجليزي للنسخ.</li>
+      <li>💰 أضفنا قسم الاسترداد الجديد.</li>
+      <li>🍽️ رجعنا حقل المطعم.</li>
+      <li>📞 بتقدر تتواصل معي لأي فكرة أو ملاحظة: <b>0779622690</b></li>
+    </ul>
+    <button onclick="closePopup()">🚀 تخطي</button>
   </div>
 </div>
 
+<style>
+/* الخلفية */
+.update-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e3eeff, #f9fcff);
+  z-index: 999999;
+  font-family: "Cairo", sans-serif;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* الصندوق */
+.popup-box {
+  background: rgba(255, 255, 255, 0.97);
+  padding: 35px 40px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  transform: scale(0.9);
+  opacity: 0;
+  animation: slideUp 0.6s ease 0.2s forwards;
+  backdrop-filter: blur(8px);
+}
+
+/* العناوين */
+.popup-box h2 {
+  color: #285eff;
+  font-size: 18px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.popup-box h3 {
+  color: #285eff;
+  margin-top: 10px;
+  font-size: 17px;
+}
+
+/* النصوص */
+#updateText {
+  text-align: right;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.8;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-top: 10px;
+}
+
+/* الزر */
+.popup-box button {
+  background: linear-gradient(90deg, #285eff, #6a8dff);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  margin-top: 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(40, 94, 255, 0.3);
+}
+.popup-box button:hover {
+  transform: scale(1.05);
+}
+
+/* الحركات */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(40px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+</style>
+
 <script>
-  // 🎬 إغلاق النافذة عند الضغط على "تخطي"
-  function closePopup() {
-    const popup = document.getElementById('updatePopup');
-    popup.style.opacity = 0;
-    popup.style.pointerEvents = 'none';
-    setTimeout(() => popup.remove(), 400);
-  }
+function closePopup() {
+  const popup = document.getElementById("updatePopup");
+  const box = popup.querySelector(".popup-box");
+
+  // نبدأ حركة الخروج
+  box.style.animation = "fadeOut 0.5s ease forwards";
+  popup.style.transition = "opacity 0.6s ease";
+  popup.style.opacity = "0";
+
+  // نحذفها بعد ما تخلص الحركة
+  setTimeout(() => popup.remove(), 600);
+}
 </script>
 
 <style>
@@ -1368,6 +1597,14 @@ const scripts = {
     ar: "نأسف على المشكلة. ممكن أعرف أي صنف كان خاطئ؟ تقدر ترسل صورة للصنف مع الوصل؟ شكرًا لك!",
     en: "Sorry to hear that, please let me know which item is wrong Please provide a photo of the receipt and the food together."
   },
+  spillage: {
+    ar: "عزيزي العميل نأسف على المشكلة التي حدثت هل يمكنك إرسال صورة الأكل المسكوب؟ شكراً على تعاونك.",
+    en: "We apologize for the bad experience. Can you send a picture of the food spillage? Thanks for your cooperation."
+  },
+   packages: {
+    ar: "علشان نقدر نشوف الموضوع زين ونفهمه صح، ممكن الله لا يهينك ترسل لنا صورة واضحة لوصل الطلب، وصورة ثانية للأكل اللي فيه المشكلة (تكون مبينة التغليف والمشكلة نفسها بوضوح)؟",
+    en: "To investigate this thoroughly, could you kindly share a clear photo of the order receipt and the affected food item (showing the packaging and the issue clearly)?"
+  },
   followup: {
     ar: "نأسف على المشكله، ما هي الاصناف الناقصة؟ لو سمحت عزيزي العميل ان تقوم بتصوير المنتجات التي استلمتها مع الوصل بجانب بعضهم البعض؟",
     en: "Sorry to hear that, please let me know which items are missing? Could you please take a photo showing both the receipt and the food you received together? This will help us better understand the issue and assist you more efficiently. Thank you!"
@@ -1380,24 +1617,65 @@ const scripts = {
     ar: "ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.",
     en: "Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience"
   },
+  //3done
+  noresref: {
+    ar: "مرحبا عميلنا العزيز سيتم تعويضك تلقائيا على (طريقة دفعك الأصلية) وذلك لانه لم اتلقى منك رد وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك",
+    en: "Hello dear customer, you will be automatically compensated through your (primary payment method) as I haven't received a response from you. The conversation will be closed soon. If you have any further inquiries, feel free to reach out to us. Thank you!"
+  },
+  Escalation: {
+    ar: "نعتذر على الإزعاج. سنتابع مشكلتك وسيقوم أحد أعضاء الفريق بالتواصل معك قريباً. إذا كان لديك أي أسئلة أخرى، لا تتردد في التواصل معنا مرة أخرى. أتمنى لك يوماً سعيداً، وإلى اللقاء",
+    en: "We’re sorry for the inconvenience. We’ll keep track of your issue and a team member will reach out to you soon. If you have any other questions, feel free to reach out to us again. Have a great day and goodbye"
+  },
+  nextday: {
+    ar: "أعتذر بشدة على المشكلة التي واجهتك، فأنت عميل محترم وعزيز علينا. ربي يسلمك، وكنت أتمنى تواصلك معنا في وقت أبكر حتى نتمكن من حل المشكلة فورًا وتقديم أفضل خدمة لك.",
+    en: "I sincerely apologize for the issue you faced. You are a valued and respected customer. God bless you, and I truly wish you had contacted us earlier so we could have resolved the issue immediately and provided you with the best possible service."
+  },
+///4done
+acceptnote: {
+    ar: "بعد ما تفاهمت مع المطعم، قبل الملاحظة. الأكل بتجهز حسب الملاحظة.",
+    en: "After negotiating with the restaurant, the restaurant accepted the note. The food will be perpared as the note."
+  },
+  rejectnote: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، المطعم ما قبل الملاحظة.",
+    en: "We apologize that the merchant didn't accept the note."
+  },
+   holdtnote: {
+    ar: "يرجى الانتظار دقيقة بينما أحاول التواصل مع المطعم لمعرفة ما إذا كان بالإمكان إضافة ملاحظة حضرتك للطلب",
+    en: "Please wait a moment while I try to contact the restaurant to see if your note can be added to the order."
+  },
+  //5done
+  canelorder: {
+    ar: "بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.",
+    en: "After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order."
+  },
+  refusecanelorder: {
+    ar: "نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه",
+    en: "We apologize, but the merchant has already started preparing the food, so the order cannot be canceled"
+  },
+
 };
 
 function toggleScript(btn, key) {
-  const area = document.getElementById("scriptArea");
-  const isOpen = btn.classList.contains("active");
-  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active"));
-  area.innerHTML = "";
-
-  if (!isOpen) {
-    btn.classList.add("active");
-    area.innerHTML = `
-      <div style="display:flex;gap:10px;justify-content:center;margin-top:10px;">
-        <button class="lang-btn" style="background:#f4f7ff;border:1px solid #d6e4ff;border-radius:8px;padding:8px 14px;cursor:pointer;" onclick="copyScript('${key}', 'ar', event)">🇸🇦</button>
-        <button class="lang-btn" style="background:#f4f7ff;border:1px solid #d6e4ff;border-radius:8px;padding:8px 14px;cursor:pointer;" onclick="copyScript('${key}', 'en', event)">🇬🇧</button>
-      </div>
-    `;
+  // إذا كان في خيارات مفتوحة تحت الزر نفسه، نحذفها (إغلاق)
+  const next = btn.nextElementSibling;
+  if (next && next.classList.contains("lang-options")) {
+    next.remove();
+    return;
   }
+
+  // نحذف أي خيارات مفتوحة تحت أزرار أخرى
+  document.querySelectorAll(".lang-options").forEach(el => el.remove());
+
+  // ننشئ خانات اللغات تحت الزر مباشرة
+  const div = document.createElement("div");
+  div.className = "lang-options";
+  div.innerHTML = `
+    <button class="lang-btn ar" onclick="copyScript('${key}','ar', event)">🇸🇦 عربي</button>
+    <button class="lang-btn en" onclick="copyScript('${key}','en', event)">🇬🇧 English</button>
+  `;
+  btn.insertAdjacentElement("afterend", div);
 }
+
 
 function copyScript(key, lang, e) {
   const text = scripts[key][lang];
@@ -1429,5 +1707,316 @@ function copyScript(key, lang, e) {
   document.getElementById("scriptArea").innerHTML = "";
 }
 </script>
+<script>
+document.addEventListener("click", function(e) {
+  const msg = e.target.closest(".msg");
+  if (!msg) return;
+
+  // نقرأ النص الأصلي
+  let text = msg.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restInput = document.getElementById("restaurantName");
+  const restName = restInput ? restInput.value.trim() : "";
+
+  // 🔹 لو فيه اسم مطعم نستبدله داخل أول قوسين فقط
+  if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
+  }
+
+  // نسخ النص إلى الكليب بورد
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار بسيط
+  let note = document.getElementById("copyNoteFinal");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNoteFinal";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1000);
+});
+</script>
+<!-- 🐍 لعبة الحية المتطورة -->
+ <script>
+// 🎮 إعداد اللعبة
+let snakeGameContainer, snakeCanvas, snakeCtx, snake, food, direction, nextDirection, gameInterval, score;
+
+// 🎯 تفعيل اللعبة باختصار Ctrl + M
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "m") {
+    e.preventDefault();
+    toggleSnakeGame();
+  }
+});
+
+// 🐍 إظهار أو إخفاء اللعبة
+function toggleSnakeGame() {
+  if (snakeGameContainer && snakeGameContainer.style.display === "block") {
+    snakeGameContainer.style.display = "none";
+    clearInterval(gameInterval);
+  } else {
+    initSnakeGame();
+  }
+}
+
+// 🚀 إنشاء اللعبة
+function initSnakeGame() {
+  // إنشاء الحاوية إذا ما كانت موجودة
+  if (!snakeGameContainer) {
+    snakeGameContainer = document.createElement("div");
+    snakeGameContainer.style.position = "fixed";
+    snakeGameContainer.style.bottom = "20px";
+    snakeGameContainer.style.left = "20px";
+    snakeGameContainer.style.background = "linear-gradient(135deg,#001f3f,#003366)";
+    snakeGameContainer.style.border = "2px solid #66a3ff";
+    snakeGameContainer.style.borderRadius = "12px";
+    snakeGameContainer.style.padding = "10px";
+    snakeGameContainer.style.zIndex = "999999";
+    snakeGameContainer.style.display = "flex";
+    snakeGameContainer.style.flexDirection = "column";
+    snakeGameContainer.style.alignItems = "center";
+    snakeGameContainer.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
+    snakeGameContainer.innerHTML = `
+      <canvas id="snakeCanvas" width="250" height="250" style="background:#000; border-radius:10px;"></canvas>
+      <div style="margin-top:8px;color:#fff;font-family:'Cairo',sans-serif;">
+        <span id="snakeScore">النقاط: 0</span>
+        <button id="snakeRestart" style="margin-left:10px;background:#285eff;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">إعادة</button>
+      </div>
+    `;
+    document.body.appendChild(snakeGameContainer);
+
+    document.getElementById("snakeRestart").addEventListener("click", restartSnakeGame);
+  } else {
+    snakeGameContainer.style.display = "block";
+  }
+
+  // إعداد الكانفاس
+  snakeCanvas = document.getElementById("snakeCanvas");
+  snakeCtx = snakeCanvas.getContext("2d");
+
+  // بداية جديدة
+  restartSnakeGame();
+
+  // التحكم بالحركة
+  document.addEventListener("keydown", handleKeyPress);
+}
+
+// ♻️ إعادة اللعبة
+function restartSnakeGame() {
+  snake = [{ x: 5, y: 5 }];
+  food = randomFood();
+  direction = "right";
+  nextDirection = "right";
+  score = 0;
+  document.getElementById("snakeScore").textContent = "النقاط: 0";
+  clearInterval(gameInterval);
+  gameInterval = setInterval(gameLoop, 130);
+}
+
+// 🎮 التحكم بالحركة
+function handleKeyPress(e) {
+  const key = e.key.toLowerCase();
+  if (key === "arrowup" && direction !== "down") nextDirection = "up";
+  else if (key === "arrowdown" && direction !== "up") nextDirection = "down";
+  else if (key === "arrowleft" && direction !== "right") nextDirection = "left";
+  else if (key === "arrowright" && direction !== "left") nextDirection = "right";
+}
+
+// 🧩 حلقة اللعبة
+function gameLoop() {
+  direction = nextDirection;
+  const head = { ...snake[0] };
+
+  // حركة الرأس
+  if (direction === "up") head.y--;
+  else if (direction === "down") head.y++;
+  else if (direction === "left") head.x--;
+  else if (direction === "right") head.x++;
+
+  // التحقق من الخسارة
+  if (head.x < 0 || head.y < 0 || head.x >= 25 || head.y >= 25 || snake.some(s => s.x === head.x && s.y === head.y)) {
+    clearInterval(gameInterval);
+    snakeCtx.fillStyle = "#ff3b3b";
+    snakeCtx.font = "20px Cairo";
+    snakeCtx.fillText("💀 خسرت! النقاط: " + score, 20, 120);
+    return;
+  }
+
+  // أكل الطعام
+  snake.unshift(head);
+  if (head.x === food.x && head.y === food.y) {
+    food = randomFood();
+    score++;
+    document.getElementById("snakeScore").textContent = "النقاط: " + score;
+  } else {
+    snake.pop();
+  }
+
+  drawGame();
+}
+
+// 🎨 الرسم
+function drawGame() {
+  snakeCtx.fillStyle = "#000";
+  snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+  // الشبكة الخفيفة (جمالية)
+  snakeCtx.strokeStyle = "#111";
+  for (let i = 0; i < 250; i += 10) {
+    snakeCtx.beginPath();
+    snakeCtx.moveTo(i, 0);
+    snakeCtx.lineTo(i, 250);
+    snakeCtx.moveTo(0, i);
+    snakeCtx.lineTo(250, i);
+    snakeCtx.stroke();
+  }
+
+  // الحية
+  snake.forEach((part, index) => {
+    snakeCtx.fillStyle = index === 0 ? "#00ff88" : "#0099ff";
+    snakeCtx.fillRect(part.x * 10, part.y * 10, 9, 9);
+  });
+
+  // الطعام
+  snakeCtx.fillStyle = "#ffcc00";
+  snakeCtx.beginPath();
+  snakeCtx.arc(food.x * 10 + 5, food.y * 10 + 5, 4, 0, Math.PI * 2);
+  snakeCtx.fill();
+}
+
+// 🥗 مكان عشوائي للطعام
+function randomFood() {
+  let newFood;
+  do {
+    newFood = { x: Math.floor(Math.random() * 25), y: Math.floor(Math.random() * 25) };
+  } while (snake.some(s => s.x === newFood.x && s.y === newFood.y));
+  return newFood;
+}
+</script>
+<!-- 🌐 شريط التنقل السفلي -->
+<!-- ✅ زر الواجهة الثانية -->
+ <!-- ✅ الشريط السفلي الموحد -->
+<div id="bottomBar">
+  <button onclick="openPage2()">🧩</button>
+  <button onclick="goHome()">🏠</button>
+</div>
+
+<div id="page2Overlay">
+  <iframe id="page2Frame" src=""></iframe>
+</div>
+
+<style>
+#bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #285eff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 10px 0;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+}
+#bottomBar button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#bottomBar button:hover {
+  transform: scale(1.2);
+}
+#page2Overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f7faff;
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#page2Overlay.show {
+  display: flex;
+  opacity: 1;
+}
+#page2Frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+
+<script>
+function openPage2() {
+  const overlay = document.getElementById("page2Overlay");
+  const frame = document.getElementById("page2Frame");
+
+  // ✅ نتأكد إن العنصر ظاهر قبل تشغيل الأنيميشن
+  overlay.style.display = "flex";
+  setTimeout(() => overlay.classList.add("show"), 20);
+
+  frame.src = "missingsol5.html"; // يربط الصفحة الثانية
+}
+
+function closePage2() {
+  const overlay = document.getElementById("page2Overlay");
+  const frame = document.getElementById("page2Frame");
+
+  overlay.classList.remove("show");
+  setTimeout(() => {
+    // ✅ ما نحذف العنصر من العرض، فقط نخفيه مؤقتًا
+    overlay.style.display = "none";
+    frame.src = "";
+  }, 600);
+}
+
+
+function goHome() {
+  const overlay = document.getElementById("page2Overlay");
+  if (overlay.classList.contains("show")) {
+    // إذا كنا داخل الصفحة الثانية
+    closePage2();
+  } else {
+    // إذا كنا بالصفحة الرئيسية فقط ننقل لأعلى الصفحة
+    scrollTo(0, 0);
+  }
+}
+
+// تأكد من أن overlay يظهر بعد التحميل
+const overlay = document.getElementById("page2Overlay");
+overlay.addEventListener("transitionstart", () => {
+  overlay.style.display = "flex";
+});
+</script>
+
 </body>
+
 </html>
