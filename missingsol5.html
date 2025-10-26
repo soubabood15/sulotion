@@ -14,18 +14,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  justify-content: start;
+  min-height: 100vh;
   text-align: center;
+  padding-bottom: 80px;
 }
 h1 {
   color: #285eff;
-  font-size: 28px;
-}
-p {
-  margin-top: 10px;
-  color: #333;
-  font-size: 15px;
+  font-size: 26px;
+  margin-top: 30px;
 }
 #bottomBar {
   position: fixed;
@@ -52,140 +49,180 @@ p {
 #bottomBar button:hover {
   transform: scale(1.2);
 }
-  .scripts-container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    padding: 24px;
-  }
 
-  h2 {
-    color: #285eff;
-    margin-top: 0;
-  }
+/* ✅ أقسام السكربتات */
+.scripts-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 40px auto;
+  max-width: 1100px;
+}
 
-  .qbtn {
-    background: #285eff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
-    cursor: pointer;
-    transition: 0.2s;
-    margin: 4px;
-  }
-  .qbtn:hover {
-    background: #1e4edb;
-  }
+.section {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  padding: 20px;
+  flex: 1;
+  min-width: 300px;
+  text-align: right;
+}
+.section h2 {
+  color: #285eff;
+  text-align: center;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #285eff22;
+  padding-bottom: 6px;
+}
 
-  .lang-box {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
+/* ✅ السكربتات */
+.chat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.msg {
+  background: #f9fbff;
+  border: 1px solid #dce6ff;
+  border-radius: 8px;
+  padding: 8px;
+  flex: 1;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+.msg:hover {
+  background: #eaf1ff;
+  transform: scale(1.02);
+}
 
-  .lang-box button {
-    padding: 6px 12px;
-    border: 1px solid #d6e4ff;
-    border-radius: 8px;
-    background: #f4f7ff;
-    cursor: pointer;
-  }
+/* ✅ إشعار النسخ */
+.notice {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  background: #285eff;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
 
-  .notice {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background: #285eff;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-  }
+.sub-title {
+  text-align: right;
+  color: #285eff;
+  font-size: 15px;
+  margin: 14px 0 10px;
+  border-bottom: 2px dashed #c8d8ff;
+  padding-bottom: 4px;
+  width: 100%;
+}
 </style>
 </head>
 <body>
 
-<div class="scripts-container">
-  <h2>سكربتات رئيسية</h2>
-  <button class="qbtn" onclick="toggleScript(this, 'missing')">Missing items</button>
-  <button class="qbtn" onclick="toggleScript(this, 'spillage')">Spillage</button>
-  <button class="qbtn" onclick="toggleScript(this, 'delay')">Delay apology</button>
+<h1>💬 سكربتات جاهزة</h1>
 
-  <div id="scriptArea"></div>
+<!-- ✅ ثلاث أقسام سكربتات بجانب بعض -->
+<div class="scripts-row">
+
+  <!-- القسم الأول -->
+  <div class="section">
+    <h2>🔹 سكربتات مشاكل الطلب</h2>
+    <h3 class="sub-title">🔹 Wrong items</h3>
+    <div class="chat-row">
+     
+      <div class="msg" onclick="copyMsg(this)">نأسف على المشكلة. ممكن أعرف أي صنف كان خاطئ؟ تقدر ترسل صورة للصنف مع الوصل؟ شكرًا لك! </div>
+      <div class="msg" onclick="copyMsg(this)">Sorry to hear that, please let me know which item is wrong Please provide a photo of the receipt and the food together. </div>
+    </div>
+    <h3 class="sub-title">🔹 Missing items</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">نأسف على المشكله، ما هي الاصناف الناقصة؟ لو سمحت عزيزي العميل ان تقوم بتصوير المنتجات التي استلمتها مع الوصل بجانب بعضهم البعض؟</div>
+      <div class="msg" onclick="copyMsg(this)"> Sorry to hear that, please let me know which items are missing? Could you please take a photo showing both the receipt and the food you received together? This will help us better understand the issue and assist you more efficiently. Thank you!</div>
+    </div>
+        <h3 class="sub-title">🔹 cant provide picture</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> شكرًا على ملاحظاتك. للأسف، بدون صور للطعام ، ما نقدر نحدد تفاصيل المشكلة. في المستقبل، يرجى الاحتفاظ بأي دليل يساعدنا في حل المشكلة بشكل أكثر فعالية. شكرًا لك</div>
+      <div class="msg" onclick="copyMsg(this)"> Thank you for your feedback. Unfortunately, without photos of the food, we can't determine the details of the issue. In the future, please keep any evidence that can help us resolve the issue more effectively. Thank you.</div>
+    </div>
+  </div>
+
+  <!-- القسم الثاني -->
+  <div class="section">
+    <h2>🔹 سكربتات الملاحظة</h2>
+    <h3 class="sub-title">🔹 المطعم وافق</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> بعد ما تفاهمت مع المطعم، قبل الملاحظة. الأكل بتجهز حسب الملاحظة.</div>
+      <div class="msg" onclick="copyMsg(this)">After negotiating with the restaurant, the restaurant accepted the note. The food will be perpared as the note. </div>
+    </div>
+   <h3 class="sub-title">🔹 المطعم رفض</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> نعتذر، المطعم بدأ بتجهيز الطلب، المطعم ما قبل الملاحظة.</div>
+      <div class="msg" onclick="copyMsg(this)"> We apologize that the merchant didn't accept the note.</div>
+    </div>
+    <h3 class="sub-title">🔹 هولد الملاحظه</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> يرجى الانتظار دقيقة بينما أحاول التواصل مع المطعم لمعرفة ما إذا كان بالإمكان إضافة ملاحظة حضرتك للطلب</div>
+      <div class="msg" onclick="copyMsg(this)"> Please wait a moment while I try to contact the restaurant to see if your note can be added to the order.</div>
+    </div>
+  </div>
+
+  <!-- القسم الثالث -->
+  <div class="section">
+    <h2>🔹 سكربتات مهمة (مشاكل)</h2>
+    <h3 class="sub-title">🔹 No respond but have refund</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> مرحبا عميلنا العزيز سيتم تعويضك تلقائيا على (طريقة دفعك الأصلية) وذلك لانه لم اتلقى منك رد وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، فلا تتردد في التواصل معنا. شكرًا لك</div>
+      <div class="msg" onclick="copyMsg(this)"> Hello dear customer, you will be automatically compensated through your (primary payment method) as I haven't received a response from you. The conversation will be closed soon. If you have any further inquiries, feel free to reach out to us. Thank you!</div>
+    </div>
+    <h3 class="sub-title">🔹 Escalation</h3>
+    <div class="chat-row">
+     <div class="msg" onclick="copyMsg(this)"> نعتذر على الإزعاج. سنتابع مشكلتك وسيقوم أحد أعضاء الفريق بالتواصل معك قريباً. إذا كان لديك أي أسئلة أخرى، لا تتردد في التواصل معنا مرة أخرى. أتمنى لك يوماً سعيداً، وإلى اللقاء</div>
+     <div class="msg" onclick="copyMsg(this)"> We’re sorry for the inconvenience. We’ll keep track of your issue and a team member will reach out to you soon. If you have any other questions, feel free to reach out to us again. Have a great day and goodbye</div>
+    </div>
+    <h3 class="sub-title">🔹 More than day</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)"> أعتذر بشدة على المشكلة التي واجهتك، فأنت عميل محترم وعزيز علينا. ربي يسلمك، وكنت أتمنى تواصلك معنا في وقت أبكر حتى نتمكن من حل المشكلة فورًا وتقديم أفضل خدمة لك.</div>
+      <div class="msg" onclick="copyMsg(this)"> I sincerely apologize for the issue you faced. You are a valued and respected customer. God bless you, and I truly wish you had contacted us earlier so we could have resolved the issue immediately and provided you with the best possible service.</div>
+    </div>
+  </div>
+
 </div>
 
-<div class="notice" id="copyNotice">✅ تم النسخ</div>
+<!-- ✅ إشعار النسخ -->
+<div id="copyNotice" class="notice">✅ تم النسخ</div>
 
-<script>
-const scripts = {
-  missing: {
-    ar: "نعتذر عن العناصر المفقودة. سنقوم بإبلاغ المطعم ومعالجتها فورًا.",
-    en: "We apologize for the missing items. We will inform the restaurant and handle it immediately."
-  },
-  spillage: {
-    ar: "نأسف لانسكاب الطلب، سنقوم بإرسال ملاحظة للمطعم.",
-    en: "Sorry for the spillage. We’ll send feedback to the restaurant."
-  },
-  delay: {
-    ar: "نعتذر عن التأخير في الطلب، ونعمل على تفادي ذلك مستقبلًا.",
-    en: "We apologize for the delay and are working to avoid it in the future."
-  }
-};
-
-function toggleScript(btn, key) {
-  const area = document.getElementById("scriptArea");
-  const isOpen = btn.classList.contains("active");
-
-  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active"));
-  area.innerHTML = "";
-
-  if (!isOpen) {
-    btn.classList.add("active");
-    area.innerHTML = `
-      <div class="lang-box">
-        <button onclick="copyScript('${key}', 'ar', event)">🇸🇦 عربي</button>
-        <button onclick="copyScript('${key}', 'en', event)">🇬🇧 English</button>
-      </div>
-    `;
-  }
-}
-
-function copyScript(key, lang, e) {
-  navigator.clipboard.writeText(scripts[key][lang]);
-  showCopiedNotice();
-}
-
-function showCopiedNotice() {
-  const notice = document.getElementById("copyNotice");
-  notice.style.opacity = "1";
-  setTimeout(() => notice.style.opacity = "0", 1000);
-}
-</script>
-
-
-
-
-
-
-
-<!-- ✅ نفس الشريط -->
+<!-- ✅ الشريط السفلي -->
 <div id="bottomBar">
-  <button disabled style="opacity:0.6;cursor:default;">🧩</button>
   <button onclick="goBack()">🏠</button>
+  <button disabled style="opacity:0.6;cursor:default;">🧩</button>
 </div>
+
 <script>
 function goBack() {
   if (window.parent && window.parent.closePage2) {
-    window.parent.closePage2(); // يرجع إلى index
+    window.parent.closePage2();
   } else {
-    window.location.href = "missingsol4"; // احتياط
+    window.location.href = "index.html";
   }
+}
+
+function copyMsg(el) {
+  const text = el.textContent.trim();
+  navigator.clipboard.writeText(text);
+  const notice = document.getElementById("copyNotice");
+  notice.style.opacity = "1";
+  setTimeout(() => notice.style.opacity = "0", 1000);
 }
 </script>
 
