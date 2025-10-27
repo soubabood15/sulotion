@@ -617,6 +617,70 @@ function toggleCallInput(){
     el('callResult').value = "";
   }
 }
+  <div id="updatePopup" style="
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  background: rgba(0,0,0,0.25); /* ← أغمقنا الخلفية شوي حتى تبرز الزجاج */
+  z-index: 999999;
+  transition: opacity .5s ease;
+">
+  <div style="
+    background: rgba(255,255,255,0.15);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow:
+      inset 0 0 15px rgba(255,255,255,0.15),
+      0 8px 25px rgba(0,0,0,0.3);
+    padding: 28px 34px;
+    width: 420px;
+    max-width: 90%;
+    color: #fff;
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+    backdrop-filter: blur(35px) saturate(180%);
+    -webkit-backdrop-filter: blur(35px) saturate(180%);
+    position: relative;
+  ">
+    <h2 style="color:#ffffff; text-shadow:0 0 8px rgba(0,0,0,0.6); font-size:22px; margin-bottom:10px;">
+      💎 تحديث جديد!
+    </h2>
+
+    <p style="color:#f2f6ff; font-weight:500; font-size:15px; text-shadow:0 0 5px rgba(0,0,0,0.4); margin-bottom:20px;">
+      تعرف على الإضافات الجديدة اللي ضفناها اليوم 👇
+    </p>
+
+    <ul style="text-align:right; font-size:15px; color:#eaf0ff; list-style:none; padding:0; line-height:1.8; text-shadow:0 0 6px rgba(0,0,0,0.4);">
+      <li>⭐ تصميم الشريط السفلي صار زجاجي بالكامل مثل iOS.</li>
+      <li>🧩 تحسين واجهة السكربتات وتوزيعها بشكل أوضح.</li>
+      <li>🐍 تحديث لعبة الحية لتصير أوضح وأكثر تفاعلًا.</li>
+      <li>💬 تم إضافة نظام النسخ الذكي الجديد.</li>
+    </ul>
+
+    <button onclick="closePopup()" style="
+      margin-top: 25px;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      transition: all .3s ease;
+      box-shadow:
+        inset 1px 1px 3px rgba(255,255,255,0.25),
+        inset -2px -2px 6px rgba(0,0,0,0.25);
+    ">
+      تخطي
+    </button>
+  </div>
+</div>
 </script>
 
 </body>
