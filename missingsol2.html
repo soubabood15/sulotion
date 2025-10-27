@@ -200,43 +200,13 @@ textarea#output {
 </head>
 <body>
 <script>
-const currentVersion = "v2.5"; // ← كل ما تعدل الموقع غيّر الرقم فقط
-const lastVersion = localStorage.getItem("siteVersion");
+// 🧩 رقم النسخة — غيّره كل مرة تحدث الصفحة على GitHub Pages
+const version = "3.1.0";
 
-if (lastVersion && lastVersion !== currentVersion) {
-  showUpdateNotice();
-  setTimeout(() => location.reload(true), 1500);
-}
-
-localStorage.setItem("siteVersion", currentVersion);
-
-function showUpdateNotice() {
-  const notice = document.createElement("div");
-  notice.textContent = "🔄 تم تحديث الموقع إلى أحدث إصدار...";
-  Object.assign(notice.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    background: "rgba(255,255,255,0.25)",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,0.4)",
-    color: "#285eff",
-    padding: "12px 20px",
-    borderRadius: "14px",
-    fontFamily: "Cairo, sans-serif",
-    fontSize: "15px",
-    fontWeight: "600",
-    boxShadow: "0 4px 25px rgba(0,0,0,0.2)",
-    zIndex: "999999",
-    opacity: "0",
-    transition: "opacity .6s ease"
-  });
-  document.body.appendChild(notice);
-  setTimeout(() => (notice.style.opacity = "1"), 50);
-  setTimeout(() => {
-    notice.style.opacity = "0";
-    setTimeout(() => notice.remove(), 600);
-  }, 2500);
+// ✅ يجبر المتصفح يعمل refresh فوري عند اختلاف النسخة
+if (localStorage.getItem("app_version") !== version) {
+  localStorage.setItem("app_version", version);
+  location.reload(true);
 }
 </script>
 <!-- القسم الأيمن -->
@@ -250,7 +220,13 @@ function showUpdateNotice() {
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
 
- 
+  <h3>الاعتذارات القصيرة</h3>
+  <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
+  <div class="box">
+    <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
+    <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
+  </div>
+</div>
 
 <!-- القسم الأيسر -->
 <div class="section" id="hold">
