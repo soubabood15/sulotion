@@ -201,7 +201,7 @@ textarea#output {
 <body>
 <script>
 // 🧩 رقم النسخة — غيّره كل مرة تحدث الصفحة على GitHub Pages
-const version = "3.1.0";
+const version = "3.1.5";
 
 // ✅ يجبر المتصفح يعمل refresh فوري عند اختلاف النسخة
 if (localStorage.getItem("app_version") !== version) {
@@ -213,7 +213,7 @@ if (localStorage.getItem("app_version") !== version) {
 <div class="section" id="apology">
   <h2>قسم الاعتذارات</h2>
 
-  <h3>الاعتذارات الطويلة</h3>
+  
   <button onclick="generate('longApology')">توليد اعتذار طويل</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
