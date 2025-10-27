@@ -200,7 +200,7 @@ textarea#output {
 </head>
 <body>
 <script>
-const currentVersion = "1.0.0"; // ✳️ نفس الرقم اللي بالملف version.json بالضبط
+const currentVersion = "1.0.2"; // ✳️ نفس الرقم اللي بالملف version.json بالضبط
 
 async function checkForUpdateOnce() {
   try {
@@ -244,11 +244,7 @@ checkForUpdateOnce();
 <!-- القسم الأيسر -->
 <div class="section" id="hold">
   <h2>قسم الهولد</h2>
-  <button onclick="generate('hold')">توليد هولد</button>
-  <div class="box">
-    <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
-    <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
-  </div>
+ 
   <!-- قسم السولوشن -->
   <div class="card">
     <h2>قسم السولوشن (Scenario 1)</h2>
