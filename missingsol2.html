@@ -200,20 +200,33 @@ textarea#output {
 </head>
 <body>
 <script>
-// 🧩 رقم النسخة — غيّره كل مرة تحدث الصفحة على GitHub Pages
-const version = "3.1.5";
+async function checkForUpdate() {
+  try {
+    // تحميل رقم الإصدار الحالي من ملف version.json
+    const response = await fetch("version.json?_=" + Date.now());
+    const data = await response.json();
 
-// ✅ يجبر المتصفح يعمل refresh فوري عند اختلاف النسخة
-if (localStorage.getItem("app_version") !== version) {
-  localStorage.setItem("app_version", version);
-  location.reload(true);
+    // الإصدار الموجود حاليًا بالصفحة
+    const currentVersion = "1.0.0"; // غيّره كل مرة تحدث الصفحة نفسها
+
+    // لو الإصدار تغيّر، نحدّث الصفحة
+    if (data.version !== currentVersion) {
+      console.log("🔄 تم اكتشاف تحديث جديد!");
+      location.reload(true); // تحديث فوري للصفحة
+    }
+  } catch (err) {
+    console.log("⚠️ لم يتم العثور على ملف الإصدار بعد");
+  }
 }
+
+// فحص التحديث كل 10 ثواني (تقدر تغيّر الوقت)
+setInterval(checkForUpdate, 10000);
 </script>
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
   <h2>قسم الاعتذارات</h2>
 
-  
+  <h3>الاعتذارات الطويلة</h3>
   <button onclick="generate('longApology')">توليد اعتذار طويل</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
