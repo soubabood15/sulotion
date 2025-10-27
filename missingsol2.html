@@ -204,7 +204,7 @@ const currentVersion = "1.0.2"; // ✳️ نفس الرقم اللي بالمل�
 
 async function checkForUpdateOnce() {
   try {
-    const res = await fetch("version.json?_=" + Date.now());
+   const response = await fetch("../version.json?nocache=" + Date.now(), { cache: "no-store" });
     const data = await res.json();
 
     // نقارن فقط إذا تغير رقم النسخة
