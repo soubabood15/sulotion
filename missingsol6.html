@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <link rel="icon" href="jordan.png" type="image/png" sizes="32x32">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>سلامٌ على غزة حتى يطمئن فؤادها</title>
+<title>اعتذارات وهولد</title>
 <style>
  .madeby {
   position: fixed;
@@ -1610,160 +1611,154 @@ document.addEventListener("click", function(e) {
 });
 </script>
 <!-- 🐍 لعبة الحية المتطورة -->
- <script>
-// 🎮 إعداد اللعبة
-let snakeGameContainer, snakeCanvas, snakeCtx, snake, food, direction, nextDirection, gameInterval, score;
+<script>
+// 🎮 لعبة الحية بإطار بنفسجي وتصادم مضبوط
+let snakeContainer, canvas, ctx, snake, direction, nextDirection, food, score, gameLoop, speed = 100, grid = 10;
 
-// 🎯 تفعيل اللعبة باختصار Ctrl + M
 document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "m") {
     e.preventDefault();
-    toggleSnakeGame();
+    toggleSnake();
   }
 });
 
-// 🐍 إظهار أو إخفاء اللعبة
-function toggleSnakeGame() {
-  if (snakeGameContainer && snakeGameContainer.style.display === "block") {
-    snakeGameContainer.style.display = "none";
-    clearInterval(gameInterval);
+function toggleSnake() {
+  if (snakeContainer && snakeContainer.style.display === "block") {
+    snakeContainer.style.display = "none";
+    clearInterval(gameLoop);
   } else {
-    initSnakeGame();
+    initSnake();
   }
 }
 
-// 🚀 إنشاء اللعبة
-function initSnakeGame() {
-  // إنشاء الحاوية إذا ما كانت موجودة
-  if (!snakeGameContainer) {
-    snakeGameContainer = document.createElement("div");
-    snakeGameContainer.style.position = "fixed";
-    snakeGameContainer.style.bottom = "20px";
-    snakeGameContainer.style.left = "20px";
-    snakeGameContainer.style.background = "linear-gradient(135deg,#001f3f,#003366)";
-    snakeGameContainer.style.border = "2px solid #66a3ff";
-    snakeGameContainer.style.borderRadius = "12px";
-    snakeGameContainer.style.padding = "10px";
-    snakeGameContainer.style.zIndex = "999999";
-    snakeGameContainer.style.display = "flex";
-    snakeGameContainer.style.flexDirection = "column";
-    snakeGameContainer.style.alignItems = "center";
-    snakeGameContainer.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
-    snakeGameContainer.innerHTML = `
-      <canvas id="snakeCanvas" width="250" height="250" style="background:#000; border-radius:10px;"></canvas>
-      <div style="margin-top:8px;color:#fff;font-family:'Cairo',sans-serif;">
+function initSnake() {
+  if (!snakeContainer) {
+    snakeContainer = document.createElement("div");
+    Object.assign(snakeContainer.style, {
+      position: "fixed",
+      bottom: "20px",
+      left: "20px",
+      background: "rgba(15,15,25,0.95)",
+      border: "3px solid #b066ff",
+      borderRadius: "16px",
+      padding: "12px",
+      boxShadow: "0 0 25px rgba(176,102,255,0.6)",
+      zIndex: "99999"
+    });
+    snakeContainer.innerHTML = `
+      <canvas id="snakeCanvas" width="320" height="320" style="border-radius:12px; background:#000;"></canvas>
+      <div style="text-align:center; color:#fff; font-family:'Cairo',sans-serif; margin-top:8px;">
         <span id="snakeScore">النقاط: 0</span>
-        <button id="snakeRestart" style="margin-left:10px;background:#285eff;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">إعادة</button>
+        <button id="restartSnake" style="background:#9b5cff;color:#fff;border:none;padding:6px 12px;border-radius:8px;margin-left:8px;cursor:pointer;">🔄 إعادة</button>
       </div>
     `;
-    document.body.appendChild(snakeGameContainer);
-
-    document.getElementById("snakeRestart").addEventListener("click", restartSnakeGame);
+    document.body.appendChild(snakeContainer);
+    document.getElementById("restartSnake").addEventListener("click", restartGame);
   } else {
-    snakeGameContainer.style.display = "block";
+    snakeContainer.style.display = "block";
   }
 
-  // إعداد الكانفاس
-  snakeCanvas = document.getElementById("snakeCanvas");
-  snakeCtx = snakeCanvas.getContext("2d");
+  canvas = document.getElementById("snakeCanvas");
+  ctx = canvas.getContext("2d");
 
-  // بداية جديدة
-  restartSnakeGame();
-
-  // التحكم بالحركة
-  document.addEventListener("keydown", handleKeyPress);
+  restartGame();
+  document.addEventListener("keydown", handleDirection);
 }
 
-// ♻️ إعادة اللعبة
-function restartSnakeGame() {
-  snake = [{ x: 5, y: 5 }];
+function restartGame() {
+  snake = [
+    { x: 15 * grid, y: 15 * grid },
+    { x: 14 * grid, y: 15 * grid },
+    { x: 13 * grid, y: 15 * grid },
+  ];
+  direction = "RIGHT";
+  nextDirection = "RIGHT";
   food = randomFood();
-  direction = "right";
-  nextDirection = "right";
   score = 0;
   document.getElementById("snakeScore").textContent = "النقاط: 0";
-  clearInterval(gameInterval);
-  gameInterval = setInterval(gameLoop, 130);
+  clearInterval(gameLoop);
+  gameLoop = setInterval(drawGame, speed);
 }
 
-// 🎮 التحكم بالحركة
-function handleKeyPress(e) {
+function handleDirection(e) {
   const key = e.key.toLowerCase();
-  if (key === "arrowup" && direction !== "down") nextDirection = "up";
-  else if (key === "arrowdown" && direction !== "up") nextDirection = "down";
-  else if (key === "arrowleft" && direction !== "right") nextDirection = "left";
-  else if (key === "arrowright" && direction !== "left") nextDirection = "right";
+  if (key === "arrowup" && direction !== "DOWN") nextDirection = "UP";
+  else if (key === "arrowdown" && direction !== "UP") nextDirection = "DOWN";
+  else if (key === "arrowleft" && direction !== "RIGHT") nextDirection = "LEFT";
+  else if (key === "arrowright" && direction !== "LEFT") nextDirection = "RIGHT";
 }
 
-// 🧩 حلقة اللعبة
-function gameLoop() {
+function drawGame() {
   direction = nextDirection;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, 320, 320);
+
+  // 🍎 رسم الطعام (بحجم مناسب وGlow)
+  const foodGradient = ctx.createRadialGradient(food.x + 5, food.y + 5, 2, food.x + 5, food.y + 5, 8);
+  foodGradient.addColorStop(0, "#ffaaaa");
+  foodGradient.addColorStop(1, "#ff3333");
+  ctx.fillStyle = foodGradient;
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#ff0000";
+  ctx.beginPath();
+  ctx.arc(food.x + 5, food.y + 5, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // 🐍 حركة الرأس
   const head = { ...snake[0] };
+  if (direction === "UP") head.y -= grid;
+  if (direction === "DOWN") head.y += grid;
+  if (direction === "LEFT") head.x -= grid;
+  if (direction === "RIGHT") head.x += grid;
 
-  // حركة الرأس
-  if (direction === "up") head.y--;
-  else if (direction === "down") head.y++;
-  else if (direction === "left") head.x--;
-  else if (direction === "right") head.x++;
-
-  // التحقق من الخسارة
-  if (head.x < 0 || head.y < 0 || head.x >= 25 || head.y >= 25 || snake.some(s => s.x === head.x && s.y === head.y)) {
-    clearInterval(gameInterval);
-    snakeCtx.fillStyle = "#ff3b3b";
-    snakeCtx.font = "20px Cairo";
-    snakeCtx.fillText("💀 خسرت! النقاط: " + score, 20, 120);
+  // 💀 تحقق من الخسارة
+  if (head.x < 0 || head.y < 0 || head.x >= 320 || head.y >= 320 || snake.some(s => s.x === head.x && s.y === head.y)) {
+    clearInterval(gameLoop);
+    ctx.fillStyle = "#ff3333";
+    ctx.font = "22px Cairo";
+    ctx.textAlign = "center";
+    ctx.fillText("💀 خسرت! النقاط: " + score, 160, 160);
     return;
   }
 
-  // أكل الطعام
+  // 🧩 أكل الطعام (دقيق بالشبكة)
   snake.unshift(head);
   if (head.x === food.x && head.y === food.y) {
-    food = randomFood();
     score++;
     document.getElementById("snakeScore").textContent = "النقاط: " + score;
+    food = randomFood();
   } else {
     snake.pop();
   }
 
-  drawGame();
-}
+  // 🟢 الحية المتوهجة
+  ctx.lineWidth = 16;
+  ctx.lineCap = "round";
+  ctx.shadowBlur = 18;
+  ctx.shadowColor = "#00ffcc";
 
-// 🎨 الرسم
-function drawGame() {
-  snakeCtx.fillStyle = "#000";
-  snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+  const grad = ctx.createLinearGradient(snake[0].x, snake[0].y, snake[snake.length-1].x, snake[snake.length-1].y);
+  grad.addColorStop(0, "#00ffcc");
+  grad.addColorStop(1, "#6600ff");
+  ctx.strokeStyle = grad;
 
-  // الشبكة الخفيفة (جمالية)
-  snakeCtx.strokeStyle = "#111";
-  for (let i = 0; i < 250; i += 10) {
-    snakeCtx.beginPath();
-    snakeCtx.moveTo(i, 0);
-    snakeCtx.lineTo(i, 250);
-    snakeCtx.moveTo(0, i);
-    snakeCtx.lineTo(250, i);
-    snakeCtx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(snake[0].x + 5, snake[0].y + 5);
+  for (let i = 1; i < snake.length; i++) {
+    const prev = snake[i - 1];
+    const curr = snake[i];
+    ctx.quadraticCurveTo(prev.x + 5, prev.y + 5, (prev.x + curr.x) / 2 + 5, (prev.y + curr.y) / 2 + 5);
   }
+  ctx.stroke();
 
-  // الحية
-  snake.forEach((part, index) => {
-    snakeCtx.fillStyle = index === 0 ? "#00ff88" : "#0099ff";
-    snakeCtx.fillRect(part.x * 10, part.y * 10, 9, 9);
-  });
-
-  // الطعام
-  snakeCtx.fillStyle = "#ffcc00";
-  snakeCtx.beginPath();
-  snakeCtx.arc(food.x * 10 + 5, food.y * 10 + 5, 4, 0, Math.PI * 2);
-  snakeCtx.fill();
+  ctx.shadowBlur = 0;
 }
 
-// 🥗 مكان عشوائي للطعام
 function randomFood() {
-  let newFood;
-  do {
-    newFood = { x: Math.floor(Math.random() * 25), y: Math.floor(Math.random() * 25) };
-  } while (snake.some(s => s.x === newFood.x && s.y === newFood.y));
-  return newFood;
+  const x = Math.floor(Math.random() * 31) * grid;
+  const y = Math.floor(Math.random() * 31) * grid;
+  return { x, y };
 }
 </script>
 <!-- 🌐 شريط التنقل السفلي -->
@@ -1779,19 +1774,70 @@ function randomFood() {
 </div>
 
 <style>
+/* 💎 الشريط السفلي الزجاجي */
 #bottomBar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #285eff;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 65px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+/* ✨ الأزرار الزجاجية */
+.nav-btn {
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+  font-size: 26px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 50px;
-  padding: 10px 0;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
-  z-index: 9999;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.3), 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* 💫 لمعة خفيفة في الأعلى */
+.nav-btn::before {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 35%;
+  top: 10%;
+  left: 15%;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  filter: blur(4px);
+  opacity: 0.8;
+}
+
+/* الزر لما تمر عليه الماوس */
+.nav-btn:hover {
+  transform: scale(1.1);
+  box-shadow: inset 0 3px 8px rgba(255,255,255,0.4), 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* 🌟 الزر النشط */
+.nav-btn.active {
+  background: radial-gradient(circle at 30% 30%, rgba(80,140,255,0.6), rgba(40,94,255,0.25));
+  box-shadow: 0 0 20px rgba(80,140,255,0.7), inset 0 3px 10px rgba(255,255,255,0.4);
+  color: white;
+  transform: scale(1.15);
 }
 #bottomBar button {
   background: none;
