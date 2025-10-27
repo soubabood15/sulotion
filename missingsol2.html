@@ -237,7 +237,23 @@ textarea#output {
 </style>
 </head>
 <body>
- 
+  <script>
+const currentVersion = "1.0.1"; // نفس الرقم الموجود في version.json
+
+async function checkVersion() {
+  try {
+    const res = await fetch("version.json?nocache=" + Date.now());
+    const data = await res.json();
+
+    if (data.version.trim() !== currentVersion.trim()) {
+      alert("🔄 تم إصدار نسخة جديدة! الصفحة ستتحدث الآن...");
+      location.reload(true);
+    }
+  } catch (e) {
+    console.log("فشل فحص النسخة:", e);
+  }
+}
+  </script>
   <div class="madeby">Made by Abdelrahman & Reem</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
@@ -1887,22 +1903,7 @@ overlay.addEventListener("transitionstart", () => {
   overlay.style.display = "flex";
 });
 </script>
- <script>
-const currentVersion = "1.0.1"; // نفس الرقم الموجود في version.json
 
-async function checkVersion() {
-  try {
-    const res = await fetch("version.json?nocache=" + Date.now());
-    const data = await res.json();
-
-    if (data.version.trim() !== currentVersion.trim()) {
-      alert("🔄 تم إصدار نسخة جديدة! الصفحة ستتحدث الآن...");
-      location.reload(true);
-    }
-  } catch (e) {
-    console.log("فشل فحص النسخة:", e);
-  }
-}
 
 </body>
 
