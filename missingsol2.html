@@ -200,28 +200,16 @@ textarea#output {
 </head>
 <body>
 <script>
-// 🔄 تحديث تلقائي فقط لما فعلاً يتغير الموقع
-(async () => {
-  try {
-    const res = await fetch(window.location.href, { method: "HEAD", cache: "no-store" });
-    const newVersion = res.headers.get("etag") || res.headers.get("last-modified");
+const currentVersion = "v2.5"; // ← كل ما تعدل الموقع غيّر الرقم فقط
+const lastVersion = localStorage.getItem("siteVersion");
 
-    if (!newVersion) return; // أمان في حال ما رجعت قيمه من GitHub
+if (lastVersion && lastVersion !== currentVersion) {
+  showUpdateNotice();
+  setTimeout(() => location.reload(true), 1500);
+}
 
-    const lastVersion = localStorage.getItem("siteVersion");
+localStorage.setItem("siteVersion", currentVersion);
 
-    if (lastVersion && lastVersion !== newVersion) {
-      showUpdateNotice(); // عرض تنبيه لطيف
-      setTimeout(() => location.reload(true), 2000);
-    }
-
-    localStorage.setItem("siteVersion", newVersion);
-  } catch (err) {
-    console.warn("⚠️ لم يتم التحقق من التحديث:", err);
-  }
-})();
-
-// 💎 تنبيه زجاجي جميل
 function showUpdateNotice() {
   const notice = document.createElement("div");
   notice.textContent = "🔄 تم تحديث الموقع إلى أحدث إصدار...";
@@ -229,9 +217,9 @@ function showUpdateNotice() {
     position: "fixed",
     bottom: "20px",
     right: "20px",
-    background: "rgba(255, 255, 255, 0.25)",
+    background: "rgba(255,255,255,0.25)",
     backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255, 255, 255, 0.4)",
+    border: "1px solid rgba(255,255,255,0.4)",
     color: "#285eff",
     padding: "12px 20px",
     borderRadius: "14px",
@@ -319,7 +307,7 @@ function showUpdateNotice() {
         <option value="need">need</option>
       </select>
        
-     
+      <label for="refund">Refund ( قيمة الطلب لو مافي اتركها فاضيه)</label>
       <input id="refund" type="text" inputmode="decimal" placeholder="حط الرقم بس" />
 
       <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
