@@ -200,27 +200,24 @@ textarea#output {
 </head>
 <body>
 <script>
-const currentVersion = "1.0.2"; // ✳️ نفس الرقم اللي بالملف version.json بالضبط
+const currentVersion = "1.0.0"; // نفس الرقم الموجود في version.json
 
-async function checkForUpdateOnce() {
+async function checkVersion() {
   try {
-   const response = await fetch("../version.json?nocache=" + Date.now(), { cache: "no-store" });
+    const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    // نقارن فقط إذا تغير رقم النسخة
     if (data.version.trim() !== currentVersion.trim()) {
-      console.log("🔄 تم اكتشاف إصدار جديد! تحديث الصفحة الآن...");
+      alert("🔄 تم إصدار نسخة جديدة! الصفحة ستتحدث الآن...");
       location.reload(true);
-    } else {
-      console.log("✅ الصفحة محدثة لآخر إصدار.");
     }
-  } catch (err) {
-    console.warn("⚠️ لم يتم العثور على ملف الإصدار:", err);
+  } catch (e) {
+    console.log("فشل فحص النسخة:", e);
   }
 }
 
-// نتحقق مرة وحدة فقط عند فتح الصفحة
-checkForUpdateOnce();
+// يفحص كل 10 ثواني إذا في تحديث
+setInterval(checkVersion, 10000);
 </script>
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
