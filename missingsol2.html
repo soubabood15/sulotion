@@ -298,7 +298,18 @@ fetch(window.location.href, { method: "HEAD", cache: "no-store" })
   </div>
 </div> 
 </div>
-
+ <div class="card">
+    <h2>الآلة الحاسبة</h2>
+    <div class="calc-box">
+      <input id="calcInput" type="number" placeholder="أدخل الرقم" />
+      <div class="calc-buttons">
+        <button onclick="calc(0.8)">Main dish</button>
+        <button onclick="calc(0.6)">Side dish</button>
+        <button onclick="calc(0.3)"> Drink</button>
+        <button onclick="calc(0.1)">Cutlery</button>
+      </div>
+      <div id="calcResult" class="calc-result">النتيجة: —</div>
+    </div>
   </div>
   
 <!-- popup -->
@@ -606,11 +617,47 @@ function toggleCallInput(){
     el('callResult').value = "";
   }
 }
-
-    </button>
-  </div>
-</div>
 </script>
+<script>
+function showUpdateNotice() {
+  const notice = document.createElement("div");
+  notice.innerHTML = "🔄 جاري تحديث الموقع إلى أحدث نسخة...";
+  Object.assign(notice.style, {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    background: "rgba(255,255,255,0.25)",
+    backdropFilter: "blur(12px)",
+    border: "1px solid rgba(255,255,255,0.4)",
+    color: "#285eff",
+    padding: "12px 20px",
+    borderRadius: "14px",
+    fontFamily: "Cairo, sans-serif",
+    fontSize: "15px",
+    fontWeight: "600",
+    boxShadow: "0 4px 25px rgba(0,0,0,0.2)",
+    zIndex: "999999",
+    opacity: "0",
+    transition: "opacity .6s ease"
+  });
 
+  document.body.appendChild(notice);
+  setTimeout(() => (notice.style.opacity = "1"), 100);
+
+  // بعد ثانيتين يخفي التنبيه ويعمل تحديث فعلي
+  setTimeout(() => {
+    notice.style.opacity = "0";
+    setTimeout(() => {
+      notice.remove();
+      location.reload(true);
+    }, 600);
+  }, 2000);
+}
+
+// 🧪 تجريبي: تشغيل التنبيه مباشرة عند فتح الصفحة
+window.addEventListener("load", () => {
+  showUpdateNotice();
+});
+</script>
 </body>
 </html>
