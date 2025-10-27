@@ -199,7 +199,20 @@ textarea#output {
 </style>
 </head>
 <body>
+<script>
+let lastEtag = localStorage.getItem("pageEtag");
 
+fetch(window.location.href, { method: "HEAD", cache: "no-store" })
+  .then(res => {
+    const currentEtag = res.headers.get("etag");
+    if (lastEtag && lastEtag !== currentEtag) {
+      console.log("🔄 تم اكتشاف تحديث جديد — إعادة تحميل الصفحة...");
+      location.reload(true);
+    }
+    localStorage.setItem("pageEtag", currentEtag);
+  })
+  .catch(err => console.log("⚠️ لم يتم التحقق من التحديث:", err));
+</script>
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
   <h2>قسم الاعتذارات</h2>
