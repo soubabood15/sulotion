@@ -237,6 +237,93 @@ textarea#output {
 </style>
 </head>
 <body>
+ <script>
+async function checkVersion() {
+  try {
+    const res = await fetch("version.json?nocache=" + Date.now());
+    const data = await res.json();
+
+    const currentVersion = "1.0.2"; // ← غيّر رقم النسخة الحالية في صفحتك
+
+    // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
+    if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
+      showUpdateNotice();
+    }
+  } catch (e) {
+    console.log("⚠️ فشل التحقق من النسخة:", e);
+  }
+}
+
+function showUpdateNotice() {
+  // 🔹 إنشاء العنصر الزجاجي
+  const notice = document.createElement("div");
+  notice.id = "updateNotice";
+  notice.innerHTML = `
+    <div class="update-glass">
+      <h3>✨ تم إصدار نسخة جديدة</h3>
+      <p>اضغط <b>Enter</b> لتحديث الصفحة</p>
+    </div>
+  `;
+  document.body.appendChild(notice);
+
+  // 🔹 عند الضغط على Enter يتم التحديث
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      location.reload(true);
+    }
+  });
+}
+
+// ⏳ التحقق كل 20 ثانية (يمكنك زيادتها)
+setInterval(checkVersion, 20000);
+</script>
+
+<style>
+/* 🧊 صندوق التحديث الزجاجي */
+.update-glass {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 18px 26px;
+  text-align: center;
+  color: #1c2742;
+  font-family: 'Cairo', sans-serif;
+  min-width: 260px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  z-index: 99999;
+  animation: glassFade 0.8s ease forwards, gentlePulse 3s ease-in-out infinite;
+}
+
+.update-glass h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #003cff;
+}
+
+.update-glass p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  color: #243b70;
+}
+
+/* ✨ الدخول الناعم */
+@keyframes glassFade {
+  from {opacity: 0; transform: translateY(15px) scale(0.95);}
+  to {opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* 💫 اهتزاز ناعم متكرر */
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 120, 255, 0.25); }
+  50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(0, 120, 255, 0.5); }
+}
+</style>
   <div class="madeby">Made by Abdelrahman & Reem</div>
 <div class="main-sections">
 <!-- القسم الأيمن -->
@@ -1440,120 +1527,83 @@ window.addEventListener("load", () => {
 </script>
  <!-- 🟦 نافذة التحديث (Popup) -->
 <!-- 🩵 نافذة التحديثات الجميلة -->
-<div id="updatePopup" class="update-popup">
-  <div class="popup-box">
-    <h2>اللهم هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم<br>السلام على غزّة بما فيها، بكل ما فيها 💙</h2>
-    <h3>📢 شو ضفنا جديد</h3>
-    <ul id="updateText">
-      <li>📌 ضفنا سكربتات مهمة بالحل – اكبس عربي أو إنجليزي للنسخ.</li>
-      <li>💰 أضفنا قسم الاسترداد الجديد.</li>
-      <li>🍽️ رجعنا حقل المطعم.</li>
-      <li>📞 بتقدر تتواصل معي لأي فكرة أو ملاحظة: <b>0779622690</b></li>
-      <li>🧩جرب الكبسه الجديدة فيها سكربتات وشو نضيف كمان </li>
-    </ul>
-    <button onclick="closePopup()">🚀 تخطي</button>
-  </div>
-</div>
-
-<style>
-/* الخلفية */
-.update-popup {
+<div id="updatePopup" style="
   position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #e3eeff, #f9fcff);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  background: rgba(0,0,0,0.25); /* ← أغمقنا الخلفية شوي حتى تبرز الزجاج */
   z-index: 999999;
-  font-family: "Cairo", sans-serif;
-  animation: fadeIn 0.6s ease forwards;
-}
+  transition: opacity .5s ease;
+">
+  <div style="
+    background: rgba(255,255,255,0.15);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow:
+      inset 0 0 15px rgba(255,255,255,0.15),
+      0 8px 25px rgba(0,0,0,0.3);
+    padding: 28px 34px;
+    width: 420px;
+    max-width: 90%;
+    color: #fff;
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+    backdrop-filter: blur(35px) saturate(180%);
+    -webkit-backdrop-filter: blur(35px) saturate(180%);
+    position: relative;
+  ">
+    <h2 style="color:#ffffff; text-shadow:0 0 8px rgba(0,0,0,0.6); font-size:22px; margin-bottom:10px;">
+      💎 تحديث جديد!
+    </h2>
 
-/* الصندوق */
-.popup-box {
-  background: rgba(255, 255, 255, 0.97);
-  padding: 35px 40px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  width: 420px;
-  max-width: 90%;
-  text-align: center;
-  transform: scale(0.9);
-  opacity: 0;
-  animation: slideUp 0.6s ease 0.2s forwards;
-  backdrop-filter: blur(8px);
-}
+    <p style="color:#f2f6ff; font-weight:500; font-size:15px; text-shadow:0 0 5px rgba(0,0,0,0.4); margin-bottom:20px;">
+      تعرف على الإضافات الجديدة اللي ضفناها اليوم 👇
+    </p>
 
-/* العناوين */
-.popup-box h2 {
-  color: #285eff;
-  font-size: 18px;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
+    <ul style="text-align:right; font-size:15px; color:#eaf0ff; list-style:none; padding:0; line-height:1.8; text-shadow:0 0 6px rgba(0,0,0,0.4);">
+      <li>⭐ تصميم الشريط السفلي صار زجاجي بالكامل مثل iOS.</li>
+      <li>🧩 تحسين واجهة السكربتات وتوزيعها بشكل أوضح.</li>
+      <li>🐍 تحديث لعبة الحية لتصير أوضح وأكثر تفاعلًا.</li>
+      <li>💬 تم إضافة نظام النسخ الذكي الجديد.</li>
+    </ul>
 
-.popup-box h3 {
-  color: #285eff;
-  margin-top: 10px;
-  font-size: 17px;
-}
-
-/* النصوص */
-#updateText {
-  text-align: right;
-  color: #333;
-  font-size: 15px;
-  line-height: 1.8;
-  list-style-type: disc;
-  list-style-position: inside;
-  margin-top: 10px;
-}
-
-/* الزر */
-.popup-box button {
-  background: linear-gradient(90deg, #285eff, #6a8dff);
-  color: #fff;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 10px;
-  margin-top: 18px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(40, 94, 255, 0.3);
-}
-.popup-box button:hover {
-  transform: scale(1.05);
-}
-
-/* الحركات */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes slideUp {
-  from { transform: translateY(40px) scale(0.9); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-@keyframes fadeOut {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(-20px) scale(0.95); }
-}
-</style>
-
+    <button onclick="closePopup()" style="
+      margin-top: 25px;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      transition: all .3s ease;
+      box-shadow:
+        inset 1px 1px 3px rgba(255,255,255,0.25),
+        inset -2px -2px 6px rgba(0,0,0,0.25);
+    ">
+      تخطي
+    </button>
+  </div>
+</div>
 <script>
 function closePopup() {
   const popup = document.getElementById("updatePopup");
-  const box = popup.querySelector(".popup-box");
-
-  // نبدأ حركة الخروج
-  box.style.animation = "fadeOut 0.5s ease forwards";
-  popup.style.transition = "opacity 0.6s ease";
+  if (!popup) return;
+  
+  // تعطيل الضغط بعد الكبس
+  popup.style.pointerEvents = "none";
   popup.style.opacity = "0";
 
-  // نحذفها بعد ما تخلص الحركة
-  setTimeout(() => popup.remove(), 600);
+  // إزالته بعد نصف ثانية
+  setTimeout(() => {
+    if (popup.parentNode) popup.remove();
+  }, 500);
 }
 </script>
 
@@ -1774,70 +1824,85 @@ function randomFood() {
 </div>
 
 <style>
-/* 💎 الشريط السفلي الزجاجي */
+/* 🌫️ شريط زجاجي شفاف لكن مرئي بشكل أوضح */
 #bottomBar {
   position: fixed;
-  bottom: 15px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  width: 220px;
-  height: 65px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(15px) saturate(180%);
-  -webkit-backdrop-filter: blur(15px) saturate(180%);
-  border-radius: 40px;
+  width: 260px;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.06); /* ← زادت الشفافية شوي */
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(35px) saturate(250%);
+  -webkit-backdrop-filter: blur(35px) saturate(250%);
+  box-shadow:
+    inset 0 0 4px rgba(255,255,255,0.25),
+    0 4px 25px rgba(0,0,0,0.15);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.2);
   z-index: 9999;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
-/* ✨ الأزرار الزجاجية */
+/* ✨ انكسار الضوء */
+#bottomBar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.04)
+  );
+  opacity: 0.7;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* ⚪️ الأزرار */
 .nav-btn {
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
-  border: 1px solid rgba(255,255,255,0.3);
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.9);
   font-size: 26px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: inset 0 2px 6px rgba(255,255,255,0.3), 0 4px 10px rgba(0,0,0,0.25);
+  box-shadow:
+    inset 1px 1px 4px rgba(255,255,255,0.25),
+    inset -2px -2px 5px rgba(0,0,0,0.15),
+    0 3px 15px rgba(0,0,0,0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
 }
 
-/* 💫 لمعة خفيفة في الأعلى */
-.nav-btn::before {
-  content: "";
-  position: absolute;
-  width: 70%;
-  height: 35%;
-  top: 10%;
-  left: 15%;
-  background: rgba(255,255,255,0.5);
-  border-radius: 50%;
-  filter: blur(4px);
-  opacity: 0.8;
-}
-
-/* الزر لما تمر عليه الماوس */
 .nav-btn:hover {
   transform: scale(1.1);
-  box-shadow: inset 0 3px 8px rgba(255,255,255,0.4), 0 5px 15px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.08);
+  box-shadow:
+    0 0 20px rgba(255,255,255,0.15),
+    inset 2px 2px 8px rgba(255,255,255,0.4);
 }
 
-/* 🌟 الزر النشط */
+/* 🔵 النشط */
 .nav-btn.active {
-  background: radial-gradient(circle at 30% 30%, rgba(80,140,255,0.6), rgba(40,94,255,0.25));
-  box-shadow: 0 0 20px rgba(80,140,255,0.7), inset 0 3px 10px rgba(255,255,255,0.4);
-  color: white;
-  transform: scale(1.15);
+  background: rgba(40,94,255,0.18);
+  box-shadow:
+    0 0 25px rgba(40,94,255,0.45),
+    inset 1px 1px 6px rgba(255,255,255,0.2);
+  color: #fff;
+  transform: scale(1.1);
 }
 #bottomBar button {
   background: none;
