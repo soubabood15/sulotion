@@ -90,8 +90,8 @@
 }
 .calc-box input {
   padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
+  font-size: px;
+  border-radius: 5px;
   border: 1px solid #c9dafd;
   outline: none;
   text-align: center;
@@ -146,7 +146,7 @@
   border: none;
 }
 textarea#output {
-  width: 100%;
+  width: 90%;
   min-height: 160px;
   resize: none;
   white-space: pre-wrap;
@@ -203,37 +203,226 @@ textarea#output {
 }
 
 .main-sections {
- display:flex;
- flex-wrap:nowrap; /* ✅ هذا هو التغيير المهم */
- gap:25px;
- justify-content:center;
- align-items:flex-start;
- scroll-behavior:smooth;
- padding-bottom:10px;
-}
-
-.section {
-  flex: 1 1 300px; /* يخلي كل قسم ياخذ عرض مرن من 300px إلى المساحة المتاحة */
-  max-width: 360px; /* كان 430، صغرناه */
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,.08);
-  padding: 24px;
-  transition: all .4s ease;
-  animation: fadeIn .8s ease;
-}
-
-.calculator-section {
+  display: flex;
+  flex-wrap: nowrap; /* ما ينزل شيء */
+  gap: 25px;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-x: auto; /* تمرير أفقي فقط لو الشاشة صغيرة */
+  scroll-behavior: smooth;
+  padding: 30px 20px;
+  box-sizing: border-box;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,.08);
-  padding: 24px;
-  animation: fadeIn .8s ease;
+  max-width: 100vw; /* يمنع التمدد الزايد */
+
+  /* مظهر الشريط */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.4) rgba(0,0,0,0.1);
 }
 
+.main-sections::-webkit-scrollbar {
+  height: 8px;
+}
+.main-sections::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.main-sections::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+}
+
+/* البوكسات نفس العرض حتى ما تنزل */
+.section {
+  flex: 0 0 350px; /* 👈 عرض ثابت يمنع النزول */
+  max-width: 350px;
+}
+/* 💎 الصناديق الزجاجية */
+.section {
+  flex: 1 1 340px;
+  max-width: 360px;
+  min-height: 520px; /* 👈 يثبت طول البوكس */
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✨ تأثير ناعم عند المرور */
+.section:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(80, 150, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 💡 لمعان زجاجي خفيف */
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.05));
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+
+/* 💎 ستايل زجاجي بحدود مضيئة ثابتة */
+/* 🧊 الحقول */
+.card select,
+.card input,
+.card textarea {
+  background: rgba(255, 255, 255, 0.20);
+  border: 1.5px solid rgba(150, 180, 255, 0.6);
+  color: #111;
+  border-radius: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card select:focus,
+.card input:focus,
+.card textarea:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(120, 160, 255, 1);
+  box-shadow: 0 0 10px rgba(120, 160, 255, 0.5);
+  outline: none;
+}
+
+/* 💙 الأزرار */
+.card .btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(70, 120, 255, 0.9), rgba(120, 160, 255, 0.9));
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(90, 140, 255, 0.35);
+  backdrop-filter: blur(10px);
+}
+.card .btn:hover {
+  background: linear-gradient(135deg, rgba(80, 130, 255, 1), rgba(140, 180, 255, 1));
+  transform: scale(1.05);
+}
+
+/* ✨ تلميح النص */
+.card .hint {
+  text-align: center;
+  font-size: 13px;
+  color: #2e5fff;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+/* 🎯 تصغير الطول لحقل Compensation مع الحفاظ على نفس المظهر */
+#compensation {
+  width: 85%;
+  height: 34px; /* 👈 أقصر شوي فقط */
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(200, 220, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15); /* 👈 نفس خلفية الزجاج */
+  backdrop-filter: blur(12px);
+  color: #1a1a1a;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* ✨ تأثير عند التفاعل */
+#compensation:hover,
+#compensation:focus {
+  border-color: rgba(91, 141, 239, 0.9);
+  box-shadow: 0 0 10px rgba(91, 141, 239, 0.25);
+  
+}
+/* 💰 زر التعويض */
+#compensationBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(15, 25, 60, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#compensationBtn:hover {
+  background: rgba(50, 70, 150, 0.9) !important;
+  box-shadow: 0 0 15px rgba(90, 150, 255, 0.5) !important;
+  transform: scale(1.06) !important;
+}
+
+/* 💳 زر الاسترداد */
+#refundcompBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(50, 20, 10, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#refundcompBtn:hover {
+  background: rgba(110, 40, 20, 0.9) !important;
+  box-shadow: 0 0 15px rgba(255, 180, 100, 0.5) !important;
+  transform: scale(1.06) !important;
+}
+
+#refundBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(179, 67, 30, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#refundBtn:hover {
+  background: rgba(110, 40, 20, 0.9) !important;
+  box-shadow: 0 0 15px rgba(255, 180, 100, 0.5) !important;
+  transform: scale(1.06) !important;
+}
 </style>
 </head>
 <body>
@@ -243,7 +432,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.0"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.2"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -260,8 +449,8 @@ function showUpdateNotice() {
   notice.id = "updateNotice";
   notice.innerHTML = `
     <div class="update-glass">
-      <h3>✨ تم إصدار نسخة جديدة</h3>
-      <p>اضغط <b>Enter</b> لتحديث الصفحة</p>
+      <h3>✨ يامعلم حدثنا النظام</h3>
+      <p>الله لايهينك اكبس  <b>Enter</b> خنحدث هلصفحه </p>
     </div>
   `;
   document.body.appendChild(notice);
@@ -275,7 +464,7 @@ function showUpdateNotice() {
 }
 
 // ⏳ التحقق كل 20 ثانية (يمكنك زيادتها)
-setInterval(checkVersion, 20000);
+setInterval(checkVersion, 5000);
 </script>
 
 <style>
@@ -537,7 +726,6 @@ setInterval(checkVersion, 20000);
   <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
 <div style="text-align:center; margin-bottom:15px;">
-  <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
   <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
          style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
 </div>
@@ -578,7 +766,7 @@ setInterval(checkVersion, 20000);
       <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
     </div>
 <div class="chat-row">
-    <div class="msg" onclick="copyMsg(this)">سُعدتُ بخدمتك اليوم. بعد انتهاء المحادثة سيظهر لك إشعار لتقييم تجربتك معنا، ونود إبلاغك أن التقييم يكون من 1 إلى 5، حيث 5 هو أعلى تقييم و1 هو الأقل. نشكر تواصلك مع كيتا ونتمنى لك يوماً سعيداً. </div>
+    <div class="msg" onclick="copyMsg(this)">سُعدتُ بخدمتك اليوم. بعد انتهاء المحادثة سيظهر لك إشعار لتقييم تجربتك معنا، ونود إبلاغك أن التقييم يكون من 1 إلى 5، حيث 5 هو أعلى تقييم و1 هو الأقل. نشكر تواصلك مع كيتا ونتمنى لك يوماً سعيداً.</div>
       <div class="msg" onclick="copyMsg(this)">I am happy to serve you today. After the end of the conversation,a message will appear to evaluate your experience, and it will inform you that the rating will be from 1 to 5, where 5 is the highest rating and 1 is the lowest. Thank you for contacting Keeta and I wish you a happy day.</div>
 </div>
   </div>
@@ -670,10 +858,11 @@ function showCopiedNotice() {
 <div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
   <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
 
+  
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
-    <button class="btn primary" onclick="startCompensation()">تعويض</button>
-    <button class="btn" onclick="startRefund()">استرداد وتعويض</button>
-    <button class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">تعويض</button>
+    <button id="refundcompBtn" class="btn" onclick="startRefund()">استرداد وتعويض</button>
+    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
     <div id="scriptBox" style="margin-top:10px;"></div>
   </div>
 
@@ -681,7 +870,7 @@ function showCopiedNotice() {
  
 <div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
   <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
-  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:100%;text-align:center;font-size:15px;">
+  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:90;text-align:center;font-size:15px;">
   <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
     <button onclick="calc(0.8)">Main dish</button>
     <button onclick="calc(0.5)">Side dish</button>
@@ -1431,10 +1620,10 @@ function buildTemplate() {
 
 el('build').addEventListener('click', buildTemplate);
 el('clear').addEventListener('click', () => {
-  el('riskLabel').value = '';
-  el('evidence').value = 'Clear';
-  el('receipt').value = 'yes';
-  el('refund').value = '';
+  el('riskLabel').value = '0RC';
+  el('evidence').value = 'No need';
+  el('receipt').value = 'No need';
+  el('refund').value = 'No refund';
   el('compensation').value = '';
   el('output').value = '';
   toggleRCOptions(); // يخفي الحقل عند المسح
@@ -1529,68 +1718,139 @@ window.addEventListener("load", () => {
 <!-- 🩵 نافذة التحديثات الجميلة -->
 <div id="updatePopup" style="
   position: fixed;
-  inset: 0;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  background: rgba(0,0,0,0.25); /* ← أغمقنا الخلفية شوي حتى تبرز الزجاج */
   z-index: 999999;
-  transition: opacity .5s ease;
+  font-family: 'Cairo', sans-serif;
 ">
-  <div style="
-    background: rgba(255,255,255,0.15);
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.25);
-    box-shadow:
-      inset 0 0 15px rgba(255,255,255,0.15),
-      0 8px 25px rgba(0,0,0,0.3);
-    padding: 28px 34px;
+  <div id="updateBox" style="
+    position: relative;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(15px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    padding: 30px;
+    text-align: center;
     width: 420px;
     max-width: 90%;
-    color: #fff;
-    text-align: center;
-    font-family: 'Cairo', sans-serif;
-    backdrop-filter: blur(35px) saturate(180%);
-    -webkit-backdrop-filter: blur(35px) saturate(180%);
-    position: relative;
+    animation: fadeIn .5s ease;
   ">
-    <h2 style="color:#ffffff; text-shadow:0 0 8px rgba(0,0,0,0.6); font-size:22px; margin-bottom:10px;">
-     اللهم هوّن على أهلنا في غزة وانصرهم وآمن روعاتهم
-السلام على غزّة بما فيها، بكل ما فيها 💙
-    </h2>
+    <h2 style="color:#285eff;margin-bottom:12px;">اللهم هون على اهلنا في غزه والسودان</h2>
+    <p style="color:#1a1a1a;font-size:15px;">اقرأ الملاحظات ثم اضغط على تمّ القراءة 👇</p>
 
-    <p style="color:#f2f6ff; font-weight:500; font-size:15px; text-shadow:0 0 5px rgba(0,0,0,0.4); margin-bottom:20px;">
-      شو ضفنا جدسد!
-    </p>
-
-    <ul style="text-align:right; font-size:15px; color:#eaf0ff; list-style:none; padding:0; line-height:1.8; text-shadow:0 0 6px rgba(0,0,0,0.4);">
-      <li>⭐ تصميم الشريط السفلي صار زجاجي بالكامل  </li>
-      <li>🧩 تحسين واجهة السكربتات وتوزيعها بشكل أوضح.</li>
-      <li>💬 تم إضافة نظام النسخ الذكي الجديد.</li>
+    <ul style="text-align:right;color:#333;font-size:20px;line-height:2;margin:15px 0;">
+      <li>ضفنا خانه السكربتات</li>
+      <li>صار الموقع اسهل صلحت بعض الاخطاء</li>
+      <li>  ضروري لما ارسلك خانه التحديث تحدث ✅</li>
     </ul>
 
-    <button onclick="closePopup()" style="
-      margin-top: 25px;
-      padding: 10px 28px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-      cursor: pointer;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      transition: all .3s ease;
-      box-shadow:
-        inset 1px 1px 3px rgba(255,255,255,0.25),
-        inset -2px -2px 6px rgba(0,0,0,0.25);
-    ">
-      تخطي
-    </button>
+    <button id="readBtn" style="
+      background:#285eff;
+      color:#fff;
+      border:none;
+      padding:10px 25px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:bold;
+      transition:all .3s ease;
+      animation: shake 2s infinite ease-in-out;
+    ">📖 تمّت القراءة</button>
+
+    <br><br>
+
+    <button id="skipBtn" style="
+      background:#fff;
+      color:#285eff;
+      border:2px solid #285eff;
+      padding:8px 20px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:14px;
+      position: relative;
+      transition: transform 0.25s ease; /* أسرع */
+      margin-top:10px;
+    ">تخطي ✨</button>
+
+    <p id="funnyMsg" style="
+      display:none;
+      color:#ff4747;
+      font-size:13px;
+      font-weight:bold;
+      margin-top:10px;
+    ">😂 مش قادر تكبس؟ اقرأ أول!</p>
   </div>
 </div>
+
+<script>
+const skipBtn = document.getElementById("skipBtn");
+const readBtn = document.getElementById("readBtn");
+const funnyMsg = document.getElementById("funnyMsg");
+let hasRead = false;
+let currentDirection = 1; // 1 = يمين، -1 = يسار
+
+// ✨ اهتزاز لطيف لزر القراءة
+readBtn.animate([
+  { transform: "translate(0,0)" },
+  { transform: "translate(2px,0)" },
+  { transform: "translate(-2px,0)" },
+  { transform: "translate(2px,0)" },
+  { transform: "translate(0,0)" }
+], { duration: 800, iterations: Infinity });
+
+// ✅ يثبّت الزر بعد القراءة
+readBtn.onclick = () => {
+  hasRead = true;
+  readBtn.style.background = "#22c55e";
+  readBtn.textContent = "✅ تم التأكيد";
+  funnyMsg.style.display = "none";
+  skipBtn.style.transform = "translateX(0)";
+};
+
+// ⚡ الزر يهرب بسرعة عند الاقتراب
+skipBtn.onmouseenter = () => {
+  if (!hasRead) {
+    funnyMsg.style.display = "block";
+
+    // يبدّل الاتجاه كل مرة
+    currentDirection *= -1;
+
+    const distance = 120 * currentDirection; // يتحرك يمين أو يسار
+    skipBtn.style.transform = `translateX(${distance}px)`;
+  }
+};
+
+// ✅ يسمح بالتخطي فعلاً بعد القراءة
+skipBtn.onclick = () => {
+  if (hasRead) closePopup();
+};
+
+// 🔻 إغلاق النافذة بلطف
+function closePopup() {
+  const popup = document.getElementById("updatePopup");
+  popup.style.opacity = 0;
+  popup.style.pointerEvents = "none";
+  setTimeout(() => popup.remove(), 400);
+}
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(2px, 0); }
+  50% { transform: translate(-2px, 0); }
+  75% { transform: translate(2px, 0); }
+}
+</style>
 <script>
 function closePopup() {
   const popup = document.getElementById("updatePopup");
@@ -1815,8 +2075,8 @@ function randomFood() {
 <!-- ✅ زر الواجهة الثانية -->
  <!-- ✅ الشريط السفلي الموحد -->
 <div id="bottomBar">
-  <button onclick="openPage2()">🧩</button>
-  <button onclick="goHome()">🏠</button>
+  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#9ecbff;">السكربتات 🧩</button>
+  <button onclick="goHome()" style="color:#9ecbff;">الرئيسية 🏠</button>
 </div>
 
 <div id="page2Overlay">
