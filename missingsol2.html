@@ -237,15 +237,16 @@ textarea#output {
 </style>
 </head>
 <body>
-  <script>
+ <script>
 async function checkVersion() {
   try {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.2"; // ← غيّري رقم النسخة
+    const currentVersion = "1.0.2"; // ← غيّر رقم النسخة الحالية في صفحتك
 
-    if (data.version.trim() !== currentVersion.trim()) {
+    // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
+    if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
       showUpdateNotice();
     }
   } catch (e) {
@@ -254,33 +255,18 @@ async function checkVersion() {
 }
 
 function showUpdateNotice() {
+  // 🔹 إنشاء العنصر الزجاجي
   const notice = document.createElement("div");
+  notice.id = "updateNotice";
   notice.innerHTML = `
-    <div id="updateNotice" style="
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
-      color: #1c2742;
-      font-family: 'Cairo', sans-serif;
-      padding: 20px 28px;
-      border-radius: 20px;
-      z-index: 99999;
-      text-align: center;
-      min-width: 260px;
-      animation: glassFade 0.8s ease forwards, shimmerMove 4s linear infinite;
-      background-image: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.35) 100%);
-    ">
-      <h3 style="margin:0;font-size:16px;font-weight:700;color:#003cff;">✨ تم إصدار نسخة جديدة</h3>
-      <p style="margin:6px 0 0 0;font-size:14px;color:#243b70;">اضغط <b style='color:#003cff'>Enter</b> لتحديث الصفحة</p>
+    <div class="update-glass">
+      <h3>✨ تم إصدار نسخة جديدة</h3>
+      <p>اضغط <b>Enter</b> لتحديث الصفحة</p>
     </div>
   `;
   document.body.appendChild(notice);
 
+  // 🔹 عند الضغط على Enter يتم التحديث
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       location.reload(true);
@@ -288,20 +274,54 @@ function showUpdateNotice() {
   });
 }
 
+// ⏳ التحقق كل 20 ثانية (يمكنك زيادتها)
 setInterval(checkVersion, 20000);
 </script>
 
 <style>
+/* 🧊 صندوق التحديث الزجاجي */
+.update-glass {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 18px 26px;
+  text-align: center;
+  color: #1c2742;
+  font-family: 'Cairo', sans-serif;
+  min-width: 260px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  z-index: 99999;
+  animation: glassFade 0.8s ease forwards, gentlePulse 3s ease-in-out infinite;
+}
+
+.update-glass h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #003cff;
+}
+
+.update-glass p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  color: #243b70;
+}
+
+/* ✨ الدخول الناعم */
 @keyframes glassFade {
   from {opacity: 0; transform: translateY(15px) scale(0.95);}
   to {opacity: 1; transform: translateY(0) scale(1);}
 }
 
-/* 💫 حركة انعكاس ضوء ناعمة تمشي على الزجاج */
-@keyframes shimmerMove {
-  0% {box-shadow: 0 0 10px rgba(0, 140, 255, 0.1);}
-  50% {box-shadow: 0 0 25px rgba(0, 140, 255, 0.35);}
-  100% {box-shadow: 0 0 10px rgba(0, 140, 255, 0.1);}
+/* 💫 اهتزاز ناعم متكرر */
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 120, 255, 0.25); }
+  50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(0, 120, 255, 0.5); }
 }
 </style>
   <div class="madeby">Made by Abdelrahman & Reem</div>
