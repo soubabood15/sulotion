@@ -243,7 +243,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.1"; // 👈 غيّري حسب رقم النسخة
+    const currentVersion = "1.0.1"; // ← غيّري رقم النسخة
 
     if (data.version.trim() !== currentVersion.trim()) {
       showUpdateNotice();
@@ -260,22 +260,23 @@ function showUpdateNotice() {
       position: fixed;
       bottom: 25px;
       right: 25px;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(18px) saturate(160%);
-      -webkit-backdrop-filter: blur(18px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.45);
-      box-shadow: 0 4px 25px rgba(0,0,0,0.25);
-      color: #0a0f2e;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+      color: #1c2742;
       font-family: 'Cairo', sans-serif;
-      padding: 18px 26px;
-      border-radius: 18px;
+      padding: 20px 28px;
+      border-radius: 20px;
       z-index: 99999;
       text-align: center;
       min-width: 260px;
-      animation: glassFade 0.6s ease forwards;
+      animation: glassFade 0.8s ease forwards, shimmerMove 4s linear infinite;
+      background-image: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.35) 100%);
     ">
-      <h3 style="margin:0;font-size:16px;font-weight:700;color:#000;">✨ تم إصدار نسخة جديدة</h3>
-      <p style="margin:6px 0 0 0;font-size:14px;color:#1a1a1a;">اضغط <b style='color:#285eff'>Enter</b> لتحديث الصفحة</p>
+      <h3 style="margin:0;font-size:16px;font-weight:700;color:#003cff;">✨ تم إصدار نسخة جديدة</h3>
+      <p style="margin:6px 0 0 0;font-size:14px;color:#243b70;">اضغط <b style='color:#003cff'>Enter</b> لتحديث الصفحة</p>
     </div>
   `;
   document.body.appendChild(notice);
@@ -294,6 +295,13 @@ setInterval(checkVersion, 20000);
 @keyframes glassFade {
   from {opacity: 0; transform: translateY(15px) scale(0.95);}
   to {opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* 💫 حركة انعكاس ضوء ناعمة تمشي على الزجاج */
+@keyframes shimmerMove {
+  0% {box-shadow: 0 0 10px rgba(0, 140, 255, 0.1);}
+  50% {box-shadow: 0 0 25px rgba(0, 140, 255, 0.35);}
+  100% {box-shadow: 0 0 10px rgba(0, 140, 255, 0.1);}
 }
 </style>
   <div class="madeby">Made by Abdelrahman & Reem</div>
