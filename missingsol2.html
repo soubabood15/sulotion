@@ -243,7 +243,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.1"; // 👈 غيّريه حسب رقم version.json
+    const currentVersion = "1.0.1"; // 👈 غيّري حسب رقم النسخة
 
     if (data.version.trim() !== currentVersion.trim()) {
       showUpdateNotice();
@@ -260,12 +260,12 @@ function showUpdateNotice() {
       position: fixed;
       bottom: 25px;
       right: 25px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(15px) saturate(180%);
-      -webkit-backdrop-filter: blur(15px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.45);
       box-shadow: 0 4px 25px rgba(0,0,0,0.25);
-      color: #e9ecff;
+      color: #0a0f2e;
       font-family: 'Cairo', sans-serif;
       padding: 18px 26px;
       border-radius: 18px;
@@ -274,8 +274,8 @@ function showUpdateNotice() {
       min-width: 260px;
       animation: glassFade 0.6s ease forwards;
     ">
-      <h3 style="margin:0;font-size:16px;color:#ffffff;">✨ تم إصدار نسخة جديدة</h3>
-      <p style="margin:6px 0 0 0;font-size:14px;color:#dbe3ff;">اضغط <b style='color:#fff'>Enter</b> لتحديث الصفحة</p>
+      <h3 style="margin:0;font-size:16px;font-weight:700;color:#000;">✨ تم إصدار نسخة جديدة</h3>
+      <p style="margin:6px 0 0 0;font-size:14px;color:#1a1a1a;">اضغط <b style='color:#285eff'>Enter</b> لتحديث الصفحة</p>
     </div>
   `;
   document.body.appendChild(notice);
