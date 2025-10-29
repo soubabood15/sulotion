@@ -710,17 +710,49 @@ setInterval(checkVersion, 5000);
   <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
 
   <!-- الترحيب -->
-  <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
-    <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">مرحبا كيف بقدر اساعدك اليوم؟</div>
-      <div class="msg" onclick="copyMsg(this)">Hello, how can I help you today?</div>
-    </div>
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">مرحبا انا هنا لمساعدتك</div>
-      <div class="msg" onclick="copyMsg(this)">Hello, I am here to help you.</div>
-    </div>
+<!-- 🔹 قسم الترحيب (معدّل مع حقول الاسم) -->
+<div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
+  <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+
+  <!-- 🧩 حقول الاسم -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <input id="nameAr" type="text" placeholder="اكتب الاسم بالعربي" 
+      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:45%;text-align:center;margin:4px;">
+    <input id="nameEn" type="text" placeholder="Enter name in English" 
+      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:45%;text-align:center;margin:4px;">
+    <button onclick="updateGreeting()" 
+      style="margin-top:6px;background:#285eff;color:#fff;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;">تحديث الاسم</button>
   </div>
+
+  <!-- 🗨️ نصوص الترحيب -->
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting1">مرحبًا، كيف بقدر أساعدك اليوم؟</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting1">Hello, how can I help you today?</div>
+  </div>
+
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting2">مرحبًا، أنا هنا لمساعدتك</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting2">Hello, I am here to help you.</div>
+  </div>
+</div>
+<script>
+
+// 🔹 تحديث الجمل حسب الاسم المكتوب
+function updateGreeting() {
+  const nameAr = document.getElementById("nameAr").value.trim();
+  const nameEn = document.getElementById("nameEn").value.trim();
+
+  const ar1 = document.getElementById("arGreeting1");
+  const en1 = document.getElementById("enGreeting1");
+  const ar2 = document.getElementById("arGreeting2");
+  const en2 = document.getElementById("enGreeting2");
+
+  ar1.textContent = nameAr ? `مرحبًا ${nameAr}، كيف بقدر أساعدك اليوم؟` : `مرحبًا، كيف بقدر أساعدك اليوم؟`;
+  en1.textContent = nameEn ? `Hello ${nameEn}, how can I help you today?` : `Hello, how can I help you today?`;
+  ar2.textContent = nameAr ? `مرحبًا ${nameAr}، أنا هنا لمساعدتك` : `مرحبًا، أنا هنا لمساعدتك`;
+  en2.textContent = nameEn ? `Hello ${nameEn}, I am here to help you.` : `Hello, I am here to help you.`;
+}
+</script>
 
   <!-- الاعتذار والتأكيد -->
   <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
