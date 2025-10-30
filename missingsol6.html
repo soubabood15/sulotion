@@ -426,13 +426,253 @@ textarea#output {
 </style>
 </head>
 <body>
+  <script>
+let chatMini = null;
+let chats = [];
+let timer = null;
+let addBtn = null;
+
+// 🔢 زر صغير دائم بالزاوية
+const toggleBtn = document.createElement("button");
+toggleBtn.textContent = "🔢";
+Object.assign(toggleBtn.style, {
+  position: "fixed",
+  bottom: "20px",
+  left: "20px",
+  fontSize: "22px",
+  background: "rgba(255,255,255,0.25)",
+  color: "#1c2742",
+  border: "1px solid rgba(255,255,255,0.3)",
+  borderRadius: "12px",
+  padding: "6px 10px",
+  cursor: "pointer",
+  backdropFilter: "blur(10px)",
+  boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+  zIndex: "999999",
+});
+document.body.appendChild(toggleBtn);
+toggleBtn.onclick = toggleChatMini;
+
+function toggleChatMini() {
+  if (!chatMini) initChatMini();
+  else chatMini.style.display = chatMini.style.display === "none" ? "flex" : "none";
+}
+
+function initChatMini() {
+  chatMini = document.createElement("div");
+  Object.assign(chatMini.style, {
+    position: "fixed",
+    bottom: "70px",
+    left: "20px",
+    display: "flex",
+    gap: "14px",
+    flexWrap: "wrap",
+    background: "rgba(255,255,255,0.08)",
+    backdropFilter: "blur(18px) saturate(180%)",
+    border: "1px solid rgba(255,255,255,0.2)",
+    borderRadius: "16px",
+    padding: "16px",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+    zIndex: "999999",
+    fontFamily: "Cairo, sans-serif",
+  });
+
+  // ➕ زر الإضافة
+  addBtn = document.createElement("button");
+  addBtn.textContent = "➕";
+  Object.assign(addBtn.style, {
+    background: "linear-gradient(45deg, #285eff, #6b9aff)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "20px",
+    width: "55px",
+    height: "55px",
+    fontWeight: "bold",
+    transition: "transform .3s, box-shadow .3s",
+  });
+  addBtn.onmouseenter = () => (addBtn.style.transform = "scale(1.1)");
+  addBtn.onmouseleave = () => (addBtn.style.transform = "scale(1)");
+  addBtn.onclick = addChat;
+  chatMini.appendChild(addBtn);
+
+  document.body.appendChild(chatMini);
+  timer = setInterval(updateTimers, 1000);
+}
+
+function addChat() {
+  if (chats.length >= 5) {
+    addBtn.style.display = "none";
+    return;
+  }
+  const id = Date.now();
+  chats.push({
+    id,
+    time: 0,
+    running: false,
+    suspended: false,
+    suspendTime: 0,
+    shaking: false,
+  });
+  renderChats();
+}
+
+function renderChats() {
+  // تنظيف القديم
+  const existing = chatMini.querySelectorAll(".chatBox");
+  existing.forEach((el) => el.remove());
+
+  // تحديث زر الإضافة
+  addBtn.style.display = chats.length >= 5 ? "none" : "inline-block";
+
+  chats.forEach((c, i) => {
+    const box = document.createElement("div");
+    box.className = "chatBox";
+
+    const glowColor = getGlowColor(c);
+    const progress = Math.min(c.time / 120, 1) * 100;
+
+    Object.assign(box.style, {
+      width: "85px",
+      height: "90px",
+      background: "rgba(255,255,255,0.35)",
+      borderRadius: "16px",
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "8px",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      border: `2px solid ${glowColor}`,
+      boxShadow: `0 0 10px ${glowColor}`,
+      overflow: "hidden",
+    });
+
+    // ✨ تأثير الانبثاق فقط عند الدخول والخروج
+    box.addEventListener("mouseenter", () => box.classList.add("hovered"));
+    box.addEventListener("mouseleave", () => box.classList.remove("hovered"));
+
+    // 💢 اهتزاز عند الوصول 1:45 أو نهاية السسبند
+    if (c.shaking) box.classList.add("shake");
+    else box.classList.remove("shake");
+
+    box.innerHTML = `
+      <div style="font-size:20px;font-weight:700;color:#000;">#${i + 1}</div>
+      <div style="font-size:15px;color:#000;font-weight:600;">
+        ${c.suspended ? formatTime(c.suspendTime) : formatTime(c.time)}
+      </div>
+      <div style="display:flex;gap:4px;z-index:10;">
+        ${
+          c.suspended
+            ? `<button onclick="unsuspendChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">🔓</button>`
+            : `<button onclick="suspendChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">⏳</button>`
+        }
+        <button onclick="deleteChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">❌</button>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;height:5px;width:${progress}%;background:linear-gradient(90deg,#00ff88,#ff0033);border-radius:0 0 16px 16px;transition:width 1s ease;"></div>
+    `;
+
+    // تشغيل أو إعادة العد
+    box.onclick = (e) => {
+      if (e.target.tagName === "BUTTON") return;
+      c.running = true;
+      c.suspended = false;
+      c.suspendTime = 0;
+      c.time = 0;
+      c.shaking = false;
+      renderChats();
+    };
+
+    chatMini.appendChild(box);
+  });
+}
+
+function getGlowColor(c) {
+  if (c.suspended) return "#ffcc00";
+  if (c.time >= 105) return "#ff3333"; // أحمر عند التأخير
+  if (c.time >= 70) return "#ff8800"; // برتقالي لما يقرب
+  return "#285eff"; // أزرق طبيعي
+}
+
+function suspendChat(id) {
+  const c = chats.find((x) => x.id === id);
+  if (c) {
+    c.suspended = true;
+    c.running = false;
+    c.suspendTime = 600; // 10 دقائق = 600 ثانية
+    c.shaking = false;
+  }
+  renderChats();
+}
+
+function unsuspendChat(id) {
+  const c = chats.find((x) => x.id === id);
+  if (c) {
+    c.suspended = false;
+    c.running = true;
+    c.shaking = false;
+  }
+  renderChats();
+}
+
+function deleteChat(id) {
+  chats = chats.filter((x) => x.id !== id);
+  renderChats();
+}
+
+function updateTimers() {
+  chats.forEach((c) => {
+    if (c.running && !c.suspended) {
+      c.time++;
+      if (c.time >= 105) c.shaking = true;
+    } else if (c.suspended && c.suspendTime > 0) {
+      c.suspendTime--;
+      if (c.suspendTime <= 0) {
+        c.suspended = false;
+        c.shaking = true; // تهتز بعد انتهاء السسبند
+      }
+    }
+  });
+  renderChats();
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = String(sec % 60).padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+// 💫 CSS
+const style = document.createElement("style");
+style.textContent = `
+  .chatBox.hovered {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(40,94,255,0.6);
+  }
+
+  @keyframes shakeAnim {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(2px, 0); }
+    50% { transform: translate(-2px, 0); }
+    75% { transform: translate(2px, 0); }
+  }
+
+  .shake {
+    animation: shakeAnim 0.4s ease-in-out infinite;
+  }
+`;
+document.head.appendChild(style);
+</script>
  <script>
 async function checkVersion() {
   try {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.3"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.2"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -514,9 +754,18 @@ setInterval(checkVersion, 5000);
 }
 </style>
   <div class="madeby">Made by Abdelrahman & Reem </div>
-  <!-- 🕒 ساعة الأردن (12 ساعة) -->
-<div id="jordanClock">🕒 00:00:00 AM</div>
+<!-- 🕒 ساعة الأردن (12 ساعة) -->
+<div id="jordanClock">🕒 00:00:00 AM 🇯🇴</div>
+
+<!-- 🌍 قائمة الدول (تظهر عند الضغط على الساعة) -->
+<div id="countryTimes">
+  <div class="country-time" id="sa-time">🇸🇦 السعودية: --:--:-- --</div>
+  <div class="country-time" id="ae-time">🇦🇪 الإمارات: --:--:-- --</div>
+  <div class="country-time" id="kw-time">🇰🇼 الكويت: --:--:-- --</div>
+</div>
+
 <style>
+  /* 🎨 شكل الساعة الرئيسي */
   #jordanClock {
     position: fixed;
     top: 10px;
@@ -535,6 +784,7 @@ setInterval(checkVersion, 5000);
     z-index: 99999;
     user-select: none;
     animation: fadeInClock 1s ease, floatClock 3s ease-in-out infinite alternate;
+    cursor: pointer;
   }
 
   @keyframes fadeInClock {
@@ -546,26 +796,101 @@ setInterval(checkVersion, 5000);
     from { transform: translateY(0px); }
     to { transform: translateY(-6px); }
   }
+
+  /* 💠 القائمة الزجاجية أسفل الساعة */
+  #countryTimes {
+    position: fixed;
+    top: 65px;
+    right: 260px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(40, 94, 255, 0.4);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+    color: #285eff;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 0 3px 15px rgba(40, 94, 255, 0.25);
+    z-index: 99998;
+    text-align: center;
+    display: none;
+    animation: fadeInList 0.4s ease forwards;
+  }
+
+  .country-time {
+    margin: 6px 0;
+    font-weight: 600;
+    text-shadow: 0 1px 5px rgba(40, 94, 255, 0.15);
+  }
+
+  @keyframes fadeInList {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 
 <script>
-function updateJordanClock() {
-  const now = new Date();
-  const jordanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Amman" }));
-  
-  let hours = jordanTime.getHours();
-  const minutes = String(jordanTime.getMinutes()).padStart(2, "0");
-  const seconds = String(jordanTime.getSeconds()).padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  
-  hours = hours % 12;
-  hours = hours ? hours : 12; // إذا كانت 0 نخليها 12
-  
-  document.getElementById("jordanClock").textContent = `🕒 ${hours}:${minutes}:${seconds} ${ampm}`;
-}
+  // 🕒 الأردن
+  function updateJordanClock() {
+    const now = new Date();
+    const jordanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Amman" }));
+    
+    let hours = jordanTime.getHours();
+    const minutes = String(jordanTime.getMinutes()).padStart(2, "0");
+    const seconds = String(jordanTime.getSeconds()).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    
+    document.getElementById("jordanClock").textContent = `🕒 ${hours}:${minutes}:${seconds} ${ampm} 🇯🇴`;
+  }
 
-setInterval(updateJordanClock, 1000);
-updateJordanClock();
+  // 🌍 الدول الثلاث
+  function getCountryTime(zone) {
+    const now = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: zone,
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    }).formatToParts(now);
+
+    let h = '12', m = '00', s = '00', am = 'AM';
+    for (const p of fmt) {
+      if (p.type === 'hour') h = p.value.padStart(2, '0');
+      if (p.type === 'minute') m = p.value.padStart(2, '0');
+      if (p.type === 'second') s = p.value.padStart(2, '0');
+      if (p.type === 'dayPeriod') am = p.value.toUpperCase();
+    }
+    return `${h}:${m}:${s} ${am}`;
+  }
+
+  function updateCountries() {
+    document.getElementById("sa-time").textContent = `🇸🇦 السعودية: ${getCountryTime("Asia/Riyadh")}`;
+    document.getElementById("ae-time").textContent = `🇦🇪 الإمارات: ${getCountryTime("Asia/Dubai")}`;
+    document.getElementById("kw-time").textContent = `🇰🇼 الكويت: ${getCountryTime("Asia/Kuwait")}`;
+  }
+
+  setInterval(() => {
+    updateJordanClock();
+    updateCountries();
+  }, 1000);
+
+  updateJordanClock();
+  updateCountries();
+
+  // 📱 عرض وإخفاء القائمة
+  const clock = document.getElementById("jordanClock");
+  const list = document.getElementById("countryTimes");
+  let isVisible = false;
+
+  clock.addEventListener("click", () => {
+    isVisible = !isVisible;
+    list.style.display = isVisible ? "block" : "none";
+  });
 </script>
 <div class="main-sections">
 <!-- القسم الأيمن -->
@@ -765,41 +1090,106 @@ updateJordanClock();
   <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
 
   <!-- الترحيب -->
-  <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
-    <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">مرحبا كيف بقدر اساعدك اليوم؟</div>
-      <div class="msg" onclick="copyMsg(this)">Hello, how can I help you today?</div>
-    </div>
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">مرحبا انا هنا لمساعدتك</div>
-      <div class="msg" onclick="copyMsg(this)">Hello, I am here to help you.</div>
-    </div>
+   <!-- الترحيب -->
+  <!-- 🔹 قسم الترحيب (يحدث تلقائي أثناء الكتابة) -->
+<div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
+  <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+
+  <!-- 🧩 حقول الاسم -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <input id="nameAr" type="text" placeholder="اكتب الاسم بالعربي" 
+      oninput="updateGreeting()" 
+      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
+    
+    <input id="nameEn" type="text" placeholder="Enter name in English" 
+      oninput="updateGreeting()" 
+      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
   </div>
 
+  <!-- 🗨️ نصوص الترحيب -->
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting1">مرحبًا معك ، كيف بقدر أساعدك اليوم؟</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting1">Hello Im, how can I help you today?</div>
+  </div>
+
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting2">مرحبًا معك، أنا هنا لمساعدتك</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting2">Hello Im, I am here to help you.</div>
+  </div>
+</div>
+
+<script>
+// 🔹 تحديث الجمل أثناء الكتابة
+function updateGreeting() {
+  const nameAr = document.getElementById("nameAr").value.trim();
+  const nameEn = document.getElementById("nameEn").value.trim();
+
+  const ar1 = document.getElementById("arGreeting1");
+  const en1 = document.getElementById("enGreeting1");
+  const ar2 = document.getElementById("arGreeting2");
+  const en2 = document.getElementById("enGreeting2");
+
+  ar1.textContent = nameAr ? `مرحبًا معك ${nameAr}، كيف بقدر أساعدك اليوم؟` : `مرحبًا معك ، كيف بقدر أساعدك اليوم؟`;
+  en1.textContent = nameEn ? `Hello Im ${nameEn}, how can I help you today?` : `Hello Im, how can I help you today?`;
+  ar2.textContent = nameAr ? `مرحبًا معك ${nameAr}، أنا هنا لمساعدتك` : `مرحبًا معك، أنا هنا لمساعدتك`;
+  en2.textContent = nameEn ? `Hello Im ${nameEn}, I am here to help you.` : `Hello Im, I am here to help you.`;
+}
+</script>
   <!-- الاعتذار والتأكيد -->
-  <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
-    <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
-<div style="text-align:center; margin-bottom:15px;">
-  <input type="text" id="restaurantName" placeholder="اكتب اسم المطعم هنا" 
-         style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
-</div>
-   
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">
-  آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
-</div>
+  <!-- 🍽️ قسم الاعتذار والتأكيد (تفاعلي) -->
+<div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
+  <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
 
-<div class="msg" onclick="copyMsg(this)">
-  I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
-</div>
-</div>  
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">أنا آسف جداً على المشكلة اللي حصلت لك</div>
-      <div class="msg" onclick="copyMsg(this)">I am very sorry for the inconvenience you have experienced.</div>
+  <!-- 🧩 حقل اسم المطعم -->
+  <div style="text-align:center; margin-bottom:15px;">
+    <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
+    <input 
+      type="text" 
+      id="restaurantName" 
+      placeholder="اكتب اسم المطعم هنا" 
+      oninput="updateRestaurant()" 
+      style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+  </div>
+
+  <!-- 🗨️ سكربتات التفاعل -->
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arApology">
+      آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+    </div>
+    <div class="msg" onclick="copyMsg(this)" id="enApology">
+      I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
     </div>
   </div>
 
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arSorry">
+      أنا آسف جداً على المشكلة اللي حصلت لك
+    </div>
+    <div class="msg" onclick="copyMsg(this)" id="enSorry">
+      I am very sorry for the inconvenience you have experienced.
+    </div>
+  </div>
+</div>
+
+<script>
+// ✨ تحديث النصوص تلقائي عند الكتابة
+function updateRestaurant() {
+  const name = document.getElementById("restaurantName").value.trim();
+
+  const arApology = document.getElementById("arApology");
+  const enApology = document.getElementById("enApology");
+
+  // تحديث النص العربي
+  arApology.textContent = name
+    ? `آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (${name}) ؟`
+    : `آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟`;
+
+  // تحديث النص الإنجليزي
+  enApology.textContent = name
+    ? `I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (${name})?`
+    : `I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?`;
+}
+</script>
   <!-- أي خدمة إضافية -->
   <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
@@ -935,6 +1325,7 @@ function showCopiedNotice() {
   <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
     النتيجة: —
   </div>
+  
 
 </div>
 <script>
@@ -1216,25 +1607,32 @@ function resetComp() {
   box.innerHTML = '';
 }
 // 🟩 قسم "استرداد فقط"
-// 🟩 قسم "استرداد فقط" بدون حقل، مع فاصل بين العادي والحمر
-// 🟩 قسم "استرداد فقط" (بدون حقل، مع فاصل وزر إعادة)
 function startOnlyRefund() {
   const box = document.getElementById('scriptBox');
+  if (!box) return;
+
   box.innerHTML = `
     <h2 style="color:#285eff;">قسم الاسترداد فقط</h2>
 
     <!-- سكربت عربي -->
-    <div class="msgBox" onclick="copyMsg(this)" 
+    <div id="refundAr" class="msgBox" onclick="copyMsg(this)" 
       style="background:#f7faff;border:1px solid #d6e4ff;
       padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
-      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (      ) ريال سعودي لطلبك
+      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (<b id="refundValAr">—</b>) ريال سعودي لطلبك
     </div>
 
     <!-- سكربت إنجليزي -->
-    <div class="msgBox" onclick="copyMsg(this)" 
+    <div id="refundEn" class="msgBox" onclick="copyMsg(this)" 
       style="background:#f7faff;border:1px solid #d6e4ff;
       padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
-      Sorry for the inconvenience. We can refund (      ) SAR for your order right away
+      Sorry for the inconvenience. We can refund (<b id="refundValEn">—</b>) SAR for your order right away
+    </div>
+
+    <!-- 🧾 حقل القيمة -->
+    <div style="margin:16px 0;text-align:center;">
+      <label style="display:block;font-weight:600;color:#285eff;margin-bottom:6px;">🧾 قيمة الاسترداد</label>
+      <input type="number" id="refundValue" placeholder="اكتب المبلغ هنا"
+             style="padding:10px 12px;border:1px solid #c9dafd;border-radius:8px;width:60%;max-width:240px;text-align:center;">
     </div>
 
     <!-- 🔹 فاصل أنيق -->
@@ -1273,6 +1671,14 @@ function startOnlyRefund() {
         onclick="resetComp()">🔄 البدء من جديد</button>
     </div>
   `;
+
+  // 💡 تحديث النصوص تلقائيًا
+  const input = document.getElementById("refundValue");
+  input.addEventListener("input", () => {
+    const val = input.value || "—";
+    document.getElementById("refundValAr").textContent = val;
+    document.getElementById("refundValEn").textContent = val;
+  });
 }
 
 </script>
@@ -1575,11 +1981,6 @@ function clearAll() {
   el('output').value = '';
 }
 
-el('output').addEventListener('click', () => {
-  el('output').select();
-  document.execCommand('copy');
-  alert("✔ تم النسخ بنجاح");
-});
 
 el('build').addEventListener('click', buildTemplate);
 el('clear').addEventListener('click', clearAll);
@@ -1711,62 +2112,87 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script>
-// ✅ إشعار "تم النسخ بنجاح" لكل الموقع + إصلاح النسخ في كل الأقسام
 window.addEventListener("load", () => {
-  // إنشاء الإشعار
-  let notice = document.createElement("div");
-  notice.id = "copyNotice";
-  notice.textContent = "✔ تم النسخ بنجاح";
-  Object.assign(notice.style, {
-    position: "fixed",
-    top: "45px",
-    right: "20px",
-    background: "#e8fff3",
-    color: "#00b36b",
-    padding: "8px 16px",
-    borderRadius: "8px",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
-    fontSize: "13px",
-    fontFamily: "Cairo, sans-serif",
-    opacity: "0",
-    zIndex: "999999",
-    transition: "opacity 0.4s ease, transform 0.4s ease",
-    transform: "translateY(-10px)"
-  });
-  document.body.appendChild(notice);
 
-  // دالة عرض الإشعار
-  window.showCopiedNotice = function() {
-    notice.style.opacity = "1";
-    notice.style.transform = "translateY(0)";
-    clearTimeout(window.noticeTimeout);
-    window.noticeTimeout = setTimeout(() => {
-      notice.style.opacity = "0";
-      notice.style.transform = "translateY(-10px)";
-    }, 1000); // ← مدة الظهور = ثانية واحدة
-  };
+  // ✅ تأثير النسخ الزجاجي المتحرك
+  function copyMsg(el, e) {
+    const text = el.value || el.textContent.trim();
+    if (!text) return;
 
-  // ✅ نربط الحدث لجميع العناصر القابلة للنسخ
+    navigator.clipboard.writeText(text);
+
+    // 💚 وميض أخضر خفيف على الكرت
+    el.style.transition = "box-shadow 0.3s ease, transform 0.2s ease";
+    el.style.boxShadow = "0 0 15px rgba(0, 255, 100, 0.6)";
+    el.style.transform = "scale(1.03)";
+    setTimeout(() => {
+      el.style.boxShadow = "none";
+      el.style.transform = "scale(1)";
+    }, 300);
+
+    // 🫧 إنشاء فقاعة زجاجية
+    const bubble = document.createElement("div");
+    bubble.textContent = "تم النسخ ✅";
+    Object.assign(bubble.style, {
+      position: "fixed",
+      left: e.pageX + "px",
+      top: e.pageY + "px",
+      transform: "translate(-50%, -50%)",
+      background: "rgba(255, 255, 255, 0.25)",
+      backdropFilter: "blur(12px) saturate(180%)",
+      WebkitBackdropFilter: "blur(12px) saturate(180%)",
+      color: "#00b36b",
+      border: "1px solid rgba(255,255,255,0.4)",
+      padding: "6px 14px",
+      borderRadius: "12px",
+      fontSize: "14px",
+      fontFamily: "Cairo, sans-serif",
+      fontWeight: "600",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+      opacity: "0",
+      zIndex: "999999",
+      pointerEvents: "none",
+      transition: "opacity .2s ease, transform .2s ease"
+    });
+
+    document.body.appendChild(bubble);
+
+    // 💫 تتحرك خلف الماوس أثناء النصف ثانية الأولى
+    const moveWithMouse = (ev) => {
+      bubble.style.left = ev.pageX + "px";
+      bubble.style.top = ev.pageY - 20 + "px";
+    };
+    document.addEventListener("mousemove", moveWithMouse);
+
+    // ✨ ظهور تدريجي
+    requestAnimationFrame(() => {
+      bubble.style.opacity = "1";
+      bubble.style.transform = "translate(-50%, -80%)";
+    });
+
+    // ⏳ توقف عن ملاحقة الماوس بعد 0.3 ثانية
+    setTimeout(() => {
+      document.removeEventListener("mousemove", moveWithMouse);
+      bubble.style.opacity = "0";
+      bubble.style.transform = "translate(-50%, -150%)";
+    }, 300);
+
+    // 🧹 حذف بعد اختفاءها
+    setTimeout(() => bubble.remove(), 700);
+  }
+
+  // ✅ تفعيل النسخ لكل العناصر
   function enableCopying() {
     document.querySelectorAll(".msg, .msgBox, textarea#output, .fixed-msg").forEach(el => {
-      el.onclick = () => {
-        const text = el.value || el.textContent.trim();
-        if (!text) return;
-        navigator.clipboard.writeText(text);
-        showCopiedNotice();
-      };
+      el.onclick = (e) => copyMsg(el, e);
     });
   }
 
-  // نفعّل النسخ أول مرة
   enableCopying();
 
-  // 🎯 لو تمت إضافة عناصر جديدة (مثل عند إنشاء سكربت جديد)
+  // 🎯 لو تمت إضافة عناصر جديدة
   const observer = new MutationObserver(enableCopying);
   observer.observe(document.body, { childList: true, subtree: true });
-
-  // ✅ لو أي نص انسخ بالطريقة العادية (Ctrl+C)
-  document.addEventListener("copy", showCopiedNotice);
 });
 </script>
  <!-- 🟦 نافذة التحديث (Popup) -->
@@ -2186,381 +2612,6 @@ function resetPausedStyle() {
 
 
 
-<!-- ========== 2-Player LANless Shooter Overlay (Ctrl+B) ========== -->
-<style>
-  /* طبقة اللعبة (زجاجية) */
-  #duelOverlay {
-    position: fixed; inset: 0;
-    display: none; justify-content: center; align-items: center;
-    background: rgba(5,10,20,0.45);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    z-index: 999999;
-    transition: opacity .25s ease;
-    opacity: 0;
-  }
-  #duelOverlay.show { display:flex; opacity:1; }
-
-  /* اللوحة العلوية للمعلومات */
-  .duel-hud {
-    position: absolute; top: 14px; left:50%; transform: translateX(-50%);
-    display:flex; gap:18px; align-items:center; font-family: Cairo, sans-serif;
-    color:#eaf2ff; text-shadow:0 2px 6px rgba(0,0,0,.35);
-    user-select: none;
-  }
-  .hud-pill{
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.22);
-    padding: 6px 12px; border-radius: 999px; font-weight:700; font-size:14px;
-    box-shadow: inset 0 0 12px rgba(255,255,255,0.12);
-  }
-
-  /* تلميحات الأزرار أسفل اليمين */
-  .duel-help {
-    position:absolute; right:16px; bottom:14px; color:#dfe9ff; font-family:Cairo,sans-serif; font-size:13px;
-    background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.22); padding:8px 10px; border-radius:10px;
-  }
-
-  /* حدود صحون اللاعبين (زجاجي) */
-  .tag {
-    position:absolute; padding:6px 10px; border-radius:10px; font: 700 12px Cairo, sans-serif; color:#fff;
-    background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25);
-    transform: translate(-50%, -140%); pointer-events:none;
-    text-shadow:0 2px 6px rgba(0,0,0,.35);
-  }
-
-  /* الكانفس */
-  #duelCanvas { background:#0a0f1a; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.45); }
-</style>
-
-<div id="duelOverlay" aria-hidden="true">
-  <canvas id="duelCanvas" width="960" height="540"></canvas>
-  <div class="duel-hud">
-    <div id="p1Hud" class="hud-pill">👤 Player 1 — ❤ <span id="p1Hp">5</span> | ★ <span id="p1Score">0</span></div>
-    <div class="hud-pill">⏸ Space لإيقاف/تشغيل — Esc للخروج</div>
-    <div id="p2Hud" class="hud-pill">👤 Player 2 — ❤ <span id="p2Hp">5</span> | ★ <span id="p2Score">0</span></div>
-  </div>
-  <div class="duel-help">
-    Player 1: W A S D + F إطلاق<br/>
-    Player 2: الأسهم + / إطلاق
-  </div>
-</div>
-
-<script>
-(() => {
-  // يمنع لعبتين سوا
-  if (window.__anyGameOverlayOpen == null) window.__anyGameOverlayOpen = false;
-
-  const overlay = document.getElementById('duelOverlay');
-  const canvas  = document.getElementById('duelCanvas');
-  const ctx     = canvas.getContext('2d');
-
-  const p1HpEl = document.getElementById('p1Hp');
-  const p2HpEl = document.getElementById('p2Hp');
-  const p1ScEl = document.getElementById('p1Score');
-  const p2ScEl = document.getElementById('p2Score');
-
-  let running = false, paused = false, rafId = null;
-
-  const world = {
-    W: canvas.width,
-    H: canvas.height,
-    friction: 0.88,
-    bulletSpeed: 6,
-    playerSpeed: 3.0,
-    maxHP: 5
-  };
-
-  // مفاتيح مضغوطة
-  const keys = new Set();
-
-  // لاعبان
-  const p1 = makePlayer(120, world.H/2, '#2ef2ff', '#00ffc6', 'P1');
-  const p2 = makePlayer(world.W-120, world.H/2, '#ff5c93', '#ffcf5c', 'P2');
-
-  // ذخيرة/عوائق
-  const bullets = [];
-  const obstacles = makeObstacles();
-
-  // سماك لطلب الإطار
-  function loop() {
-    if (!running) return;
-    if (!paused) update();
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-
-  // أحداث مفاتيح
-  window.addEventListener('keydown', (e) => {
-    // فتح/إغلاق بـ Ctrl+B
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
-      e.preventDefault();
-      toggleDuel();
-      return;
-    }
-    if (!overlay.classList.contains('show')) return;
-
-    // Space = إيقاف/تشغيل مؤقت
-    if (e.code === 'Space') { e.preventDefault(); paused = !paused; return; }
-    // Esc = خروج
-    if (e.key === 'Escape') { e.preventDefault(); closeDuel(); return; }
-
-    keys.add(e.key);
-    // إطلاق
-    if (e.key.toLowerCase() === 'f') shoot(p1);
-    if (e.key === '/') shoot(p2);
-  });
-  window.addEventListener('keyup', (e) => keys.delete(e.key));
-
-  // توغل
-  function toggleDuel() {
-    // أغلق لعبة الحية إن كانت موجودة
-    try {
-      if (typeof toggleSnake === 'function') {
-        // لو مفتوحة، اقفلها
-        toggleSnake(); // الدالة عندك تقلب الحالة
-      }
-    } catch(_) {}
-
-    if (overlay.classList.contains('show')) {
-      closeDuel();
-    } else {
-      if (window.__anyGameOverlayOpen) return; // لعبة أخرى مفتوحة
-      openDuel();
-    }
-  }
-
-  function openDuel() {
-    window.__anyGameOverlayOpen = true;
-    overlay.style.display = 'flex';
-    requestAnimationFrame(() => overlay.classList.add('show'));
-    resetMatch();
-    running = true; paused = false;
-    loop();
-  }
-
-  function closeDuel() {
-    running = false; paused = false;
-    cancelAnimationFrame(rafId);
-    overlay.classList.remove('show');
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      window.__anyGameOverlayOpen = false;
-    }, 200);
-  }
-
-  // إنشاء لاعب
-  function makePlayer(x, y, c1, c2, tag) {
-    return {
-      x, y, vx:0, vy:0, r:16,
-      color1:c1, color2:c2,
-      hp: world.maxHP, score:0, tag,
-      cd: 0 // تبريد إطلاق
-    };
-  }
-
-  function resetMatch() {
-    Object.assign(p1, { x:120, y:world.H/2, vx:0, vy:0, hp:world.maxHP, cd:0 });
-    Object.assign(p2, { x:world.W-120, y:world.H/2, vx:0, vy:0, hp:world.maxHP, cd:0 });
-    bullets.length = 0;
-    p1HpEl.textContent = p1.hp; p2HpEl.textContent = p2.hp;
-    p1ScEl.textContent = p1.score; p2ScEl.textContent = p2.score;
-  }
-
-  function shoot(player) {
-    if (player.cd > 0) return;
-    const dir = aimDir(player);
-    bullets.push({ x: player.x, y: player.y, vx: dir.x * world.bulletSpeed, vy: dir.y * world.bulletSpeed, owner: player });
-    player.cd = 12; // فريمات تبريد
-  }
-
-  function aimDir(player) {
-    // اتجاه افتراضي: P1 لليمين، P2 لليسار. أو حسب آخر حركة.
-    let dx = (player === p1) ? 1 : -1, dy = 0;
-    if (Math.abs(player.vx) + Math.abs(player.vy) > 0.5) {
-      const len = Math.hypot(player.vx, player.vy) || 1;
-      dx = player.vx / len; dy = player.vy / len;
-    }
-    return { x:dx, y:dy };
-  }
-
-  function update() {
-    // تبريد إطلاق
-    if (p1.cd > 0) p1.cd--;
-    if (p2.cd > 0) p2.cd--;
-
-    // حركة اللاعبين
-    movePlayerP1();
-    movePlayerP2();
-    clampToArena(p1); clampToArena(p2);
-
-    // حركة الرصاص
-    for (let i = bullets.length - 1; i >= 0; i--) {
-      const b = bullets[i];
-      b.x += b.vx; b.y += b.vy;
-
-      // اصطدام بالحواف
-      if (b.x < 0 || b.x > world.W || b.y < 0 || b.y > world.H) {
-        bullets.splice(i,1); continue;
-      }
-
-      // اصطدام عقبات
-      if (hitObstacle(b.x, b.y)) { bullets.splice(i,1); continue; }
-
-      // اصطدام بلاعب
-      if (dist(b, p1) < p1.r && b.owner !== p1) { onHit(p1, b.owner); bullets.splice(i,1); continue; }
-      if (dist(b, p2) < p2.r && b.owner !== p2) { onHit(p2, b.owner); bullets.splice(i,1); continue; }
-    }
-  }
-
-  function onHit(victim, attacker) {
-    victim.hp--; 
-    if (victim === p1) p1HpEl.textContent = victim.hp; else p2HpEl.textContent = victim.hp;
-
-    // موت
-    if (victim.hp <= 0) {
-      attacker.score++; 
-      if (attacker === p1) p1ScEl.textContent = attacker.score; else p2ScEl.textContent = attacker.score;
-      // جولة جديدة
-      Object.assign(p1, { x:120, y:world.H/2, vx:0, vy:0, hp:world.maxHP, cd:0 });
-      Object.assign(p2, { x:world.W-120, y:world.H/2, vx:0, vy:0, hp:world.maxHP, cd:0 });
-      bullets.length = 0;
-      p1HpEl.textContent = p1.hp; p2HpEl.textContent = p2.hp;
-    }
-  }
-
-  function movePlayerP1() {
-    let ax=0, ay=0;
-    if (keys.has('w') || keys.has('W')) ay -= 1;
-    if (keys.has('s') || keys.has('S')) ay += 1;
-    if (keys.has('a') || keys.has('A')) ax -= 1;
-    if (keys.has('d') || keys.has('D')) ax += 1;
-    applyMove(p1, ax, ay);
-  }
-  function movePlayerP2() {
-    let ax=0, ay=0;
-    if (keys.has('ArrowUp')) ay -= 1;
-    if (keys.has('ArrowDown')) ay += 1;
-    if (keys.has('ArrowLeft')) ax -= 1;
-    if (keys.has('ArrowRight')) ax += 1;
-    applyMove(p2, ax, ay);
-  }
-  function applyMove(pl, ax, ay) {
-    const len = Math.hypot(ax, ay) || 1;
-    if (ax || ay) {
-      pl.vx += (ax/len) * world.playerSpeed;
-      pl.vy += (ay/len) * world.playerSpeed;
-    }
-    pl.vx *= world.friction; pl.vy *= world.friction;
-
-    const nx = pl.x + pl.vx, ny = pl.y + pl.vy;
-    // منع الدخول في العوائق: نطبق محورياً
-    if (!circleHitAny(nx, pl.y, pl.r)) pl.x = nx;
-    else pl.vx = 0;
-    if (!circleHitAny(pl.x, ny, pl.r)) pl.y = ny;
-    else pl.vy = 0;
-  }
-
-  function clampToArena(pl){
-    pl.x = Math.max(pl.r, Math.min(world.W - pl.r, pl.x));
-    pl.y = Math.max(pl.r, Math.min(world.H - pl.r, pl.y));
-  }
-
-  function circleHitAny(x, y, r) {
-    return obstacles.some(ob => rectCircleCollide(ob, x, y, r));
-  }
-
-  function hitObstacle(x, y) {
-    return obstacles.some(ob => (x > ob.x && x < ob.x+ob.w && y > ob.y && y < ob.y+ob.h));
-  }
-
-  function rectCircleCollide(ob, cx, cy, r) {
-    const nx = Math.max(ob.x, Math.min(cx, ob.x+ob.w));
-    const ny = Math.max(ob.y, Math.min(cy, ob.y+ob.h));
-    return ( (cx-nx)**2 + (cy-ny)**2 ) <= r*r;
-  }
-
-  function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
-
-  function makeObstacles() {
-    // مستطيلات بسيطة في الوسط
-    const arr = [];
-    const pad = 80, thick=20, long=160;
-    arr.push({x: world.W/2 - thick/2, y: world.H/2 - long/2, w: thick, h: long});
-    arr.push({x: world.W/2 - long/2, y: world.H/2 - thick/2, w: long, h: thick});
-    return arr;
-  }
-
-  function draw() {
-    // خلفية مع تدرج خفيف
-    const g = ctx.createLinearGradient(0,0, world.W, world.H);
-    g.addColorStop(0, '#0a1020');
-    g.addColorStop(1, '#0c162a');
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,world.W, world.H);
-
-    // عوائق زجاجية
-    for (const ob of obstacles) {
-      ctx.fillStyle = 'rgba(255,255,255,0.08)';
-      ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
-      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(ob.x+0.5, ob.y+0.5, ob.w-1, ob.h-1);
-    }
-
-    // رصاص
-    for (const b of bullets) {
-      ctx.beginPath();
-      ctx.fillStyle = b.owner===p1 ? '#00ffc6' : '#ffcf5c';
-      ctx.arc(b.x, b.y, 4, 0, Math.PI*2);
-      ctx.shadowBlur = 12; ctx.shadowColor = ctx.fillStyle;
-      ctx.fill(); ctx.shadowBlur = 0;
-    }
-
-    // لاعبين (جسم متدرج ولمعة)
-    drawPlayer(p1);
-    drawPlayer(p2);
-
-    // تاغات أسماء (DOM أقل؟ نخلي Canvas أبسط)
-    drawTag(p1, 'Player 1');
-    drawTag(p2, 'Player 2');
-  }
-
-  function drawPlayer(pl) {
-    // هالة
-    ctx.beginPath();
-    ctx.arc(pl.x, pl.y, pl.r+10, 0, Math.PI*2);
-    ctx.fillStyle = (pl===p1) ? 'rgba(0,255,198,0.12)' : 'rgba(255,207,92,0.12)';
-    ctx.fill();
-
-    // جسم متدرج
-    const grd = ctx.createRadialGradient(pl.x-6, pl.y-6, 4, pl.x, pl.y, pl.r);
-    grd.addColorStop(0, pl.color1);
-    grd.addColorStop(1, pl.color2);
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(pl.x, pl.y, pl.r, 0, Math.PI*2);
-    ctx.shadowBlur = 20; ctx.shadowColor = pl.color2;
-    ctx.fill(); ctx.shadowBlur = 0;
-
-    // فوهة (اتجاه آخر حركة)
-    const aim = aimDir(pl);
-    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(pl.x, pl.y);
-    ctx.lineTo(pl.x + aim.x*(pl.r+10), pl.y + aim.y*(pl.r+10));
-    ctx.stroke();
-  }
-
-  function drawTag(pl, text) {
-    ctx.font = '700 12px Cairo, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.textAlign = 'center';
-    ctx.fillText(text, pl.x, pl.y - (pl.r + 18));
-  }
-})();
-</script>
-<!-- ========== /2-Player Shooter ========== -->
 <!-- 🌐 شريط التنقل السفلي -->
 <!-- ✅ زر الواجهة الثانية -->
  <!-- ✅ الشريط السفلي الموحد -->
