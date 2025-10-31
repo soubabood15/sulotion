@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.5"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.6"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -2710,7 +2710,7 @@ function resetPausedStyle() {
     ">✖ إغلاق</button>
   </div>
 
-  <h3 style="color:#285eff; text-align:center; margin-top:5px;">قيد التطوير لاتستخدمه</h3>
+  <h3 style="color:#285eff; text-align:center; margin-top:5px;">سكربتات مخصصه لكل حاله  </h3>
 
   <!-- 🔘 أزرار الحالات -->
   <div style="text-align:center; margin-bottom:12px;">
