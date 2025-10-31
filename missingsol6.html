@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.4"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.5"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -2716,62 +2716,71 @@ function resetPausedStyle() {
   <div style="text-align:center; margin-bottom:12px;">
     <button onclick="aplg_showCase('missing')" class="aplg_caseBtn">Missing</button>
     <button onclick="aplg_showCase('wrong')" class="aplg_caseBtn">Wrong</button>
-    <button onclick="aplg_showCase('late')" class="aplg_caseBtn">Late</button>
-    <button onclick="aplg_showCase('quality')" class="aplg_caseBtn">Quality</button>
-    <button onclick="aplg_showCase('driver')" class="aplg_caseBtn">Driver</button>
+    <button onclick="aplg_showCase('coldfood')" class="aplg_caseBtn">Cold Food</button>
+    <button onclick="aplg_showCase('notdelicious')" class="aplg_caseBtn">Not Felicious</button>
+    <button onclick="aplg_showCase('portion')" class="aplg_caseBtn">Portion Size</button>
     <button onclick="aplg_showCase('general')" class="aplg_caseBtn">General</button>
   </div>
 
   <!-- 🧩 صندوق الحالات -->
-  <div id="aplg_casesArea">
-    <div id="aplg_missing" class="aplg_caseBox">
-      <button onclick="aplg_generate('missing')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
-      </div>
-    </div>
+ <!-- 🧩 صندوق الحالات -->
+<div id="aplg_casesArea">
 
-    <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
-      <button onclick="aplg_generate('wrong')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
-      </div>
-    </div>
-
-    <div id="aplg_late" class="aplg_caseBox" style="display:none;">
-      <button onclick="aplg_generate('late')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_late" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_late" class="aplg_msg aplg_copy">—</div>
-      </div>
-    </div>
-
-    <div id="aplg_quality" class="aplg_caseBox" style="display:none;">
-      <button onclick="aplg_generate('quality')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_quality" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_quality" class="aplg_msg aplg_copy">—</div>
-      </div>
-    </div>
-
-    <div id="aplg_driver" class="aplg_caseBox" style="display:none;">
-      <button onclick="aplg_generate('driver')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_driver" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_driver" class="aplg_msg aplg_copy">—</div>
-      </div>
-    </div>
-
-    <div id="aplg_general" class="aplg_caseBox" style="display:none;">
-      <button onclick="aplg_generate('general')" class="aplg_genBtn">توليد اعتذار</button>
-      <div class="aplg_output">
-        <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
-        <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
-      </div>
+  <!-- Missing -->
+  <div id="aplg_missing" class="aplg_caseBox">
+    <button onclick="aplg_generate('missing')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
     </div>
   </div>
+
+  <!-- Wrong -->
+  <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Cold food -->
+  <div id="aplg_coldfood" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_coldfood" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_coldfood" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Not delicious -->
+  <div id="aplg_notdelicious" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_notdelicious" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_notdelicious" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Portion size -->
+  <div id="aplg_portion" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('portion')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_portion" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_portion" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- General -->
+  <div id="aplg_general" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('general')" class="aplg_genBtn">توليد اعتذار</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+</div>
 </div>
 
 <style>
@@ -2831,8 +2840,16 @@ function aplg_togglePanel() {
 document.getElementById('aplg_toggle').addEventListener('click', aplg_togglePanel);
 
 function aplg_showCase(type) {
+  // إخفاء جميع الحالات
   document.querySelectorAll('.aplg_caseBox').forEach(b => b.style.display = 'none');
-  document.getElementById('aplg_' + type).style.display = 'block';
+
+  // إظهار الحالة المختارة
+  const box = document.getElementById('aplg_' + type);
+  if (!box) return;
+  box.style.display = 'block';
+
+  // 🔹 توليد أول سكربت تلقائي عند الفتح
+  aplg_generate(type);
 }
 
 // 📜 قاعدة بيانات مبدئية فاضية (تقدر تعبيها بعدين)
@@ -2870,7 +2887,7 @@ const aplg_data = {
     "I completely understand and I’ll make sure your feedback helps us improve",
     "I’m really with you on this and we’ll take steps to avoid it happening again",
     "I appreciate your understanding and we’ll make sure your next experience is better",
-    "I get how that felt and I promise we’ll do better moving forward"] },
+    "I get how that felt and I promise we’ll do better moving forward"]},
 
   wrong: { 
   ar:[    "أفهم تمامًا إن استلامك لطلب مختلف عن المطلوب مزعج وراح نحرص ما يتكرر هالشي",
@@ -2887,8 +2904,7 @@ const aplg_data = {
     "أقدّر صبرك وإحنا نحل الموضوع ونتأكد إنه ما يتكرر",
     "فاهم إحساسك لما توصلك غرض غلط وأنا متابع عشان نطور من الخدمة",
     "عارف إن اللي وصلك مو اللي طلبته وراح نحرص تكون الدقة أعلى المرات الجاية",
-    "أنا معك في اللي صار وراح نراجع الخطأ ونتأكد طلبك الجاي يوصل مثل المطلوب"
-  ],
+    "أنا معك في اللي صار وراح نراجع الخطأ ونتأكد طلبك الجاي يوصل مثل المطلوب"],
 
   en:[
     "I completely understand receiving the wrong item is disappointing and we’ll make sure this doesn’t happen again",
@@ -2907,21 +2923,105 @@ const aplg_data = {
     "I know this isn’t what you ordered and we’ll ensure accuracy going forward",
     "I’m with you on this we’ll review what happened and make sure your next order arrives correctly"] },
 
-  late: { 
-  ar:["~"], 
-  en:["~"] },
+  coldfood: { 
+  ar:[
+  "عارف إن انتظار الطلب أو وصوله بارد شي مزعج وأنا فعلاً متفهم إحساسك وراح نحسن الخدمة أكثر",
+  "أتفهم تمامًا إنك كنت متحمس للطلب وتأخره خيب ظنك وراح نعمل على تحسين السرعة مستقبلاً",
+  "أكيد ما كان من المفترض يوصل الطلب متأخر أو بارد وراح نحرص تكون التجربة الجاية أفضل",
+  "أقدر شعورك لما يوصل الأكل مو بحرارته المعتادة وراح نراجع هالشي حتى ما يتكرر",
+  "فعلاً مو من اللطيف يوصل الطلب متأخر وأنا متفهم إحباطك وراح نتابع لتحسين الخدمة",
+  "عارف قديش يضايق لما تكون متوقع الطلب بوقته ويجي متأخر وراح نحسن التجربة القادمة",
+  "أتفهم إن حرارة الأكل جزء من التجربة وراح نحرص نوصلها أفضل المرات القادمة",
+  "معك حق التأخير يسبب انزعاج وأنا متفهم إحساسك تمامًا وراح نشتغل على تحسين السرعة",
+  "أعتذر عن التأخير اللي حصل وأقدر صبرك وراح نحرص تكون التجارب القادمة أسرع",
+  "عارف إن الأكل فقد حرارته وراح نعمل على تحسين طريقة التوصيل بالمستقبل"], 
 
-  quality: {
-  ar:["~"], 
-  en:["~"] },
+  en:[
+  "I know waiting too long or getting a cold order is frustrating I completely understand and we’ll improve the service",
+  "I totally understand you were excited for your meal and the delay disappointed you we’ll work on improving delivery speed",
+  "It shouldn’t have arrived late or cold and we’ll make sure your next experience is better",
+  "I understand how it feels to receive food that’s not warm and we’ll review this to avoid it happening again",
+  "It’s really not pleasant to get your order late I understand your frustration and we’ll work on improving delivery",
+  "I get that you expected your food on time and the delay is upsetting we’ll make sure to improve the next time",
+  "I understand that temperature matters and we’ll focus on delivering better next time",
+  "You’re right delays can be frustrating I completely get how you feel and we’ll work on faster delivery",
+  "I’m sorry for the delay and I appreciate your patience we’ll make sure future deliveries are faster",
+  "I know the food lost its warmth and we’ll work on improving how we handle deliveries"] },
 
-  driver: { 
-  ar:["~"], 
-  en:["~"] },
+  notdelicious: {
+  ar:[  
+  "عارف إن الطعم ما كان بالمستوى المتوقع وفعلاً أتفهم انزعاجك وراح نحرص تكون التجربة الجاية أفضل",
+  "أتفهم إن الطعم ما عجبك وراح نحرص نراجع التفاصيل مع المطعم لتتحسن الجودة أكثر",
+  "فعلاً إحساس مو حلو لما الأكل ما يكون زاكي وأنا معك تمامًا وراح نشتغل على تحسين التجربة",
+  "أقدر رأيك بالطعم وراح نأخذه بعين الاعتبار لتحسين الخدمة القادمة",
+  "عارف إن الأكل ما طلع مثل المتوقع وراح نحرص تكون التجربة الجاية أفضل بكثير",
+  "أتفهم إن الطعم أثر على تجربتك وأنا معك تمامًا وراح نراجع هذا الشي مع الفريق",
+  "أعتذر إن الطعم ما كان مرضي وراح نحرص نتابع تحسين الجودة أكثر",
+  "عارف قديش ممكن ينزعج الشخص لما الأكل ما يعجبه وراح نشتغل نرفع مستوى التجربة",
+  "أكيد كنت متوقع تجربة ألذ وأنا متفهم تمامًا وراح نحاول نحسن التجربة القادمة",
+  "الطعم جزء مهم من التجربة وأنا فاهمك تمامًا وراح نحرص نوصل جودة أفضل المرات الجاية"], 
+
+  en:[  
+  "I understand the taste wasn’t as expected and I completely get how that felt we’ll make sure your next experience is better",
+  "I get that the food didn’t taste right and we’ll review this with the restaurant to improve the quality",
+  "I know it’s unpleasant when the food doesn’t taste good I’m totally with you and we’ll work on improving the experience",
+  "I value your feedback about the taste and we’ll take it seriously to improve future service",
+  "I understand the meal didn’t meet your expectations and we’ll make sure the next one is much better",
+  "I get that the taste affected your experience and I’m with you we’ll follow up on this for improvement",
+  "I’m sorry the flavor wasn’t satisfying and we’ll make sure to work on improving quality",
+  "I know how disappointing it feels when the meal isn’t tasty we’ll keep working to improve the experience",
+  "You were expecting a better taste and I totally understand we’ll make sure the next one feels worth it",
+  "Taste is a big part of the experience and I completely get you we’ll make sure to aim for better quality next time"] },
+
+  portion: { 
+  ar:[  
+  "عارف إحساسك تمامًا لما تكون الكمية أقل من المتوقع وأنا معك وراح نشارك ملاحظتك للمطعم حتى تتحسن التجربة الجاية",
+  "أتفهم شعورك بالحجم فعلاً وأنا معك وراح أتابع الملاحظة مع المطعم لتحسين الجودة",
+  "أقدر إنك حسيت إن الوجبة صغيرة وأنا أتفق معك وراح نحرص نوصل الملاحظة للمطعم",
+  "عارف قديش ممكن يضايقك الموضوع وأنا معك تمامًا وراح نراجع الموضوع مع المطعم",
+  "فعلاً ما يكون إحساس حلو لما الوجبة تطلع أصغر من المتوقع وأنا أشاركك الإحساس وراح نراجع الملاحظة",
+  "أتفهمك تمامًا وأنا معك هذا الحجم هو اللي يقدمه المطعم بس راح نرفع الملاحظة لتحسين التجربة",
+  "عارف إن الحجم خيّب توقعك وأنا أتفهمك وراح أحرص نوصل الملاحظة للمطعم لتتحسن الخدمة",
+  "أقدر إحباطك تمامًا لما تشوف الكمية أقل وأنا فعلاً معك وراح نراجع الموضوع لتحسينه",
+  "أتفهمك جدًا لما ما تكون الكمية كافية وأنا معك وراح نأخذ الملاحظة بعين الاعتبار",
+  "عارف إن التجربة ما كانت مرضية بسبب الحجم وأنا متفهمك تمامًا وراح نوصلها للمطعم للتحسين"],
+
+  en:[  
+  "I totally get how it feels when the portion is smaller than expected I’m on your side and we’ll share your feedback with the restaurant",
+  "I completely understand your feeling about the size I’m with you and we’ll review this with the restaurant to improve",
+  "I get that the portion felt small and I agree with you we’ll make sure the feedback reaches the restaurant",
+  "I know it’s frustrating to receive a small portion and I’m with you we’ll bring this up with the restaurant",
+  "I get how disappointing it feels when the meal looks smaller I feel you and we’ll make sure to check this with the restaurant",
+  "I understand and I’m totally with you this is the portion size provided by the restaurant but we’ll raise your note for improvement",
+  "I see how that felt and I’m with you we’ll make sure your comment helps improve future experiences",
+  "I completely understand your frustration and I’m with you we’ll take this seriously with the restaurant",
+  "I get it the portion didn’t meet your expectations and I’m on your side we’ll ensure the feedback helps improve quality",
+  "I totally understand your disappointment I’m really with you and we’ll forward this to the restaurant to improve"] },
 
   general: { 
-  ar:["~"], 
-  en:["~"] }
+  ar:[ 
+  "أتفهم تمامًا إحباطك من التجربة وأنا معك وراح نتأكد إنها ما تتكرر بإذن الله",
+  "عارف شعورك وأنا أعتذر بصدق عن اللي صار وراح نهتم بالملاحظة لتحسين تجربتك القادمة",
+  "أقدر وقتك فعلاً وراح أحرص إن ملاحظتك تساعدنا نطور الخدمة أكثر",
+  "أنا متفهمك تمامًا واللي صار فعلاً مو المفروض يصير وراح نحرص نمنع تكراره",
+  "أتفهمك جدًا وراح نراجع التفاصيل عشان نتحسن أكثر بالتجارب القادمة",
+  "عارف قديش هالشي ممكن يضايق وأنا فعلاً أعتذر وراح نهتم بالملاحظة للتحسين",
+  "أقدر تفهمك وصبرك جدًا وراح نعمل على تحسين الخدمة بشكل أفضل",
+  "أعتذر عن الإزعاج اللي سببناه وأؤكد لك إننا راح نراجع الموضوع لتحسين تجربتك القادمة",
+  "أقدر ملاحظتك كثير وراح نراجع اللي صار لتجنب تكراره",
+  "أتفهم تمامًا مشاعرك وراح نأخذ الملاحظة بجدية لتحسين تجربتك القادمة"
+], 
+  en:[ 
+  "I completely understand your frustration and I’m with you we’ll make sure this doesn’t happen again",
+  "I truly understand how you feel and I’m sorry for the experience we’ll work on improving moving forward",
+  "I really appreciate your time and I’ll make sure your feedback helps us improve",
+  "I get how that felt and I agree it shouldn’t have happened we’ll make sure it’s reviewed",
+  "I understand you and we’ll take this note seriously to make your next experience better",
+  "I totally get it and I’m sorry for the inconvenience we’ll use your feedback to improve",
+  "I appreciate your understanding and patience we’ll keep improving the service",
+  "I’m sorry for the inconvenience caused and we’ll review this carefully to improve next time",
+  "I value your feedback and we’ll make sure to review what happened to avoid it again",
+  "I truly understand how you felt and we’ll take your note seriously for future improvement"] }
 
 };
 
