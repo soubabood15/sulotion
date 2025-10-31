@@ -426,253 +426,14 @@ textarea#output {
 </style>
 </head>
 <body>
-  <script>
-let chatMini = null;
-let chats = [];
-let timer = null;
-let addBtn = null;
-
-// 🔢 زر صغير دائم بالزاوية
-const toggleBtn = document.createElement("button");
-toggleBtn.textContent = "🔢";
-Object.assign(toggleBtn.style, {
-  position: "fixed",
-  bottom: "20px",
-  left: "20px",
-  fontSize: "22px",
-  background: "rgba(255,255,255,0.25)",
-  color: "#1c2742",
-  border: "1px solid rgba(255,255,255,0.3)",
-  borderRadius: "12px",
-  padding: "6px 10px",
-  cursor: "pointer",
-  backdropFilter: "blur(10px)",
-  boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
-  zIndex: "999999",
-});
-document.body.appendChild(toggleBtn);
-toggleBtn.onclick = toggleChatMini;
-
-function toggleChatMini() {
-  if (!chatMini) initChatMini();
-  else chatMini.style.display = chatMini.style.display === "none" ? "flex" : "none";
-}
-
-function initChatMini() {
-  chatMini = document.createElement("div");
-  Object.assign(chatMini.style, {
-    position: "fixed",
-    bottom: "70px",
-    left: "20px",
-    display: "flex",
-    gap: "14px",
-    flexWrap: "wrap",
-    background: "rgba(255,255,255,0.08)",
-    backdropFilter: "blur(18px) saturate(180%)",
-    border: "1px solid rgba(255,255,255,0.2)",
-    borderRadius: "16px",
-    padding: "16px",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
-    zIndex: "999999",
-    fontFamily: "Cairo, sans-serif",
-  });
-
-  // ➕ زر الإضافة
-  addBtn = document.createElement("button");
-  addBtn.textContent = "➕";
-  Object.assign(addBtn.style, {
-    background: "linear-gradient(45deg, #285eff, #6b9aff)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontSize: "20px",
-    width: "55px",
-    height: "55px",
-    fontWeight: "bold",
-    transition: "transform .3s, box-shadow .3s",
-  });
-  addBtn.onmouseenter = () => (addBtn.style.transform = "scale(1.1)");
-  addBtn.onmouseleave = () => (addBtn.style.transform = "scale(1)");
-  addBtn.onclick = addChat;
-  chatMini.appendChild(addBtn);
-
-  document.body.appendChild(chatMini);
-  timer = setInterval(updateTimers, 1000);
-}
-
-function addChat() {
-  if (chats.length >= 5) {
-    addBtn.style.display = "none";
-    return;
-  }
-  const id = Date.now();
-  chats.push({
-    id,
-    time: 0,
-    running: false,
-    suspended: false,
-    suspendTime: 0,
-    shaking: false,
-  });
-  renderChats();
-}
-
-function renderChats() {
-  // تنظيف القديم
-  const existing = chatMini.querySelectorAll(".chatBox");
-  existing.forEach((el) => el.remove());
-
-  // تحديث زر الإضافة
-  addBtn.style.display = chats.length >= 5 ? "none" : "inline-block";
-
-  chats.forEach((c, i) => {
-    const box = document.createElement("div");
-    box.className = "chatBox";
-
-    const glowColor = getGlowColor(c);
-    const progress = Math.min(c.time / 120, 1) * 100;
-
-    Object.assign(box.style, {
-      width: "85px",
-      height: "90px",
-      background: "rgba(255,255,255,0.35)",
-      borderRadius: "16px",
-      position: "relative",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "8px",
-      cursor: "pointer",
-      transition: "all 0.3s ease",
-      border: `2px solid ${glowColor}`,
-      boxShadow: `0 0 10px ${glowColor}`,
-      overflow: "hidden",
-    });
-
-    // ✨ تأثير الانبثاق فقط عند الدخول والخروج
-    box.addEventListener("mouseenter", () => box.classList.add("hovered"));
-    box.addEventListener("mouseleave", () => box.classList.remove("hovered"));
-
-    // 💢 اهتزاز عند الوصول 1:45 أو نهاية السسبند
-    if (c.shaking) box.classList.add("shake");
-    else box.classList.remove("shake");
-
-    box.innerHTML = `
-      <div style="font-size:20px;font-weight:700;color:#000;">#${i + 1}</div>
-      <div style="font-size:15px;color:#000;font-weight:600;">
-        ${c.suspended ? formatTime(c.suspendTime) : formatTime(c.time)}
-      </div>
-      <div style="display:flex;gap:4px;z-index:10;">
-        ${
-          c.suspended
-            ? `<button onclick="unsuspendChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">🔓</button>`
-            : `<button onclick="suspendChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">⏳</button>`
-        }
-        <button onclick="deleteChat(${c.id})" style="background:none;border:none;cursor:pointer;color:#000;">❌</button>
-      </div>
-      <div style="position:absolute;bottom:0;left:0;height:5px;width:${progress}%;background:linear-gradient(90deg,#00ff88,#ff0033);border-radius:0 0 16px 16px;transition:width 1s ease;"></div>
-    `;
-
-    // تشغيل أو إعادة العد
-    box.onclick = (e) => {
-      if (e.target.tagName === "BUTTON") return;
-      c.running = true;
-      c.suspended = false;
-      c.suspendTime = 0;
-      c.time = 0;
-      c.shaking = false;
-      renderChats();
-    };
-
-    chatMini.appendChild(box);
-  });
-}
-
-function getGlowColor(c) {
-  if (c.suspended) return "#ffcc00";
-  if (c.time >= 105) return "#ff3333"; // أحمر عند التأخير
-  if (c.time >= 70) return "#ff8800"; // برتقالي لما يقرب
-  return "#285eff"; // أزرق طبيعي
-}
-
-function suspendChat(id) {
-  const c = chats.find((x) => x.id === id);
-  if (c) {
-    c.suspended = true;
-    c.running = false;
-    c.suspendTime = 600; // 10 دقائق = 600 ثانية
-    c.shaking = false;
-  }
-  renderChats();
-}
-
-function unsuspendChat(id) {
-  const c = chats.find((x) => x.id === id);
-  if (c) {
-    c.suspended = false;
-    c.running = true;
-    c.shaking = false;
-  }
-  renderChats();
-}
-
-function deleteChat(id) {
-  chats = chats.filter((x) => x.id !== id);
-  renderChats();
-}
-
-function updateTimers() {
-  chats.forEach((c) => {
-    if (c.running && !c.suspended) {
-      c.time++;
-      if (c.time >= 105) c.shaking = true;
-    } else if (c.suspended && c.suspendTime > 0) {
-      c.suspendTime--;
-      if (c.suspendTime <= 0) {
-        c.suspended = false;
-        c.shaking = true; // تهتز بعد انتهاء السسبند
-      }
-    }
-  });
-  renderChats();
-}
-
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = String(sec % 60).padStart(2, "0");
-  return `${m}:${s}`;
-}
-
-// 💫 CSS
-const style = document.createElement("style");
-style.textContent = `
-  .chatBox.hovered {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px rgba(40,94,255,0.6);
-  }
-
-  @keyframes shakeAnim {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(2px, 0); }
-    50% { transform: translate(-2px, 0); }
-    75% { transform: translate(2px, 0); }
-  }
-
-  .shake {
-    animation: shakeAnim 0.4s ease-in-out infinite;
-  }
-`;
-document.head.appendChild(style);
-</script>
+  
  <script>
 async function checkVersion() {
   try {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.2"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.3"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -898,13 +659,13 @@ setInterval(checkVersion, 5000);
   <h2 style="color:#285eff;">قسم الاعتذارات</h2>
 
   <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
-  <button onclick="generate('longApology')">توليد اعتذار طويل</button>
+  <button onclick="generate('longApology')">انشاء اعتذار طويل مختلف</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
   <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
-  <button onclick="generate('shortApology')">توليد اعتذار قصير</button>
+  <button onclick="generate('shortApology')">انشاء اعتذار قصير مختلف</button>
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
@@ -955,7 +716,7 @@ setInterval(checkVersion, 5000);
  
 <div class="section" id="hold">
   <h2 style="color:#285eff;">قسم الهولد</h2>
-  <button onclick="generate('hold')">توليد هولد</button>
+  <button onclick="generate('hold')">انشاء هولد مختلف</button>
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
@@ -973,14 +734,152 @@ setInterval(checkVersion, 5000);
   </div>
 </div>
 
-  <div style="color:#9a1b1b;" class="fixed-hold-cards">
-  <div class="hold-card" onclick="copyMsg(this)">
-   شكرا على صبرك
+  <!-- 💬 قسم الشكر على الانتظار -->
+<div class="card" style="position:relative;">
+  <h2 style="color:#285eff;">قسم الشكر على الانتظار</h2>
+
+  <!-- زر التوليد -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <button class="btn primary" 
+            style="background:#285eff;color:#fff;border:none;
+                   padding:10px 18px;border-radius:10px;cursor:pointer;"
+            onclick="generateThanks()"> انشاء شكر مختلف </button>
   </div>
-  <div class="hold-card" onclick="copyMsg(this)">
- Thank you for your patience
+
+  <!-- الكروت الزجاجية -->
+  <div id="thanksBox" style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+    <div id="arabicThanks" class="msgBox glass-box">شكراً على صبرك</div>
+    <div id="englishThanks" class="msgBox glass-box">Thank you for your patience</div>
   </div>
 </div>
+
+<style>
+.glass-box {
+  flex:1;
+  min-width:240px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(40, 94, 255, 0.4);
+  border-radius: 14px;
+  padding: 12px 16px;
+  text-align: center;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 500;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 3px 15px rgba(40,94,255,0.15);
+  transition: all 0.3s ease;
+}
+.glass-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(40,94,255,0.3);
+}
+#thanksNotice {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(40,94,255,0.4);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 15px;
+  color: #003cff;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: opacity .4s ease, transform .4s ease;
+  transform: translateY(10px);
+  z-index: 99999;
+}
+#thanksNotice.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
+<script>
+const arabicPhrases = [
+  "شكراً على صبرك",
+  "أقدّر وقتك كثير",
+  "شكراً لتفهمك",
+  "أقدر انتظارك فعلاً",
+  "ممتن لوقتك",
+  "شكراً على تفاعلك وصبرك",
+  "أقدر إنك كنت متعاون بصبرك",
+  "شكراً على انتظارك",
+  "أقدّر إنك عطيتنا من وقتك",
+  "شكراً على سعة صدرك",
+  "شكراً على وقتك وتفهمك",
+  "أقدر تعاونك وصبرك",
+  "ممتن على وقتك فعلاً",
+  "شكراً على صبرك الجميل",
+  "أقدر وقتك جدًا وشكراً من القلب"
+];
+
+const englishPhrases = [
+  "Thank you for your patience",
+  "Really appreciate your time",
+  "Thanks for understanding",
+  "Appreciate your wait",
+  "Grateful for your time",
+  "Thanks for staying with us",
+  "Appreciate your patience",
+  "Thank you for waiting",
+  "Really value your time",
+  "Thanks for your understanding",
+  "Appreciate your cooperation",
+  "Grateful for your patience",
+  "Thanks for being patient with us",
+  "Truly appreciate your time and patience",
+  "Thanks for waiting"
+];
+
+let usedArabic = new Set();
+let usedEnglish = new Set();
+
+function getUniquePhrase(set, phrases) {
+  if (set.size === phrases.length) {
+    showNotice("🪄 تم استخدام جميع العبارات، تم إعادة التوليد ✨");
+    set.clear();
+  }
+  let phrase;
+  do {
+    phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  } while (set.has(phrase));
+  set.add(phrase);
+  return phrase;
+}
+
+function generateThanks() {
+  document.getElementById("arabicThanks").textContent = getUniquePhrase(usedArabic, arabicPhrases);
+  document.getElementById("englishThanks").textContent = getUniquePhrase(usedEnglish, englishPhrases);
+  animateCards();
+}
+
+// حركة بسيطة عند التوليد
+function animateCards() {
+  document.querySelectorAll(".glass-box").forEach(card => {
+    card.style.transform = "scale(1.05)";
+    setTimeout(() => card.style.transform = "scale(1)", 200);
+  });
+}
+
+// إشعار زجاجي أنيق
+function showNotice(text) {
+  let note = document.getElementById("thanksNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "thanksNotice";
+    document.body.appendChild(note);
+  }
+  note.textContent = text;
+  note.classList.add("show");
+  clearTimeout(window.noticeTimeout);
+  window.noticeTimeout = setTimeout(() => note.classList.remove("show"), 2000);
+}
+</script>
 
 <style>
 .fixed-hold-cards {
@@ -1097,14 +996,14 @@ setInterval(checkVersion, 5000);
 
   <!-- 🧩 حقول الاسم -->
   <div style="text-align:center; margin-bottom:12px;">
-    <input id="nameAr" type="text" placeholder="اكتب الاسم بالعربي" 
-      oninput="updateGreeting()" 
-      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
-    
-    <input id="nameEn" type="text" placeholder="Enter name in English" 
-      oninput="updateGreeting()" 
-      style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
+  <input id="nameAr" type="text" placeholder="اكتب الاسم بالعربي" 
+  oninput="updateGreeting(); saveName();" 
+  style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
+<input id="nameEn" type="text" placeholder="Enter name in English" 
+  oninput="updateGreeting(); saveName();" 
+  style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;"> 
   </div>
+  
 
   <!-- 🗨️ نصوص الترحيب -->
   <div class="chat-row">
@@ -1121,6 +1020,7 @@ setInterval(checkVersion, 5000);
 <script>
 // 🔹 تحديث الجمل أثناء الكتابة
 function updateGreeting() {
+
   const nameAr = document.getElementById("nameAr").value.trim();
   const nameEn = document.getElementById("nameEn").value.trim();
 
@@ -1134,6 +1034,19 @@ function updateGreeting() {
   ar2.textContent = nameAr ? `مرحبًا معك ${nameAr}، أنا هنا لمساعدتك` : `مرحبًا معك، أنا هنا لمساعدتك`;
   en2.textContent = nameEn ? `Hello Im ${nameEn}, I am here to help you.` : `Hello Im, I am here to help you.`;
 }
+function saveName() {
+  localStorage.setItem("savedNameAr", document.getElementById("nameAr").value);
+  localStorage.setItem("savedNameEn", document.getElementById("nameEn").value);
+}
+window.addEventListener("load", () => {
+  const savedAr = localStorage.getItem("savedNameAr");
+  const savedEn = localStorage.getItem("savedNameEn");
+
+  if (savedAr) document.getElementById("nameAr").value = savedAr;
+  if (savedEn) document.getElementById("nameEn").value = savedEn;
+
+  updateGreeting();
+});
 </script>
   <!-- الاعتذار والتأكيد -->
   <!-- 🍽️ قسم الاعتذار والتأكيد (تفاعلي) -->
@@ -1193,10 +1106,61 @@ function updateRestaurant() {
   <!-- أي خدمة إضافية -->
   <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
-    <div class="chat-row">
-      <div class="msg" onclick="copyMsg(this)">اي خدمه ثانيه يمكنني مساعدتك بها عميلنا العزيز ؟</div>
-      <div class="msg" onclick="copyMsg(this)">Is there anything else I can help you with?</div>
+    <div id="extraServiceBox" 
+     style="background:#fffbea;padding:16px;border-radius:14px;
+            border:1px solid #ffe58a;text-align:center;font-family:'Cairo',sans-serif;">
+
+  <button id="generateService"
+    style="background:#fff;border:1px solid #ccc;
+           color:#333;
+           border-radius:8px;
+           padding:6px 12px;
+           font-size:14px;
+           cursor:pointer;
+           transition:0.3s;">
+    توليد
+  </button>
+
+  <div id="serviceContainer"
+       style="display:flex;justify-content:center;align-items:stretch;
+              gap:10px;margin-top:10px;flex-wrap:wrap;">
+    <div id="arabicBox" class="msgBox"
+         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+                border-radius:10px;padding:10px;text-align:right;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      هل يمكنني مساعدتك بأي خدمة أخرى عميلنا العزيز؟
     </div>
+
+    <div id="englishBox" class="msgBox"
+         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+                border-radius:10px;padding:10px;text-align:left;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      Is there anything else I can help you with?
+    </div>
+  </div>
+</div>
+
+<script>
+const servicePairs = [
+  ["هل أستطيع مساعدتك في أمر آخر اليوم؟","Can I assist you with anything else today?"],
+  ["هل هناك أي خدمة إضافية يمكنني تقديمها لك؟","Is there any additional service I can provide?"],
+  ["هل ترغب أن أتحقق لك من شيء آخر؟","Would you like me to check something else for you?"],
+  ["هل يمكنني دعمك في أي نقطة أخرى؟","Can I support you with anything else?"],
+  ["هل تحتاج أي مساعدة أخرى قبل أن ننهي؟","Do you need any further help before we finish?"],
+  ["هل يوجد شيء آخر يمكنني توضيحه لك؟","Is there anything else I can clarify for you?"]
+];
+
+document.getElementById("generateService").addEventListener("click", () => {
+  const [ar, en] = servicePairs[Math.floor(Math.random() * servicePairs.length)];
+  document.getElementById("arabicBox").textContent = ar;
+  document.getElementById("englishBox").textContent = en;
+
+  // تأثير بسيط
+  [arabicBox, englishBox].forEach(box => {
+    box.style.transition = "transform 0.2s ease";
+    box.style.transform = "scale(1.05)";
+    setTimeout(() => box.style.transform = "scale(1)", 200);
+  });
+});
+</script>
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">مرحبًا. لم نتلق ردك بعد، وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، لا تتردد بالتواصل معنا.</div>
       <div class="msg" onclick="copyMsg(this)">Hello! We haven’t received your response yet. The chat will close soon. Feel free to contact us anytime.</div>
@@ -1315,17 +1279,105 @@ function showCopiedNotice() {
  
 <div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
   <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
-  <input id="calcInput" type="number" placeholder="أدخل الرقم" style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:90;text-align:center;font-size:15px;">
+
+  <input id="calcInput" type="number" placeholder="أدخل السعر" 
+         oninput="resetAutoTimer()" 
+         style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:90%;text-align:center;font-size:15px;">
+
   <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
-    <button onclick="calc(0.8)">Main dish</button>
-    <button onclick="calc(0.5)">Side dish</button>
-    <button onclick="calc(0.3)">Drink</button>
-    <button onclick="calc(0.1)">Cutlery</button>
+    <button onclick="addItem('Main dish', 0.8)">🍛 Main dish</button>
+    <button onclick="addItem('Side dish', 0.5)">🥗 Side dish</button>
+    <button onclick="addItem('Drink', 0.3)">🥤 Drink</button>
+    <button onclick="addItem('Cutlery', 0.1)">🍴 Cutlery</button>
   </div>
-  <div id="calcResult" class="calc-result" style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;font-weight:bold;border:1px solid #e1e9ff;">
+
+  <div id="calcItems" style="margin-top:15px;text-align:right;font-family:'Cairo',sans-serif;font-size:14px;color:#1d2b5c;">
+    <b>📋 الأصناف المضافة:</b><br>
+    <span id="itemList" style="display:block;margin-top:6px;color:#444;">—</span>
+  </div>
+
+  <div id="calcResult" class="calc-result" 
+       style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;
+              font-weight:bold;border:1px solid #e1e9ff;color:#003cff;">
     النتيجة: —
   </div>
-  
+
+  <div style="text-align:center;margin-top:10px;">
+    <button onclick="resetCalc(true)" 
+            style="background:#ff4b4b;color:#fff;border:none;padding:8px 16px;
+                   border-radius:8px;cursor:pointer;font-weight:bold;">
+      🔁 Reset
+    </button>
+  </div>
+</div>
+
+<script>
+let total = 0;
+let items = [];
+let resetTimer; // ⏳ مؤقت التصفير التلقائي
+
+function addItem(type, multiplier) {
+  resetAutoTimer(); // ← أي تفاعل يمدد الوقت
+  const input = document.getElementById("calcInput");
+  const value = parseFloat(input.value);
+
+  if (isNaN(value) || value <= 0) {
+    alert("⚠️ الرجاء إدخال سعر صحيح أولاً");
+    return;
+  }
+
+  const result = value * multiplier;
+  total += result;
+
+  items.push(`${type}: ${result.toFixed(2)} ريال`);
+  document.getElementById("itemList").innerHTML = items.join("<br>");
+  document.getElementById("calcResult").textContent = `النتيجة: ${total.toFixed(2)} ريال`;
+
+  input.value = "";
+}
+
+function resetCalc(manual = false) {
+  total = 0;
+  items = [];
+  document.getElementById("itemList").innerHTML = "—";
+  document.getElementById("calcResult").textContent = "النتيجة: —";
+  if (manual) clearTimeout(resetTimer);
+}
+
+// ⏳ دالة التصفير التلقائي بعد دقيقتين من عدم التفاعل
+function resetAutoTimer() {
+  clearTimeout(resetTimer);
+  resetTimer = setTimeout(() => {
+    resetCalc();
+    showAutoResetNotice();
+  }, 120000); // 120000 = دقيقتين (بالملّي ثانية)
+}
+
+// 💬 إشعار بسيط يظهر عند التصفير التلقائي
+function showAutoResetNotice() {
+  const msg = document.createElement("div");
+  msg.textContent = "🔄 تمت إعادة ضبط الحاسبة تلقائيًا بعد 2 دقيقة";
+  Object.assign(msg.style, {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    background: "rgba(255,255,255,0.8)",
+    color: "#003cff",
+    border: "1px solid #c9dafd",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    fontFamily: "Cairo, sans-serif",
+    fontSize: "14px",
+    zIndex: "99999",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+  });
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2500);
+}
+
+// تشغيل المؤقت أول مرة عند تحميل الصفحة
+resetAutoTimer();
+</script>
 
 </div>
 <script>
@@ -2609,8 +2661,334 @@ function resetPausedStyle() {
 }
 </script>
 
+<!-- 📜 زر فتح مولد الاعتذارات (مستقل تمامًا) -->
+<!-- 💬 زر فتح مولد الاعتذارات -->
+<button id="aplg_toggle" style="
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:#285eff;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:55px;
+  height:55px;
+  font-size:22px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  z-index:99999;
+  transition:.3s;
+">💬</button>
 
+<!-- ⚙️ نافذة مولد الاعتذارات -->
+<div id="aplg_panel" style="
+  display:none;
+  position:fixed;
+  bottom:90px;
+  left:20px;
+  width:420px;
+  max-height:85vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:16px;
+  border:1px solid #d8e5ff;
+  padding:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+  z-index:99998;
+  font-family:'Cairo',sans-serif;
+">
+  <div style="text-align:right;">
+    <button onclick="aplg_togglePanel()" style="
+      background:#ff4d4d;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      padding:3px 10px;
+      cursor:pointer;
+      font-size:13px;
+    ">✖ إغلاق</button>
+  </div>
 
+  <h3 style="color:#285eff; text-align:center; margin-top:5px;">قيد التطوير لاتستخدمه</h3>
+
+  <!-- 🔘 أزرار الحالات -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <button onclick="aplg_showCase('missing')" class="aplg_caseBtn">Missing</button>
+    <button onclick="aplg_showCase('wrong')" class="aplg_caseBtn">Wrong</button>
+    <button onclick="aplg_showCase('late')" class="aplg_caseBtn">Late</button>
+    <button onclick="aplg_showCase('quality')" class="aplg_caseBtn">Quality</button>
+    <button onclick="aplg_showCase('driver')" class="aplg_caseBtn">Driver</button>
+    <button onclick="aplg_showCase('general')" class="aplg_caseBtn">General</button>
+  </div>
+
+  <!-- 🧩 صندوق الحالات -->
+  <div id="aplg_casesArea">
+    <div id="aplg_missing" class="aplg_caseBox">
+      <button onclick="aplg_generate('missing')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+
+    <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
+      <button onclick="aplg_generate('wrong')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+
+    <div id="aplg_late" class="aplg_caseBox" style="display:none;">
+      <button onclick="aplg_generate('late')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_late" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_late" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+
+    <div id="aplg_quality" class="aplg_caseBox" style="display:none;">
+      <button onclick="aplg_generate('quality')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_quality" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_quality" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+
+    <div id="aplg_driver" class="aplg_caseBox" style="display:none;">
+      <button onclick="aplg_generate('driver')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_driver" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_driver" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+
+    <div id="aplg_general" class="aplg_caseBox" style="display:none;">
+      <button onclick="aplg_generate('general')" class="aplg_genBtn">توليد اعتذار</button>
+      <div class="aplg_output">
+        <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
+        <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.aplg_caseBtn {
+  background:#285eff;
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  margin:3px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.aplg_caseBtn:hover { background:#174de0; transform:scale(1.05); }
+
+.aplg_caseBox { margin-top:10px; text-align:center; }
+
+.aplg_genBtn {
+  background:#00b36b;
+  color:#fff;
+  border:none;
+  padding:8px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+.aplg_genBtn:hover { background:#00975a; transform:scale(1.05); }
+
+.aplg_output {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.aplg_msg {
+  flex:1;
+  min-width:160px;
+  background:#fff;
+  border:1px solid #d8e5ff;
+  border-radius:10px;
+  padding:8px;
+  text-align:center;
+  color:#222;
+  font-family:'Cairo',sans-serif;
+  cursor:pointer;
+  transition:.2s;
+}
+.aplg_msg:hover { background:#f0f5ff; }
+</style>
+
+<script>
+function aplg_togglePanel() {
+  const p = document.getElementById('aplg_panel');
+  p.style.display = (p.style.display === 'none' || !p.style.display) ? 'block' : 'none';
+}
+document.getElementById('aplg_toggle').addEventListener('click', aplg_togglePanel);
+
+function aplg_showCase(type) {
+  document.querySelectorAll('.aplg_caseBox').forEach(b => b.style.display = 'none');
+  document.getElementById('aplg_' + type).style.display = 'block';
+}
+
+// 📜 قاعدة بيانات مبدئية فاضية (تقدر تعبيها بعدين)
+const aplg_data = {
+  missing: { 
+  ar:[  
+    "متفهم تمامًا انك استلمت الطلب ناقص وانا معك فعلاً هذا الشي يضايق بس اكيد راح نحرص انها ما تتكرر",
+    "اعرف ان النقص يسبب إحباط وانا فعلاً مقدر شعورك وواثق انها تجربة ما راح تتكرر معك",
+    "فعلاً النقص ما هو مقبول وانا شخصيًا متفهم اللي صار معك وراح نحرص يكون كل طلبك كامل دائمًا",
+    "انا في صفك تمامًا واللي صار من نقص ما يمثلنا وراح نتابع السبب عشان نمنع تكراره",
+    "اعتذر لك عن النقص اللي حصل واعرف انه مو موقف مريح وراح نضمن يكون التوصيل أدق المرات الجايه",
+    "اقدر تفهمك وصبرك وفعلاً آسف انك استلمت الطلب ناقص بس صدقني راح نحرص انها ما تصير ثاني",
+    "انا معك واتفهم احساسك تمامًا النقص احيانًا يضايق وراح نتابع الموضوع عشان نتفاداه المرات الجايه",
+    "اعرف ان النقص يسبب انزعاج وانا فعلاً متفهم اللي مريت فيه وراح نتأكد تكون تجاربك القادمة أفضل",
+    "فعلاً مو سهل تستلم طلب ناقص وانا معك واعتذر بكل صدق وراح نضمن دقة الطلبات الجاية",
+    "انا فعلاً مقدر اللي صار ومتأكد انك ما تستحق هالتجربة وراح نحرص ما تتكرر أبدًا",
+    "النقص اللي صار فعلاً ما يعكس شغلنا وراح نراجع السبب عشان نضمن جودة أفضل",
+    "متفهم الموقف جدًا وانا معك راح انقل الملاحظة للفريق حتى نمنعها من التكرار",
+    "انا فعلاً معك واعتذر عن النقص اللي صار وراح نتابع داخليًا حتى ما يتكرر",
+    "اقدر صبرك وفعلاً اللي صار ما المفروض يصير ابداً وراح نحرص على تحسن تجربتك الجاية",
+    "النقص فعلاً يسبب انزعاج وانا متفهمك جدًا وواثق انها ما راح تتكرر بإذن الله"], 
+
+  en:[
+    "I completely understand receiving a missing item is frustrating and we’ll make sure this doesn’t happen again",
+    "I know how disappointing it feels and I’m confident this experience won’t happen again",
+    "Missing items shouldn’t happen and we’ll ensure your next order arrives complete",
+    "I’m on your side and we’ll look into this to make sure it doesn’t repeat",
+    "I truly apologize for the missing part and we’ll make sure your future orders are accurate",
+    "I appreciate your patience and I promise we’ll be more careful moving forward",
+    "I’m with you this shouldn’t happen and we’ll work on improving our process",
+    "I understand it’s frustrating and we’ll do our best to make sure it doesn’t happen again",
+    "It’s not easy to receive an incomplete order and we’ll make sure it’s complete next time",
+    "I truly value your time and we’ll ensure this kind of issue doesn’t repeat",
+    "The missing item doesn’t reflect us and we’ll review the case to improve accuracy",
+    "I completely understand and I’ll make sure your feedback helps us improve",
+    "I’m really with you on this and we’ll take steps to avoid it happening again",
+    "I appreciate your understanding and we’ll make sure your next experience is better",
+    "I get how that felt and I promise we’ll do better moving forward"] },
+
+  wrong: { 
+  ar:[    "أفهم تمامًا إن استلامك لطلب مختلف عن المطلوب مزعج وراح نحرص ما يتكرر هالشي",
+    "عارف قديش يضايق لما الطلب ما يكون مثل ما كنت تتوقع وراح نشتغل على تحسين التجربة قدام",
+    "أعتذر بصدق عن الخطأ بالطلب وراح نحرص إن طلبك الجاي يوصل بشكل دقيق",
+    "فاهم إن هذا الخطأ ما المفروض يصير وراح أتأكد إن ملاحظتك توصل للفريق المعني",
+    "أنا معك وراح أتابع مع المطعم علشان ما يتكرر الخطأ",
+    "أتخيل قد إيش الموقف كان مربك وراح نتصرف ونعالجه",
+    "فاهم إن الموضوع مزعج وإنه مو مقبول توصل غرض مختلف وراح نحسن العملية",
+    "فاهم قلقك تمامًا وراح أتأكد الفريق المختص يشوف الحالة",
+    "أقدّر تفهمك وراح نحرص إن تجربتك الجاية تكون صحيحة ومريحة",
+    "عارف إن الموضوع مخيب وراح نكون أدق إن شاء الله في المرات الجاية",
+    "أشوف كيف الموقف ممكن يزعجك وراح أتابعه بشكل مناسب",
+    "أقدّر صبرك وإحنا نحل الموضوع ونتأكد إنه ما يتكرر",
+    "فاهم إحساسك لما توصلك غرض غلط وأنا متابع عشان نطور من الخدمة",
+    "عارف إن اللي وصلك مو اللي طلبته وراح نحرص تكون الدقة أعلى المرات الجاية",
+    "أنا معك في اللي صار وراح نراجع الخطأ ونتأكد طلبك الجاي يوصل مثل المطلوب"
+  ],
+
+  en:[
+    "I completely understand receiving the wrong item is disappointing and we’ll make sure this doesn’t happen again",
+    "I know how frustrating it is when the order isn’t what you expected and we’ll fix this for the future",
+    "I truly apologize for the wrong item and we’ll make sure your next order is accurate",
+    "I understand this mistake shouldn’t happen and I’ll make sure your feedback is taken seriously",
+    "I’m on your side and we’ll check with the restaurant to prevent it from happening again",
+    "I can imagine how confusing this must have been and we’ll take care of it",
+    "I understand your frustration receiving the wrong item isn’t acceptable and we’ll improve on it",
+    "I completely get your concern and I’ll ensure the right team looks into this",
+    "I truly value your understanding and we’ll make sure your next experience is right",
+    "I know it’s disappointing to receive the wrong order and we’ll do better moving forward",
+    "I can see how this could be upsetting and I’ll make sure this is addressed properly",
+    "I truly appreciate your patience while we fix this and make sure it doesn’t happen again",
+    "I understand how it feels to get the wrong item and I’m already on it to ensure improvement",
+    "I know this isn’t what you ordered and we’ll ensure accuracy going forward",
+    "I’m with you on this we’ll review what happened and make sure your next order arrives correctly"] },
+
+  late: { 
+  ar:["~"], 
+  en:["~"] },
+
+  quality: {
+  ar:["~"], 
+  en:["~"] },
+
+  driver: { 
+  ar:["~"], 
+  en:["~"] },
+
+  general: { 
+  ar:["~"], 
+  en:["~"] }
+
+};
+
+function aplg_generate(type) {
+  const data = aplg_data[type];
+  const rand = Math.floor(Math.random() * data.ar.length);
+  document.getElementById("aplg_ar_" + type).textContent = data.ar[rand] || "~";
+  document.getElementById("aplg_en_" + type).textContent = data.en[rand] || "~";
+}
+
+// ✅ النسخ الفعّال + إشعار زجاجي فوق الماوس
+document.addEventListener("click", function(e) {
+  const target = e.target.closest(".aplg_copy");
+  if (!target) return;
+
+  const text = target.textContent.trim();
+  if (!text || text === "~") return; // نتأكد مو فاضي
+
+  try {
+    navigator.clipboard.writeText(text);
+    aplg_showCopiedNotice(e.pageX, e.pageY);
+  } catch (err) {
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+    aplg_showCopiedNotice(e.pageX, e.pageY);
+  }
+});
+
+// ✨ إشعار زجاجي فوق الماوس
+function aplg_showCopiedNotice(x, y) {
+  const note = document.createElement("div");
+  note.textContent = "☑️ تم النسخ";
+  Object.assign(note.style, {
+    position: "fixed",
+    left: x + "px",
+    top: y - 25 + "px",
+    background: "rgba(255, 255, 255, 0.55)",
+    color: "#00b36b",
+    padding: "6px 14px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    fontWeight: "600",
+    backdropFilter: "blur(10px)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+    transform: "translate(-50%,-50%)",
+    zIndex: "999999",
+    opacity: "0",
+    transition: "opacity 0.3s ease, top 0.5s ease"
+  });
+
+  document.body.appendChild(note);
+
+  requestAnimationFrame(() => {
+    note.style.opacity = "1";
+    note.style.top = (y - 55) + "px";
+  });
+
+  setTimeout(() => {
+    note.style.opacity = "0";
+    note.style.top = (y - 80) + "px";
+    setTimeout(() => note.remove(), 400);
+  }, 900);
+}
+</script>
 
 <!-- 🌐 شريط التنقل السفلي -->
 <!-- ✅ زر الواجهة الثانية -->
