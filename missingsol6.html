@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.7"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.8"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -515,7 +515,7 @@ setInterval(checkVersion, 5000);
 }
 </style>
 
-  <div class="madeby">Made by Abdelrahman & Reem </div>
+  <div class="madeby">Made by Abdelrahman & Alfaouri </div>
 
   <!-- 🕒 ساعة الأردن (12 ساعة) -->
 <div id="jordanClock">🕒 00:00:00 AM 🇯🇴</div>
@@ -3532,8 +3532,8 @@ function aplg_showCopiedNotice(x, y) {
 <!-- ✅ زر الواجهة الثانية -->
  <!-- ✅ الشريط السفلي الموحد -->
 <div id="bottomBar">
-  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#9ecbff;">السكربتات 🧩</button>
-  <button onclick="goHome()" style="color:#9ecbff;">الرئيسية 🏠</button>
+  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#000000;">كل السكربتات </button>
+  <button onclick="goHome()" style="color:#000000;">الرئيسية </button>
 </div>
 
 <div id="page2Overlay">
