@@ -6,36 +6,44 @@
 <title>تقييم الصفحة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --main-color: #285eff;
+  --bg-light: linear-gradient(120deg,#eef3ff,#f7faff);
+  --bg-dark: #1b1b1b;
+  --text-dark: #222;
+  --text-light: #eee;
+}
 body {
   font-family: 'Cairo', sans-serif;
-  background: linear-gradient(120deg,#eef3ff,#f7faff);
+  background: var(--bg-light);
+  color: var(--text-dark);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   min-height: 100vh;
-  padding: 30px 15px;
-  color: #222;
-  transition: 0.4s;
-}
-
-h1 {
-  color: #285eff;
+  padding: 40px 15px;
   text-align: center;
+  transition: background 0.5s ease, color 0.5s ease;
 }
-
+h1 {
+  color: var(--main-color);
+  font-size: 26px;
+  margin-bottom: 10px;
+  animation: fadeIn 1s ease;
+}
 form {
   background: #fff;
   border: 1px solid #d8e5ff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  padding: 20px;
-  max-width: 420px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  padding: 25px;
   width: 100%;
-  text-align: center;
-  margin-top: 20px;
+  max-width: 400px;
+  margin-top: 15px;
+  transition: all 0.4s ease;
+  animation: slideUp 0.7s ease;
 }
-
 input, textarea {
   width: 100%;
   padding: 10px;
@@ -44,53 +52,70 @@ input, textarea {
   border: 1px solid #c9dafd;
   font-family: 'Cairo', sans-serif;
   font-size: 15px;
-  resize: none;
+  transition: border 0.3s, background 0.3s;
 }
-
+input:focus, textarea:focus {
+  outline: none;
+  border: 1px solid var(--main-color);
+  background: #f2f6ff;
+}
 button {
-  background: #285eff;
+  background: var(--main-color);
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 10px 18px;
+  padding: 12px 20px;
   cursor: pointer;
   font-size: 15px;
-  transition: 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
 }
-button:hover { background: #174de0; transform: scale(1.03); }
-
-/* 🌟 تقييم النجوم */
+button:hover {
+  background: #174de0;
+  transform: scale(1.03);
+}
 .stars {
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  margin: 10px 0 15px;
+  flex-wrap: wrap;
 }
 .star {
-  font-size: 26px;
+  font-size: 36px;
   color: #ccc;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 0.2s;
+  user-select: none;
 }
-.star.active { color: #FFD700; }
-
-/* 🌙 الوضع الليلي */
+.star:hover {
+  transform: scale(1.25);
+}
+.star.active {
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255,215,0,0.6);
+  animation: pop 0.3s ease;
+}
 .dark {
-  background: #1b1b1b;
-  color: #eee;
+  background: var(--bg-dark);
+  color: var(--text-light);
 }
 .dark form {
   background: #222;
-  border: 1px solid #444;
+  border: 1px solid #333;
   box-shadow: none;
 }
 .dark input, .dark textarea {
   background: #333;
-  border: 1px solid #555;
+  border: 1px solid #444;
   color: #eee;
 }
-.dark button { background: #00b36b; }
-
-/* ✅ رسالة النجاح */
+.dark button {
+  background: #00b36b;
+}
+.dark button:hover {
+  background: #00a060;
+}
 #successMsg {
   display: none;
   background: #d4ffe1;
@@ -99,6 +124,40 @@ button:hover { background: #174de0; transform: scale(1.03); }
   border-radius: 10px;
   padding: 10px;
   margin-top: 15px;
+  animation: fadeIn 0.6s ease;
+}
+/* 🌙 زر الوضع الليلي */
+#darkToggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: 2px solid var(--main-color);
+  border-radius: 50%;
+  color: var(--main-color);
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+#darkToggle:hover {
+  background: var(--main-color);
+  color: #fff;
+}
+
+/* ✨ أنيميشن */
+@keyframes pop { 0%{transform:scale(0.7);} 100%{transform:scale(1);} }
+@keyframes fadeIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+@keyframes slideUp { from{opacity:0; transform:translateY(50px);} to{opacity:1; transform:translateY(0);} }
+
+@media (max-width: 480px) {
+  h1 { font-size: 22px; }
+  form { padding: 20px; }
+  .star { font-size: 32px; }
 }
 </style>
 </head>
@@ -106,19 +165,7 @@ button:hover { background: #174de0; transform: scale(1.03); }
 
 <h1>📝 تقييم الصفحة</h1>
 
-<button onclick="toggleDarkMode()" style="
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: none;
-  border: 2px solid #285eff;
-  border-radius: 50%;
-  color: #285eff;
-  width: 45px;
-  height: 45px;
-  cursor: pointer;
-  font-size: 20px;
-">🌙</button>
+<button id="darkToggle" onclick="toggleDarkMode()">🌙</button>
 
 <form id="feedbackForm" method="POST">
   <input type="text" name="name" placeholder="اسمك الكريم" required>
@@ -155,7 +202,6 @@ form.addEventListener('submit', e => {
   .catch(err => alert('حدث خطأ أثناء الإرسال، حاول لاحقًا'));
 });
 
-// ⭐ النجوم
 function setRating(num) {
   document.getElementById('rating').value = num;
   document.querySelectorAll('.star').forEach((s,i)=>{
@@ -163,9 +209,10 @@ function setRating(num) {
   });
 }
 
-// 🌙 التبديل بين النهار والليل
 function toggleDarkMode(){
   document.body.classList.toggle("dark");
+  document.getElementById("darkToggle").textContent =
+    document.body.classList.contains("dark") ? "☀️" : "🌙";
 }
 </script>
 
