@@ -3,204 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💬 رأيك يهمنا</title>
+<title>تقييم الصفحة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f7faff;
-  --card-bg: #ffffff;
-  --text: #222;
-  --border: #c9dafd;
-  --btn-bg: #285eff;
-  --btn-hover: #174de0;
-}
-body.dark {
-  --bg: #121212;
-  --card-bg: #1e1e1e;
-  --text: #f0f0f0;
-  --border: #2c2c2c;
-  --btn-bg: #3a6fff;
-  --btn-hover: #285eff;
-}
 body {
-  font-family:'Cairo',sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  margin:0;
-  text-align:center;
-  padding:20px;
-  transition: background 0.3s, color 0.3s;
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(120deg,#eef3ff,#f7faff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  min-height: 100vh;
+  padding: 30px 15px;
+  color: #222;
+  transition: 0.4s;
 }
-.container {
-  background: var(--card-bg);
-  padding:25px 20px;
-  border-radius:16px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.1);
-  width:80%;
-  max-width:420px;
-  transition: background 0.3s;
+
+h1 {
+  color: #285eff;
+  text-align: center;
 }
-h1 { color: var(--btn-bg); font-size:22px; margin-bottom:10px; }
+
+form {
+  background: #fff;
+  border: 1px solid #d8e5ff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  padding: 20px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
 
 input, textarea {
-  width:80%;
-  margin-top:10px;
-  padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  font-family:'Cairo',sans-serif;
-  font-size:15px;
-  background: var(--bg);
-  color: var(--text);
-  resize:none;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #c9dafd;
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  resize: none;
+}
+
+button {
+  background: #285eff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-size: 15px;
   transition: 0.3s;
 }
-textarea { height:120px; }
+button:hover { background: #174de0; transform: scale(1.03); }
 
-/* ⭐ النجوم */
+/* 🌟 تقييم النجوم */
 .stars {
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  margin:10px 0;
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
 }
 .star {
-  font-size:28px;
-  color:#999;
-  cursor:pointer;
-  transition:0.2s;
+  font-size: 26px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s;
 }
-.star.active {
-  color:#FFD700;
-  transform:scale(1.15);
-}
+.star.active { color: #FFD700; }
 
-/* 🔘 زر الإرسال */
-button {
-  margin-top:15px;
-  background:var(--btn-bg);
-  color:#fff;
-  border:none;
-  padding:10px 20px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.3s;
-  width:100%;
-  font-size:16px;
+/* 🌙 الوضع الليلي */
+.dark {
+  background: #1b1b1b;
+  color: #eee;
 }
-button:hover { background:var(--btn-hover); transform:scale(1.05); }
+.dark form {
+  background: #222;
+  border: 1px solid #444;
+  box-shadow: none;
+}
+.dark input, .dark textarea {
+  background: #333;
+  border: 1px solid #555;
+  color: #eee;
+}
+.dark button { background: #00b36b; }
 
-#status {
-  margin-top:12px;
-  color:#00b36b;
-  font-weight:bold;
-  display:none;
-}
-
-/* 🌙 زر وضع الليل */
-#toggleMode {
-  position:fixed;
-  top:15px;
-  left:15px;
-  background:var(--card-bg);
-  border:1px solid var(--border);
-  border-radius:50%;
-  width:42px;
-  height:42px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-  font-size:18px;
-  color: var(--text);
-  transition:0.3s;
-  box-shadow:0 2px 6px rgba(0,0,0,0.2);
-}
-#toggleMode:hover {
-  transform:scale(1.1);
-  background:var(--btn-bg);
-  color:#fff;
+/* ✅ رسالة النجاح */
+#successMsg {
+  display: none;
+  background: #d4ffe1;
+  border: 1px solid #8ff0b4;
+  color: #006b3f;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 15px;
 }
 </style>
 </head>
 <body>
-<button id="toggleMode">🌙</button>
 
-<div class="container">
-  <h1>💬 رأيك يهمنا</h1>
-  <p>شاركنا اسمك وتقييمك عن الصفحة 👇</p>
-  
-  <input id="userName" type="text" placeholder="اكتب اسمك هنا">
-  <textarea id="feedbackInput" placeholder="اكتب رأيك هنا..."></textarea>
-  
+<h1>📝 تقييم الصفحة</h1>
+
+<button onclick="toggleDarkMode()" style="
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: 2px solid #285eff;
+  border-radius: 50%;
+  color: #285eff;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  font-size: 20px;
+">🌙</button>
+
+<form id="feedbackForm" method="POST">
+  <input type="text" name="name" placeholder="اسمك الكريم" required>
+
   <div class="stars">
-    <span class="star" data-value="1">★</span>
-    <span class="star" data-value="2">★</span>
-    <span class="star" data-value="3">★</span>
-    <span class="star" data-value="4">★</span>
-    <span class="star" data-value="5">★</span>
+    <span class="star" onclick="setRating(1)">★</span>
+    <span class="star" onclick="setRating(2)">★</span>
+    <span class="star" onclick="setRating(3)">★</span>
+    <span class="star" onclick="setRating(4)">★</span>
+    <span class="star" onclick="setRating(5)">★</span>
   </div>
+  <input type="hidden" name="rating" id="rating" value="0">
 
-  <button onclick="sendFeedback()">إرسال</button>
-  <div id="status">✅ تم إرسال رأيك بنجاح!</div>
-</div>
+  <textarea name="feedback" rows="4" placeholder="اكتب رأيك أو اقتراحك هنا..." required></textarea>
+  <button type="submit">إرسال التقييم ✅</button>
+  <div id="successMsg">✅ تم إرسال تقييمك بنجاح! شكرًا لمشاركتك 🌟</div>
+</form>
 
 <script>
-let rating = 0;
+const scriptURL = "https://script.google.com/macros/s/AKfycbzhb-cCyiVdKYptQseQoN-MD6sivowDvaICZWapiDNOu0Su_PKz6kACTm6YRYhh7Sl_/exec";
 
-// ⭐ تحديد عدد النجوم
-document.querySelectorAll('.star').forEach(star => {
-  star.addEventListener('click', function(){
-    rating = this.getAttribute('data-value');
-    document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-    for(let i=0; i<rating; i++){
-      document.querySelectorAll('.star')[i].classList.add('active');
-    }
-  });
+const form = document.getElementById('feedbackForm');
+const successMsg = document.getElementById('successMsg');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+  .then(() => {
+    successMsg.style.display = 'block';
+    form.reset();
+    setRating(0);
+    setTimeout(()=> successMsg.style.display='none', 4000);
+  })
+  .catch(err => alert('حدث خطأ أثناء الإرسال، حاول لاحقًا'));
 });
 
-// ☀️🌙 وضع الليل
-const toggleBtn = document.getElementById('toggleMode');
-toggleBtn.onclick = () => {
-  document.body.classList.toggle('dark');
-  toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-};
+// ⭐ النجوم
+function setRating(num) {
+  document.getElementById('rating').value = num;
+  document.querySelectorAll('.star').forEach((s,i)=>{
+    s.classList.toggle('active', i < num);
+  });
+}
 
-// 🧾 إرسال البيانات إلى Google Sheet
-async function sendFeedback(){
-  const name = document.getElementById("userName").value.trim();
-  const feedback = document.getElementById("feedbackInput").value.trim();
-  const status = document.getElementById("status");
-
-  if(!name || !feedback || rating == 0){
-    alert("يرجى كتابة الاسم والرأي واختيار عدد النجوم ⭐");
-    return;
-  }
-
-  const scriptURL = "YOUR_GOOGLE_SCRIPT_URL";
-
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("feedback", feedback);
-  formData.append("rating", rating);
-
-  try {
-    await fetch(scriptURL, { method:'POST', mode:'no-cors', body: formData });
-    document.getElementById("userName").value = "";
-    document.getElementById("feedbackInput").value = "";
-    document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-    rating = 0;
-    status.style.display = "block";
-    setTimeout(()=>status.style.display="none",3000);
-  } catch (e) {
-    alert("حدث خطأ أثناء الإرسال 😔");
-  }
+// 🌙 التبديل بين النهار والليل
+function toggleDarkMode(){
+  document.body.classList.toggle("dark");
 }
 </script>
+
 </body>
 </html>
