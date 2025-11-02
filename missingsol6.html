@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.8"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.0.9"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -1158,7 +1158,80 @@ getPrayerTimes().then(()=>{
   setInterval(getPrayerTimes,21600000);
 });
 </script>
+<!-- 🔘 زر عرض QR (فوق بجانب الترجمة) -->
+<button onclick="toggleQR()" style="
+  position:fixed;
+  top:10px;
+  left:480px; /* ← عدّلها حسب موقع الترجمة عندك */
+  background:#285eff;
+  color:white;
+  border:none;
+  border-radius:50px;
+  padding:10px 18px;
+  cursor:pointer;
+  font-family:'Cairo',sans-serif;
+  font-size:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  z-index:99999;
+  transition:transform 0.3s ease, background 0.3s ease;
+">
+ في ملاحظة او حابب تعطي رايك؟ اضغط
+</button>
 
+<!-- 🖼️ نافذة QR -->
+<div id="qrPopup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  justify-content:center;
+  align-items:center;
+  z-index:99998;
+">
+  <div style="text-align:center;">
+    <p style="
+      color:white;
+      font-family:'Cairo',sans-serif;
+      font-size:16px;
+      margin-bottom:10px;
+      animation:fadeIn 0.8s ease;">📱 يهمني رايك امسح الكود </p>
+    <img src="https://soubabood15.github.io/sulotion/qr.png"
+         alt="QR Code"
+         style="width:230px;border-radius:12px;
+                box-shadow:0 4px 25px rgba(0,0,0,0.4);
+                opacity:0;transform:scale(0.8);
+                transition:opacity 0.4s ease, transform 0.4s ease;">
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+
+<script>
+function toggleQR(){
+  const qr = document.getElementById("qrPopup");
+  const img = qr.querySelector("img");
+  const isVisible = qr.style.display === "flex";
+
+  if (!isVisible) {
+    qr.style.display = "flex";
+    setTimeout(()=>{
+      img.style.opacity = "1";
+      img.style.transform = "scale(1)";
+    },10);
+  } else {
+    img.style.opacity = "0";
+    img.style.transform = "scale(0.8)";
+    setTimeout(()=> qr.style.display = "none",300);
+  }
+}
+document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
+</script>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
@@ -2891,214 +2964,6 @@ document.addEventListener("click", function(e) {
   setTimeout(() => (note.style.opacity = "0"), 1000);
 });
 </script>
-<!-- 🐍 لعبة الحية المتطورة -->
-<script>
-let snakeContainer, canvas, ctx, snake, direction, nextDirection, food, score, gameLoop, speed = 100, grid = 10;
-let isPaused = false; // ⏸️ حالة الإيقاف
-
-// 🎮 المفاتيح
-document.addEventListener("keydown", (e) => {
-  const key = e.key.toLowerCase();
-
-  // 🔹 Ctrl + M → إظهار أو إخفاء اللعبة
-  if ((e.ctrlKey || e.metaKey) && key === "m") {
-    e.preventDefault();
-    toggleSnake();
-  }
-
-  // 🔸 Shift → إيقاف أو استئناف
-  if (key === "shift") {
-    e.preventDefault();
-    togglePause();
-  }
-});
-
-function toggleSnake() {
-  // ✅ إذا مفتوحة: نخفيها ونوقفها
-  if (snakeContainer && snakeContainer.style.display === "block") {
-    pauseSnake(); // يوقف
-    snakeContainer.style.display = "none";
-  } 
-  // ✅ إذا مخفية: نرجعها، لكن تبقى موقوفة
-  else {
-    if (!snakeContainer) initSnake();
-    else {
-      snakeContainer.style.display = "block";
-      applyPausedStyle(); // ترجع بنفس شكل الإيقاف
-    }
-  }
-}
-
-function initSnake() {
-  if (!snakeContainer) {
-    snakeContainer = document.createElement("div");
-    Object.assign(snakeContainer.style, {
-      position: "fixed",
-      bottom: "20px",
-      left: "20px",
-      background: "rgba(15,15,25,0.95)",
-      border: "3px solid #b066ff",
-      borderRadius: "16px",
-      padding: "12px",
-      boxShadow: "0 0 25px rgba(176,102,255,0.6)",
-      zIndex: "99999",
-      transition: "all 0.3s ease"
-    });
-    snakeContainer.innerHTML = `
-      <canvas id="snakeCanvas" width="320" height="320" style="border-radius:12px; background:#000;"></canvas>
-      <div style="text-align:center; color:#fff; font-family:'Cairo',sans-serif; margin-top:8px;">
-        <span id="snakeScore">النقاط: 0</span>
-        <button id="restartSnake" style="background:#9b5cff;color:#fff;border:none;padding:6px 12px;border-radius:8px;margin-left:8px;cursor:pointer;">🔄 إعادة</button>
-        <button id="pauseSnake" style="background:#ff9900;color:#fff;border:none;padding:6px 12px;border-radius:8px;margin-left:8px;cursor:pointer;">⏸️ إيقاف</button>
-      </div>
-    `;
-    document.body.appendChild(snakeContainer);
-
-    document.getElementById("restartSnake").addEventListener("click", restartGame);
-    document.getElementById("pauseSnake").addEventListener("click", togglePause);
-  }
-
-  canvas = document.getElementById("snakeCanvas");
-  ctx = canvas.getContext("2d");
-
-  restartGame();
-  document.addEventListener("keydown", handleDirection);
-}
-
-function restartGame() {
-  snake = [
-    { x: 15 * grid, y: 15 * grid },
-    { x: 14 * grid, y: 15 * grid },
-    { x: 13 * grid, y: 15 * grid },
-  ];
-  direction = "RIGHT";
-  nextDirection = "RIGHT";
-  food = randomFood();
-  score = 0;
-  document.getElementById("snakeScore").textContent = "النقاط: 0";
-  clearInterval(gameLoop);
-  gameLoop = setInterval(drawGame, speed);
-  isPaused = false;
-  resetPausedStyle();
-}
-
-function handleDirection(e) {
-  const key = e.key.toLowerCase();
-  if (key === "arrowup" && direction !== "DOWN") nextDirection = "UP";
-  else if (key === "arrowdown" && direction !== "UP") nextDirection = "DOWN";
-  else if (key === "arrowleft" && direction !== "RIGHT") nextDirection = "LEFT";
-  else if (key === "arrowright" && direction !== "LEFT") nextDirection = "RIGHT";
-}
-
-function drawGame() {
-  if (isPaused) return; // 🚫 لا تتحرك أثناء الإيقاف
-
-  direction = nextDirection;
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, 320, 320);
-
-  // 🍎 رسم الطعام
-  const foodGradient = ctx.createRadialGradient(food.x + 5, food.y + 5, 2, food.x + 5, food.y + 5, 8);
-  foodGradient.addColorStop(0, "#ffaaaa");
-  foodGradient.addColorStop(1, "#ff3333");
-  ctx.fillStyle = foodGradient;
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = "#ff0000";
-  ctx.beginPath();
-  ctx.arc(food.x + 5, food.y + 5, 6, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // 🐍 حركة الرأس
-  const head = { ...snake[0] };
-  if (direction === "UP") head.y -= grid;
-  if (direction === "DOWN") head.y += grid;
-  if (direction === "LEFT") head.x -= grid;
-  if (direction === "RIGHT") head.x += grid;
-
-  // 💀 التحقق من الخسارة
-  if (head.x < 0 || head.y < 0 || head.x >= 320 || head.y >= 320 || snake.some(s => s.x === head.x && s.y === head.y)) {
-    clearInterval(gameLoop);
-    ctx.fillStyle = "#ff3333";
-    ctx.font = "22px Cairo";
-    ctx.textAlign = "center";
-    ctx.fillText("💀 خسرت! النقاط: " + score, 160, 160);
-    return;
-  }
-
-  // 🧩 أكل الطعام
-  snake.unshift(head);
-  if (head.x === food.x && head.y === food.y) {
-    score++;
-    document.getElementById("snakeScore").textContent = "النقاط: " + score;
-    food = randomFood();
-  } else {
-    snake.pop();
-  }
-
-  // 🟢 الحية المتوهجة بخط متصل ناعم
-  ctx.lineWidth = 16;
-  ctx.lineCap = "round";
-  ctx.shadowBlur = 18;
-  ctx.shadowColor = "#00ffcc";
-  const grad = ctx.createLinearGradient(snake[0].x, snake[0].y, snake[snake.length - 1].x, snake[snake.length - 1].y);
-  grad.addColorStop(0, "#00ffcc");
-  grad.addColorStop(1, "#6600ff");
-  ctx.strokeStyle = grad;
-
-  ctx.beginPath();
-  ctx.moveTo(snake[0].x + 5, snake[0].y + 5);
-  for (let i = 1; i < snake.length; i++) {
-    const prev = snake[i - 1];
-    const curr = snake[i];
-    ctx.quadraticCurveTo(prev.x + 5, prev.y + 5, (prev.x + curr.x) / 2 + 5, (prev.y + curr.y) / 2 + 5);
-  }
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-}
-
-function randomFood() {
-  const x = Math.floor(Math.random() * 31) * grid;
-  const y = Math.floor(Math.random() * 31) * grid;
-  return { x, y };
-}
-
-// 🟣 التحكم بالإيقاف والاستئناف
-function togglePause() {
-  isPaused = !isPaused;
-  document.getElementById("pauseSnake").textContent = isPaused ? "▶️ استئناف" : "⏸️ إيقاف";
-  isPaused ? applyPausedStyle() : resetPausedStyle();
-}
-
-function pauseSnake() {
-  isPaused = true;
-  clearInterval(gameLoop);
-  applyPausedStyle();
-}
-
-function resumeSnake() {
-  clearInterval(gameLoop);
-  gameLoop = setInterval(drawGame, speed);
-}
-
-function applyPausedStyle() {
-  if (!snakeContainer) return;
-  snakeContainer.style.border = "3px solid #777";
-  snakeContainer.style.boxShadow = "0 0 20px rgba(200,200,200,0.3)";
-  snakeContainer.animate(
-    [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }],
-    { duration: 1000, iterations: Infinity, easing: "ease-in-out" }
-  );
-}
-
-function resetPausedStyle() {
-  if (!snakeContainer) return;
-  snakeContainer.style.border = "3px solid #b066ff";
-  snakeContainer.style.boxShadow = "0 0 25px rgba(176,102,255,0.6)";
-  snakeContainer.getAnimations().forEach(a => a.cancel());
-}
-</script>
-
 <!-- 📜 زر فتح مولد الاعتذارات (مستقل تمامًا) -->
 <!-- 💬 زر فتح مولد الاعتذارات -->
 <button id="aplg_toggle" style="
@@ -3923,5 +3788,6 @@ function closePopup() {
   }, 500);
 }
 </script>
+
 </body>
 </html>
