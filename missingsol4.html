@@ -38,14 +38,14 @@ form {
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   padding: 25px;
-  width: 100%;
+  width: 70%;
   max-width: 400px;
   margin-top: 15px;
   transition: all 0.4s ease;
   animation: slideUp 0.7s ease;
 }
 input, textarea {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin: 8px 0;
   border-radius: 8px;
@@ -189,17 +189,39 @@ const scriptURL = "https://script.google.com/macros/s/AKfycbzhb-cCyiVdKYptQseQoN
 
 const form = document.getElementById('feedbackForm');
 const successMsg = document.getElementById('successMsg');
+const submitBtn = form.querySelector('button[type="submit"]');
+let isSubmitting = false;
 
 form.addEventListener('submit', e => {
   e.preventDefault();
+  if (isSubmitting) return; // 🔒 منع الإرسال المكرر
+
+  isSubmitting = true;
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = "0.6";
+  submitBtn.textContent = "⏳ يتم الإرسال...";
+
   fetch(scriptURL, { method: 'POST', body: new FormData(form)})
   .then(() => {
     successMsg.style.display = 'block';
     form.reset();
     setRating(0);
-    setTimeout(()=> successMsg.style.display='none', 4000);
+    submitBtn.textContent = "تم الإرسال ✅";
+    setTimeout(()=>{
+      successMsg.style.display='none';
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+      submitBtn.textContent = "إرسال التقييم ✅";
+      isSubmitting = false;
+    }, 4000);
   })
-  .catch(err => alert('حدث خطأ أثناء الإرسال، حاول لاحقًا'));
+  .catch(err => {
+    alert('حدث خطأ أثناء الإرسال، حاول لاحقًا');
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = "1";
+    submitBtn.textContent = "إرسال التقييم ✅";
+    isSubmitting = false;
+  });
 });
 
 function setRating(num) {
@@ -209,12 +231,41 @@ function setRating(num) {
   });
 }
 
+
 function toggleDarkMode(){
   document.body.classList.toggle("dark");
   document.getElementById("darkToggle").textContent =
     document.body.classList.contains("dark") ? "☀️" : "🌙";
 }
 </script>
+<!-- 💬 زر واتساب للتواصل -->
+<a href="https://wa.me/962779622690" target="_blank" id="whatsappContact"
+   style="display:inline-flex;align-items:center;gap:10px;
+          background:#25D366;color:white;
+          padding:12px 20px;border-radius:50px;
+          font-family:'Cairo',sans-serif;
+          font-size:16px;font-weight:bold;
+          text-decoration:none;
+          box-shadow:0 4px 20px rgba(0,0,0,0.15);
+          transition:all 0.3s ease;
+          margin-top:16px;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+       alt="whatsapp"
+       style="width:24px;height:24px;">
+  تواصل معنا عبر واتساب
+</a>
 
+<script>
+// ✨ تأثير أنيق عند تمرير الماوس
+const whatsappBtn = document.getElementById('whatsappContact');
+whatsappBtn.addEventListener('mouseenter', ()=>{
+  whatsappBtn.style.transform = "scale(1.08)";
+  whatsappBtn.style.boxShadow = "0 6px 25px rgba(37, 211, 102, 0.5)";
+});
+whatsappBtn.addEventListener('mouseleave', ()=>{
+  whatsappBtn.style.transform = "scale(1)";
+  whatsappBtn.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)";
+});
+</script>
 </body>
 </html>
