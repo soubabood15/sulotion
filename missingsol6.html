@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.9"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.10.0"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -515,7 +515,7 @@ setInterval(checkVersion, 5000);
 }
 </style>
 
-  <div class="madeby">Made by Abdelrahman & Alfaouri </div>
+  <div class="madeby">Made by Abdelrahman soub </div>
 
   <!-- 🕒 ساعة الأردن (12 ساعة) -->
 <div id="jordanClock">🕒 00:00:00 AM 🇯🇴</div>
@@ -578,246 +578,8 @@ setInterval(checkVersion, 5000);
     <div class="link-item"><a href="https://keeservice-eu.mykeeta.com/index.html#/login" target="_blank"> keeservice</a></div>
 </div>
 
-<!-- 🌐 زر المترجم -->
-<div id="translatorBtn" style="
-  position:fixed;
-  top:10px;
-  right:600px;
-  z-index:99999;
-">
-  <button onclick="toggleTranslator()" style="
-    background:rgba(255,255,255,0.25);
-    border:1px solid rgba(40,94,255,0.4);
-    color:#285eff;
-    font-weight:600;
-    padding:6px 14px;
-    border-radius:12px;
-    backdrop-filter:blur(12px) saturate(180%);
-    -webkit-backdrop-filter:blur(12px) saturate(180%);
-    cursor:pointer;
-    transition:all .3s ease;
-  ">🌐 المترجم</button>
-</div>
 
-<!-- ✨ نافذة المترجم -->
-<div id="translatorBox" style="
-  display:none;
-  position:fixed;
-  top:55px;
-  right:600px;
-  width:300px;
-  background:rgba(255,255,255,0.45);
-  border:1px solid rgba(40,94,255,0.3);
-  border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  padding:14px;
-  backdrop-filter:blur(12px) saturate(180%);
-  -webkit-backdrop-filter:blur(12px) saturate(180%);
-  z-index:99998;
-  opacity:0;
-  transform:translateY(-10px);
-  transition:all .4s ease;
-  font-family:'Cairo',sans-serif;
-">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <span id="langDir" style="color:#285eff;font-weight:600;">عربي ➜ English</span>
-    <button onclick="toggleLang()" style="
-      background:#285eff;color:white;
-      border:none;border-radius:8px;
-      padding:4px 8px;cursor:pointer;
-    ">🔁 تبديل</button>
-  </div>
 
-  <label id="inputLabel" style="font-size:13px;color:#285eff;font-weight:600;">النص بالعربية:</label>
-  <input id="translateInput" placeholder="اكتب النص هنا..." style="
-    width:70%;
-    padding:8px;
-    border:1px solid #c9dafd;
-    border-radius:8px;
-    margin-bottom:6px;
-  ">
-
-  <button onclick="translateText()" style="
-    background:#285eff;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    padding:6px 12px;
-    cursor:pointer;
-    width:100%;
-    font-weight:600;
-  ">ترجمة</button>
-
-  <label id="outputLabel" style="font-size:13px;color:#285eff;font-weight:600;display:block;margin-top:8px;">النتيجة بالإنجليزية:</label>
-  
-  <div id="translateResultBox" style="
-    position:relative;
-    background:#f1f6ff;
-    border-radius:8px;
-    padding:8px;
-    font-weight:600;
-    color:#285eff;
-    text-align:center;
-    min-height:30px;
-    margin-top:4px;
-    cursor:pointer;
-    user-select:none;
-    transition:background .3s;
-  ">
-    <span id="translateResult">—</span>
-  </div>
-</div>
-<script>
-// ✅ فتح وإغلاق المترجم بانميشن
-function toggleTranslator(){
-  const box = document.getElementById("translatorBox");
-  if(box.style.display === "none" || !box.style.display){
-    box.style.display = "block";
-    requestAnimationFrame(()=>{
-      box.style.opacity = "1";
-      box.style.transform = "translateY(0)";
-    });
-  } else {
-    box.style.opacity = "0";
-    box.style.transform = "translateY(-10px)";
-    setTimeout(()=> box.style.display = "none", 300);
-  }
-}
-
-// 🌍 الاتجاه الافتراضي
-let currentLang = "ar-en";
-
-function toggleLang(){
-  if(currentLang === "ar-en"){
-    currentLang = "en-ar";
-    document.getElementById("langDir").textContent = "English ➜ عربي";
-    document.getElementById("inputLabel").textContent = "Text in English:";
-    document.getElementById("outputLabel").textContent = "النتيجة بالعربية:";
-  } else {
-    currentLang = "ar-en";
-    document.getElementById("langDir").textContent = "عربي ➜ English";
-    document.getElementById("inputLabel").textContent = "النص بالعربية:";
-    document.getElementById("outputLabel").textContent = "النتيجة بالإنجليزية:";
-  }
-}
-
-// 🧠 فلترة الكلمات قبل الترجمة (استبدال مدخلات)
-
-// 🧠 فلترة الكلمات قبل الترجمة (استبدال مدخلات)
-const preReplacements = {
-  "كيتا": "Keeta",
-  "كيتا.": "Keeta",
-  "السائق": "rider",
-  "المندوب": "rider",
-  "المطعم": "merchant",
-  "العميل": "customer",
-  "تم الطلب غلط": "الطلب مختلف",
-  "ناقص": "جزء مفقود",
-  "بارد": "لم يكن دافئًا"
-};
-
-// 🔤 تصحيح الترجمة بعد الترجمة (استبدال مخرجات)
-const postReplacements = {
-  "Kita": "Keeta",
-  "kita": "Keeta",
-  "the driver": "the rider",
-  "driver": "rider",
-  "representative": "rider",
-  "restaurant": "merchant",
-  "Restaurant": "Merchant",
-  "customer": "customer",
-  "Request": "Order",
-  "request": "Order"
-};
-
-// ✅ دالة الفلترة الذكية
-function applyPreReplacements(text) {
-  // استبدال العبارات الثابتة
-  for (const [key, val] of Object.entries(preReplacements)) {
-    text = text.replaceAll(key, val);
-  }
-
-  // ✅ التعامل مع "طلب" بشكل ذكي — لا يشمل "طلبك"
-  text = text.replace(/\bالطلب\b/g, "Order");
-  text = text.replace(/\bطلبي\b/g, "My Order");
-  text = text.replace(/\bطلب\b(?!ك)/g, "Order"); // يستبدل "طلب" فقط إذا ما بعدها "ك"
-
-  return text;
-}
-
-// 🌐 الترجمة من Google Translate مع التصحيح الذكي
-async function translateText() {
-  let text = document.getElementById("translateInput").value.trim();
-  if (!text) return;
-
-  // 🔹 معالجة النص قبل الترجمة
-  text = applyPreReplacements(text);
-
-  const sl = currentLang === "ar-en" ? "ar" : "en";
-  const tl = currentLang === "ar-en" ? "en" : "ar";
-
-  const res = await fetch(
-    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
-  );
-  const data = await res.json();
-  let translated = data[0][0][0];
-
-  // 🔧 تصحيح بعد الترجمة
-  for (let key in postReplacements) {
-    const regex = new RegExp(`\\b${key}\\b`, "gi");
-    translated = translated.replace(regex, postReplacements[key]);
-  }
-
-  document.getElementById("translateResult").textContent = translated;
-}
-
-// 📋 النسخ بمجرد الضغط على النتيجة
-document.getElementById("translateResultBox").addEventListener("click", () => {
-  const box = document.getElementById("translateResultBox");
-  const text = document.getElementById("translateResult").textContent.trim();
-  if (!text || text === "—") return;
-
-  navigator.clipboard.writeText(text);
-  showCopyNotice();
-
-  // ✨ أنميشن وميض عند النسخ
-  box.style.background = "#d4ffe1";
-  setTimeout(() => (box.style.background = "#f1f6ff"), 300);
-});
-
-// ✨ إشعار زجاجي عند النسخ
-function showCopyNotice() {
-  const note = document.createElement("div");
-  note.textContent = "✅ تم النسخ";
-  Object.assign(note.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "50%",
-    transform: "translateX(50%)",
-    background: "rgba(255,255,255,0.7)",
-    color: "#00b36b",
-    padding: "6px 14px",
-    borderRadius: "10px",
-    fontSize: "14px",
-    fontWeight: "600",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-    zIndex: "999999",
-    opacity: "0",
-    transition: "opacity 0.3s ease, bottom 0.3s ease"
-  });
-  document.body.appendChild(note);
-  requestAnimationFrame(() => {
-    note.style.opacity = "1";
-    note.style.bottom = "40px";
-  });
-  setTimeout(() => {
-    note.style.opacity = "0";
-    note.style.bottom = "60px";
-    setTimeout(() => note.remove(), 300);
-  }, 900);
-}
-</script>
 
 <style>
 .link-item {
@@ -995,6 +757,7 @@ document.addEventListener("click", (e) => {
 
 <!-- 🌙 الأزرار العلوية -->
 <div style="position:fixed;top:15px;left:20px;display:flex;gap:10px;z-index:99999;">
+  <!-- 📿 اكسب أجر -->
   <div style="position:relative;">
     <button id="ayahBtn" style="
       background:linear-gradient(135deg,#285eff,#00c8ff);
@@ -1003,13 +766,12 @@ document.addEventListener("click", (e) => {
       cursor:pointer;box-shadow:0 0 20px rgba(40,94,255,0.5);
       overflow:hidden;transition:all 0.3s ease;position:relative;">
       <span style="position:relative;z-index:2;">📿 اكسب أجر</span>
-      <span class="shine" style="
+      <span class='shine' style="
         position:absolute;top:0;left:-75%;width:50%;height:100%;
         background:linear-gradient(120deg,rgba(255,255,255,0.3),rgba(255,255,255,0));
         transform:skewX(-25deg);animation:shineMove 2.8s infinite;"></span>
     </button>
 
-    <!-- 💎 صندوق عرض الآية -->
     <div id="dailyAyah" style="
       display:none;position:absolute;top:60px;left:0;
       background:rgba(255,255,255,0.9);color:#0b2b66;
@@ -1018,11 +780,12 @@ document.addEventListener("click", (e) => {
       font-size:16px;font-weight:600;line-height:1.8;
       text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.15);
       backdrop-filter:blur(10px);min-width:250px;max-width:350px;
-      opacity:0;transform:translateY(-10px);z-index:99998;
+      opacity:0;transform:translateY(-10px);
       transition:opacity 0.6s ease, transform 0.6s ease;">
     </div>
   </div>
 
+  <!-- 🕌 أوقات الصلاة -->
   <div style="position:relative;">
     <button id="prayerBtn" style="
       background:linear-gradient(135deg,#00c8ff,#285eff);
@@ -1033,7 +796,6 @@ document.addEventListener("click", (e) => {
       🕌 أوقات الصلاة
     </button>
 
-    <!-- 🕌 نافذة أوقات الصلاة -->
     <div id="prayerTimes" style="
       display:none;position:absolute;top:60px;left:0;
       background:rgba(255,255,255,0.85);
@@ -1059,104 +821,65 @@ document.addEventListener("click", (e) => {
 </style>
 
 <script>
-// 🕌 عرض أوقات الصلاة
-document.getElementById("prayerBtn").addEventListener("click", ()=>{
-  const box = document.getElementById("prayerTimes");
-  box.style.display = box.style.display === "block" ? "none" : "block";
-});
+// 🌿 آياتك الخاصة
+const ayat = [
+  "وَفِي السَّمَاءِ رِزْقُكُمْ وَمَا تُوعَدُونَ 🌤 [الذاريات:22]",
+  "إِنَّ مَعَ الْعُسْرِ يُسْرًا 🌸 [الشرح:6]",
+  "اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ ✨ [النور:35]",
+  "ادْعُونِي أَسْتَجِبْ لَكُمْ 🤲 [غافر:60]",
+  "وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ 💫 [البقرة:20]"
+];
 
-// 🌿 جلب آية قصيرة
-async function getRandomAyah() {
-  try {
-    let ayahText = "";
-    let surahName = "";
-    let num = 0;
-    while (ayahText.length < 5 || ayahText.length > 150) {
-      const res = await fetch(`https://api.alquran.cloud/v1/ayah/${Math.floor(Math.random() * 6236) + 1}`);
-      const data = await res.json();
-      ayahText = data.data.text;
-      surahName = data.data.surah.name;
-      num = data.data.numberInSurah;
-    }
-    ayahText = ayahText.replace(/[\u06d6-\u06ed\u08d3-\u08ff]/g, "").replace(/[^\u0600-\u06FF\s،؛؟]/g, "");
-    return `﴿ ${ayahText.trim()} ﴾<br><small style="color:#285eff;font-size:14px;">[${surahName}:${num}]</small>`;
-  } catch { return "⚠️ لم نتمكن من جلب الآية."; }
-}
-
+let ayahIndex = 0;
 const ayahBox = document.getElementById("dailyAyah");
-async function showAyah() {
-  const ayah = await getRandomAyah();
-  ayahBox.innerHTML = ayah;
+
+function showAyah(auto=false){
+  ayahBox.innerHTML = ayat[ayahIndex];
   ayahBox.style.display = "block";
   requestAnimationFrame(()=>{
-    ayahBox.style.opacity="1";
-    ayahBox.style.transform="translateY(0)";
+    ayahBox.style.opacity = "1";
+    ayahBox.style.transform = "translateY(0)";
   });
   clearTimeout(ayahBox.hideTimeout);
-  ayahBox.hideTimeout = setTimeout(hideAyah,20000);
+  ayahBox.hideTimeout = setTimeout(hideAyah, 20000);
+
+  if(auto) ayahIndex = (ayahIndex + 1) % ayat.length;
 }
 function hideAyah(){
   ayahBox.style.opacity="0";
   ayahBox.style.transform="translateY(-10px)";
   setTimeout(()=>ayahBox.style.display="none",600);
 }
-document.getElementById("ayahBtn").addEventListener("click",showAyah);
+document.getElementById("ayahBtn").addEventListener("click",()=>showAyah(true));
 ayahBox.addEventListener("click",hideAyah);
+setInterval(()=>showAyah(true),60000);
+showAyah(true);
 
-// 🕋 أوقات الصلاة + نظام التنبيه
-let prayerTimes = {};
-async function getPrayerTimes() {
-  const res = await fetch(`https://api.aladhan.com/v1/timingsByAddress?address=Amman,Jordan&method=5`);
+// 🕌 أوقات الصلاة
+document.getElementById("prayerBtn").addEventListener("click",()=>{
+  const box=document.getElementById("prayerTimes");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+});
+async function getPrayerTimes(){
+  const res = await fetch("https://api.aladhan.com/v1/timingsByAddress?address=Amman,Jordan&method=5");
   const data = await res.json();
-  prayerTimes = data.data.timings;
-  displayPrayerTimes();
+  const t=data.data.timings;
+  document.getElementById("prayerTimes").innerHTML = `
+  <b>🕌 أوقات الصلاة اليوم</b><br>
+  الفجر: ${to12(t.Fajr)}<br>
+  الظهر: ${to12(t.Dhuhr)}<br>
+  العصر: ${to12(t.Asr)}<br>
+  المغرب: ${to12(t.Maghrib)}<br>
+  العشاء: ${to12(t.Isha)}
+  `;
 }
-function to12hr(t){
-  let [h,m] = t.split(':');
-  h = parseInt(h);
-  const ampm = h>=12 ? 'PM':'AM';
-  h = h%12 || 12;
+function to12(t){
+  let [h,m]=t.split(":").map(Number);
+  const ampm=h>=12?"PM":"AM";
+  h=h%12||12;
   return `${h}:${m} ${ampm}`;
 }
-function displayPrayerTimes(){
-  const box=document.getElementById("prayerTimes");
-  box.innerHTML=`🕌 <b>أوقات الصلاة اليوم</b><br>
-  الفجر: ${to12hr(prayerTimes.Fajr)}<br>
-  الظهر: ${to12hr(prayerTimes.Dhuhr)}<br>
-  العصر: ${to12hr(prayerTimes.Asr)}<br>
-  المغرب: ${to12hr(prayerTimes.Maghrib)}<br>
-  العشاء: ${to12hr(prayerTimes.Isha)}`;
-}
-
-// 🔔 إشعارات الصلاة
-function schedulePrayerNotifications() {
-  const now = new Date();
-  for (let [name,time] of Object.entries(prayerTimes)) {
-    const [h,m]=time.split(":").map(Number);
-    const prayerTime=new Date();
-    prayerTime.setHours(h,m,0,0);
-    const diff = prayerTime - now;
-    if (diff>0) {
-      setTimeout(()=>showNotification(`⏰ اقترب وقت صلاة ${name}`), diff - 5*60000);
-      setTimeout(()=>showNotification(`🕌 حان الآن وقت صلاة ${name}`), diff);
-    }
-  }
-}
-function showNotification(msg){
-  if (Notification.permission === "granted"){
-    new Notification(msg);
-  } else if (Notification.permission !== "denied"){
-    Notification.requestPermission().then(p=>{
-      if(p==="granted") new Notification(msg);
-    });
-  }
-}
-
-// ⏱ تشغيل النظام
-getPrayerTimes().then(()=>{
-  schedulePrayerNotifications();
-  setInterval(getPrayerTimes,21600000);
-});
+getPrayerTimes();
 </script>
 <!-- 🔘 زر عرض QR (فوق بجانب الترجمة) -->
 <button onclick="toggleQR()" style="
@@ -1966,7 +1689,179 @@ function showAutoResetNotice() {
 // تشغيل المؤقت أول مرة عند تحميل الصفحة
 resetAutoTimer();
 </script>
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 Customer Requests Section -->
+<div class="customer-requests" style="margin-top:25px;font-family:'Cairo',sans-serif;">
+  <h3 style="color:#285eff;text-align:center;margin-bottom:18px;">🧾 Customer Requests</h3>
 
+  <!-- 💰 Compensation -->
+  <div class="req-package">
+    <h4 class="req-title">💰 Compensation & Refund</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to get comepensation</div>
+      <div class="req-card">The cusmtomer wants to get refund</div>
+      <div class="req-card">The cusmtomer wants to get more comepensation</div>
+    </div>
+  </div>
+
+  <!-- 📝 Note -->
+  <div class="req-package">
+    <h4 class="req-title">📝 Note</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to change order</div>
+      <div class="req-card">The cusmtomer wants to add a note</div>
+      <div class="req-card red">The cusmtomer wants to cancel order</div>
+    </div>
+  </div>
+
+  <!-- 📞 Call -->
+  <div class="req-package">
+    <h4 class="req-title">📞 Call Requested</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card">The cusmtomer wants to rider number</div>
+      <div class="req-card">The cusmtomer wants to merchant number</div>
+      <div class="req-card">The cusmtomer wants to agent to call him</div>
+    </div>
+  </div>
+
+  <!-- 💬 Complaint -->
+  <div class="req-package">
+    <h4 class="req-title">💬 Complaint</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to Complain about restaurant</div>
+      <div class="req-card">The cusmtomer wants to Complain about rider</div>
+      <div class="req-card">The cusmtomer wants to Complain about agent</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  
+.req-package {
+  background:#fff;
+  border:1px solid #e0e8ff;
+  border-radius:14px;
+  padding:10px 14px;
+  margin:12px auto;
+  max-width:900px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.req-title {
+  color:#285eff;
+  font-size:15px;
+  margin-bottom:8px;
+  text-align:right;
+  border-right:4px solid #285eff33;
+  padding-right:8px;
+}
+
+/* 👇 السر هنا: auto-fit + minmax */
+.req-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:10px;
+  justify-items:center;
+  align-items:center;
+}
+
+.req-card {
+  width:100%;
+  height:55px;
+  background:#f9fbff;
+  border:1px solid #dce6ff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12.5px;
+  font-weight:500;
+  color:#1a2a55;
+  cursor:pointer;
+  transition:all .25s ease;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.req-card:hover {
+  background:#eaf1ff;
+  transform:scale(1.06);
+  box-shadow:0 3px 10px rgba(40,94,255,0.25);
+}
+
+/* 📱 للجوال */
+@media(max-width:600px){
+  .req-grid {
+    grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .req-card {
+    font-size:11.5px;
+    height:50px;
+  }
+}
+.req-card.blue {
+  background:#e7f0ff;
+  color:#0044cc;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(0,90,255,0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(0,80,255,0.25);
+}
+.req-card.green {
+  background:#9effca;
+  color:#0c7a29;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(5, 97, 32, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(7, 97, 43, 0.25);
+}
+.req-card.red {
+  background:#fd8383;
+  color:#720b0b;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(67, 8, 8, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(47, 9, 9, 0.25);
+}
+</style>
+
+<script>
+// 📋 نسخ النص عند الضغط
+document.addEventListener("click", e=>{
+  if(e.target.classList.contains("req-card")){
+    const text = e.target.textContent.trim();
+    navigator.clipboard.writeText(text);
+    showCopiedNotice(e.pageX, e.pageY);
+  }
+});
+
+// ✅ إشعار النسخ
+function showCopiedNotice(x,y){
+  const note=document.createElement("div");
+  note.textContent="✅ Copied!";
+  Object.assign(note.style,{
+    position:"fixed",left:x+"px",top:y-25+"px",
+    background:"rgba(255,255,255,0.9)",color:"#285eff",
+    padding:"5px 12px",borderRadius:"8px",
+    fontSize:"12px",fontWeight:"600",
+    backdropFilter:"blur(8px)",boxShadow:"0 4px 10px rgba(0,0,0,0.2)",
+    zIndex:"99999",opacity:"0",
+    transition:"opacity 0.3s ease, top 0.4s ease"
+  });
+  document.body.appendChild(note);
+  requestAnimationFrame(()=>{note.style.opacity="1";note.style.top=(y-45)+"px"});
+  setTimeout(()=>{note.style.opacity="0";note.style.top=(y-65)+"px";setTimeout(()=>note.remove(),400)},900);
+}
+</script>
 </div>
 <script>
 // دالة النسخ الذكية 👇
@@ -2862,12 +2757,13 @@ window.addEventListener("load", () => {
     animation: fadeIn .5s ease;
   ">
     <h2 style="color:#285eff;margin-bottom:12px;">اللهم هون على اهلنا في غزه والسودان</h2>
+    <h2 style="color:#285eff;margin-bottom:12px;">وَاتَّقُوا يَوْمًا تُرْجَعُونَ فِيهِ إِلَى اللَّهِ ۖ ثُمَّ تُوَفَّىٰ كُلُّ نَفْسٍ مَّا كَسَبَتْ وَهُمْ لَا يُظْلَمُونَ</h2>
     <p style="color:#1a1a1a;font-size:15px;">اقرأ الملاحظات ثم اضغط على تمّ القراءة 👇</p>
 
     <ul style="text-align:right;color:#333;font-size:20px;line-height:2;margin:15px 0;">
-      <li>  حتى لو عملت ريفريش اسمك راح يضل مكتوب</li>
-      <li>     مولد شكر انتظار ومولد تاكيد حل مشكله</li>
-      <li>صارت الاله الحاسبه ذكيه بتجمع ارقامك لو اكثر من صنف وكبسه تعيين جديد</li>
+      <li style="color:#285eff;margin-bottom:12px;" >  ياريت مثل ما انا ساعدتك ولو شيء بسيط تقرا المكتوب  </li>
+      <li style="color:#285eff;margin-bottom:12px;" > اسمحلي اكسب معك شويه اجر</li>
+      <li>حدثت كل اشي طلبتوه مني وياريت لو في اشي احكولي عنها في الملاحظات</li>
       <li>  ضروري لما ارسلك خانه التحديث تحدث ✅</li>
     </ul>
 
