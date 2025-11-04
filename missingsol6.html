@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.10.0"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.1.1"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -450,8 +450,8 @@ function showUpdateNotice() {
   notice.id = "updateNotice";
   notice.innerHTML = `
     <div class="update-glass">
-      <h3>✨ يامعلم حدثنا النظام</h3>
-      <p>الله لايهينك اكبس  <b>Enter</b> خنحدث هلصفحه </p>
+      <h3>✨ System need update  </h3>
+     <p>Press Enter to refresh and get the latest version.</p>
     </div>
   `;
   document.body.appendChild(notice);
@@ -548,7 +548,7 @@ setInterval(checkVersion, 5000);
     cursor:pointer;
     box-shadow:0 4px 15px rgba(40,94,255,0.25);
     transition:0.3s;
-  ">🔗 الروابط</button>
+  ">🔗 Links</button>
 </div>
 
 <div id="linksPanel" style="
@@ -754,138 +754,11 @@ document.addEventListener("click", (e) => {
   
 </script>
 
-
-<!-- 🌙 الأزرار العلوية -->
-<div style="position:fixed;top:15px;left:20px;display:flex;gap:10px;z-index:99999;">
-  <!-- 📿 اكسب أجر -->
-  <div style="position:relative;">
-    <button id="ayahBtn" style="
-      background:linear-gradient(135deg,#285eff,#00c8ff);
-      color:white;border:none;border-radius:50px;
-      padding:10px 22px;font-size:17px;font-weight:600;
-      cursor:pointer;box-shadow:0 0 20px rgba(40,94,255,0.5);
-      overflow:hidden;transition:all 0.3s ease;position:relative;">
-      <span style="position:relative;z-index:2;">📿 اكسب أجر</span>
-      <span class='shine' style="
-        position:absolute;top:0;left:-75%;width:50%;height:100%;
-        background:linear-gradient(120deg,rgba(255,255,255,0.3),rgba(255,255,255,0));
-        transform:skewX(-25deg);animation:shineMove 2.8s infinite;"></span>
-    </button>
-
-    <div id="dailyAyah" style="
-      display:none;position:absolute;top:60px;left:0;
-      background:rgba(255,255,255,0.9);color:#0b2b66;
-      border:1px solid rgba(40,94,255,0.25);border-radius:18px;
-      padding:14px 18px;font-family:'Cairo',sans-serif;
-      font-size:16px;font-weight:600;line-height:1.8;
-      text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.15);
-      backdrop-filter:blur(10px);min-width:250px;max-width:350px;
-      opacity:0;transform:translateY(-10px);
-      transition:opacity 0.6s ease, transform 0.6s ease;">
-    </div>
-  </div>
-
-  <!-- 🕌 أوقات الصلاة -->
-  <div style="position:relative;">
-    <button id="prayerBtn" style="
-      background:linear-gradient(135deg,#00c8ff,#285eff);
-      color:white;border:none;border-radius:50px;
-      padding:10px 22px;font-size:17px;font-weight:600;
-      cursor:pointer;box-shadow:0 0 20px rgba(0,0,0,0.2);
-      transition:all 0.3s ease;">
-      🕌 أوقات الصلاة
-    </button>
-
-    <div id="prayerTimes" style="
-      display:none;position:absolute;top:60px;left:0;
-      background:rgba(255,255,255,0.85);
-      border-radius:16px;border:1px solid rgba(40,94,255,0.25);
-      box-shadow:0 4px 20px rgba(0,0,0,0.15);
-      backdrop-filter:blur(12px);
-      font-family:'Cairo',sans-serif;
-      color:#0b2b66;font-size:14px;padding:12px 16px;
-      text-align:right;line-height:1.7;z-index:99997;direction:rtl;">
-    </div>
-  </div>
-</div>
-
-<style>
-@keyframes shineMove {
-  0% { left: -75%; }
-  50% { left: 125%; }
-  100% { left: 125%; }
-}
-#ayahBtn:hover,#prayerBtn:hover {
-  transform:scale(1.05);
-}
-</style>
-
-<script>
-// 🌿 آياتك الخاصة
-const ayat = [
-  "وَفِي السَّمَاءِ رِزْقُكُمْ وَمَا تُوعَدُونَ 🌤 [الذاريات:22]",
-  "إِنَّ مَعَ الْعُسْرِ يُسْرًا 🌸 [الشرح:6]",
-  "اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ ✨ [النور:35]",
-  "ادْعُونِي أَسْتَجِبْ لَكُمْ 🤲 [غافر:60]",
-  "وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ 💫 [البقرة:20]"
-];
-
-let ayahIndex = 0;
-const ayahBox = document.getElementById("dailyAyah");
-
-function showAyah(auto=false){
-  ayahBox.innerHTML = ayat[ayahIndex];
-  ayahBox.style.display = "block";
-  requestAnimationFrame(()=>{
-    ayahBox.style.opacity = "1";
-    ayahBox.style.transform = "translateY(0)";
-  });
-  clearTimeout(ayahBox.hideTimeout);
-  ayahBox.hideTimeout = setTimeout(hideAyah, 20000);
-
-  if(auto) ayahIndex = (ayahIndex + 1) % ayat.length;
-}
-function hideAyah(){
-  ayahBox.style.opacity="0";
-  ayahBox.style.transform="translateY(-10px)";
-  setTimeout(()=>ayahBox.style.display="none",600);
-}
-document.getElementById("ayahBtn").addEventListener("click",()=>showAyah(true));
-ayahBox.addEventListener("click",hideAyah);
-setInterval(()=>showAyah(true),60000);
-showAyah(true);
-
-// 🕌 أوقات الصلاة
-document.getElementById("prayerBtn").addEventListener("click",()=>{
-  const box=document.getElementById("prayerTimes");
-  box.style.display = box.style.display === "block" ? "none" : "block";
-});
-async function getPrayerTimes(){
-  const res = await fetch("https://api.aladhan.com/v1/timingsByAddress?address=Amman,Jordan&method=5");
-  const data = await res.json();
-  const t=data.data.timings;
-  document.getElementById("prayerTimes").innerHTML = `
-  <b>🕌 أوقات الصلاة اليوم</b><br>
-  الفجر: ${to12(t.Fajr)}<br>
-  الظهر: ${to12(t.Dhuhr)}<br>
-  العصر: ${to12(t.Asr)}<br>
-  المغرب: ${to12(t.Maghrib)}<br>
-  العشاء: ${to12(t.Isha)}
-  `;
-}
-function to12(t){
-  let [h,m]=t.split(":").map(Number);
-  const ampm=h>=12?"PM":"AM";
-  h=h%12||12;
-  return `${h}:${m} ${ampm}`;
-}
-getPrayerTimes();
-</script>
 <!-- 🔘 زر عرض QR (فوق بجانب الترجمة) -->
 <button onclick="toggleQR()" style="
   position:fixed;
   top:10px;
-  left:480px; /* ← عدّلها حسب موقع الترجمة عندك */
+  left:650px; /* ← عدّلها حسب موقع الترجمة عندك */
   background:#285eff;
   color:white;
   border:none;
@@ -898,7 +771,7 @@ getPrayerTimes();
   z-index:99999;
   transition:transform 0.3s ease, background 0.3s ease;
 ">
- في ملاحظة او حابب تعطي رايك؟ اضغط
+    ?  For any suggestions 
 </button>
 
 <!-- 🖼️ نافذة QR -->
@@ -918,7 +791,7 @@ getPrayerTimes();
       font-family:'Cairo',sans-serif;
       font-size:16px;
       margin-bottom:10px;
-      animation:fadeIn 0.8s ease;">📱 يهمني رايك امسح الكود </p>
+      animation:fadeIn 0.8s ease;">📱    Scan code please </p>
     <img src="https://soubabood15.github.io/sulotion/qr.png"
          alt="QR Code"
          style="width:230px;border-radius:12px;
@@ -958,16 +831,16 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
-  <h2 style="color:#285eff;">قسم الاعتذارات</h2>
+  <h2 style="color:#285eff;"> Apology</h2>
 
-  <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
-  <button onclick="generate('longApology')">انشاء اعتذار طويل مختلف</button>
+  <h3 style="color:#285eff;">Long apologies </h3>
+  <button onclick="generate('longApology')">Create apology</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
-  <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
-  <button onclick="generate('shortApology')">انشاء اعتذار قصير مختلف</button>
+  <h3 style="color:#285eff;"> Short Apologies</h3>
+  <button onclick="generate('shortApology')">Create apology </button>
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
@@ -975,7 +848,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
  </div>
  
 
-  <h2>🔹 هولد المطعم</h2>
+  <h2>🔹 Hold for merchant </h2>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.</div>
@@ -985,7 +858,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 
 </div>
 
- <h2>🔹 هولد المندوب</h2>
+ <h2>🔹 Hold for rider</h2>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.</div>
@@ -994,7 +867,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
   Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience</div>
    
 </div>
-<h3>🔹 الغاء الطلب </h3>
+<h3>🔹 Cancel order</h3>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.</div>
@@ -1003,7 +876,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
   After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order.</div>
   </div>
   
-   <h5>🔹 ماوافق  </h5>
+   <h5>🔹 Refused to cancel</h5>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه</div>
@@ -1017,8 +890,8 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 <!-- القسم الأيسر -->
  
 <div class="section" id="hold">
-  <h2 style="color:#285eff;">قسم الهولد</h2>
-  <button onclick="generate('hold')">انشاء هولد مختلف</button>
+  <h2 style="color:#285eff;"> Hold</h2>
+  <button onclick="generate('hold')"> Create hold</button>
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
@@ -1038,14 +911,14 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 
   <!-- 💬 قسم الشكر على الانتظار -->
 <div class="card" style="position:relative;">
-  <h2 style="color:#285eff;">قسم الشكر على الانتظار</h2>
+  <h2 style="color:#285eff;"> Thanks after hold</h2>
 
   <!-- زر التوليد -->
   <div style="text-align:center; margin-bottom:12px;">
     <button class="btn primary" 
             style="background:#285eff;color:#fff;border:none;
                    padding:10px 18px;border-radius:10px;cursor:pointer;"
-            onclick="generateThanks()"> انشاء شكر مختلف </button>
+            onclick="generateThanks()"> Create </button>
   </div>
 
   <!-- الكروت الزجاجية -->
@@ -1208,7 +1081,7 @@ function showNotice(text) {
   
   <!-- قسم السولوشن -->
  <div class="card">
-  <h2 style="color:#285eff;">قسم السولوشن </h2>
+  <h2 style="color:#285eff;"> Solution maker</h2>
 
   <div class="grid">
     <!-- 🧩 Call Line -->
@@ -1272,29 +1145,29 @@ function showNotice(text) {
       <option value="Full refund">Full refund</option>
     </select>
 
-    <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+    <label for="compensation">Compensation (Optional)</label>
     <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
   </div>
 
   <div class="actions">
-    <button class="btn primary" id="build">صنع الحل</button>
-    <button class="btn" id="clear">مسح</button>
+    <button class="btn primary" id="build"> Create solution</button>
+    <button class="btn" id="clear">Reset</button>
   </div>
 
-  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
-  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+  <textarea id="output" readonly placeholder="Click here"></textarea>
+  <div class="hint"> Click inside to copy</div>
 </div>
  </div>
   <!-- القسم الثالث -->
 <!-- سكربتات المحادثة (نسخة مضغوطة) -->
 <div class="section" id="chatScriptsSimple" style="width:500px; padding:16px;">
-  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
+  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">Conversation scripts </h2>
 
   <!-- الترحيب -->
    <!-- الترحيب -->
   <!-- 🔹 قسم الترحيب (يحدث تلقائي أثناء الكتابة) -->
 <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
-  <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+  <h3 class="chat-title" style="color:#285eff;">👋  Greeting</h3>
 
   <!-- 🧩 حقول الاسم -->
   <div style="text-align:center; margin-bottom:12px;">
@@ -1353,11 +1226,11 @@ window.addEventListener("load", () => {
   <!-- الاعتذار والتأكيد -->
   <!-- 🍽️ قسم الاعتذار والتأكيد (تفاعلي) -->
 <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
-  <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
+  <h3 class="chat-title" style="color:#009a61;">🍽️ Apology & confirmation </h3>
 
   <!-- 🧩 حقل اسم المطعم -->
   <div style="text-align:center; margin-bottom:15px;">
-    <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
+    <label for="restaurantName" style="color:#285eff; font-weight:600;">Merchant name (optional)</label><br>
     <input 
       type="text" 
       id="restaurantName" 
@@ -1407,7 +1280,7 @@ function updateRestaurant() {
 </script>
   <!-- أي خدمة إضافية -->
   <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
-    <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
+    <h3 class="chat-title" style="color:#c77b00;">❓ After solve issue </h3>
     <div id="extraServiceBox" 
      style="background:#fffbea;padding:16px;border-radius:14px;
             border:1px solid #ffe58a;text-align:center;font-family:'Cairo',sans-serif;">
@@ -1420,7 +1293,7 @@ function updateRestaurant() {
            font-size:14px;
            cursor:pointer;
            transition:0.3s;">
-    توليد
+    Create
   </button>
 
   <div id="serviceContainer"
@@ -1446,7 +1319,6 @@ const servicePairs = [
   ["هل هناك أي خدمة إضافية يمكنني تقديمها لك؟","Is there any additional service I can provide?"],
   ["هل ترغب أن أتحقق لك من شيء آخر؟","Would you like me to check something else for you?"],
   ["هل يمكنني دعمك في أي نقطة أخرى؟","Can I support you with anything else?"],
-  ["هل تحتاج أي مساعدة أخرى قبل أن ننهي؟","Do you need any further help before we finish?"],
   ["هل يوجد شيء آخر يمكنني توضيحه لك؟","Is there anything else I can clarify for you?"]
 ];
 
@@ -1471,7 +1343,7 @@ document.getElementById("generateService").addEventListener("click", () => {
 
   <!-- الختامية -->
   <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
-    <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
+    <h3 class="chat-title" style="color:#7b2cbf;">✅ End of conversation</h3>
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
       <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
@@ -1567,20 +1439,20 @@ function showCopiedNotice() {
 </script>
 <!-- 🟦 القسم الرابع: التعويض والاسترداد -->
 <div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
-  <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
+  <h2 style="text-align:center; color:#285eff;">   Refund and compensation</h2>
 
   
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
-    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">تعويض</button>
-    <button id="refundcompBtn" class="btn" onclick="startRefund()">استرداد وتعويض</button>
-    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">compensation</button>
+    <button id="refundcompBtn" class="btn" onclick="startRefund()"> Refund & compensation</button>
+    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">Refund</button>
     <div id="scriptBox" style="margin-top:10px;"></div>
   </div>
 
 <!-- الآلة الحاسبة داخل قسم الاعتذارات -->
  
 <div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
-  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢  calculator</h3>
 
   <input id="calcInput" type="number" placeholder="أدخل السعر" 
          oninput="resetAutoTimer()" 
@@ -1664,28 +1536,6 @@ function resetAutoTimer() {
   }, 30000); // 120000 = دقيقتين (بالملّي ثانية)
 }
 
-// 💬 إشعار بسيط يظهر عند التصفير التلقائي
-function showAutoResetNotice() {
-  const msg = document.createElement("div");
-  msg.textContent = "🔄 تمت إعادة ضبط الحاسبة تلقائيًا بعد 2 دقيقة";
-  Object.assign(msg.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    background: "rgba(255,255,255,0.8)",
-    color: "#003cff",
-    border: "1px solid #c9dafd",
-    padding: "10px 14px",
-    borderRadius: "10px",
-    fontFamily: "Cairo, sans-serif",
-    fontSize: "14px",
-    zIndex: "99999",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-  });
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 2500);
-}
-
 // تشغيل المؤقت أول مرة عند تحميل الصفحة
 resetAutoTimer();
 </script>
@@ -1693,6 +1543,7 @@ resetAutoTimer();
 <!-- 🧾 قسم طلبات العميل -->
 <!-- 🧾 Customer Requests Section -->
 <div class="customer-requests" style="margin-top:25px;font-family:'Cairo',sans-serif;">
+  
   <h3 style="color:#285eff;text-align:center;margin-bottom:18px;">🧾 Customer Requests</h3>
 
   <!-- 💰 Compensation -->
@@ -1895,37 +1746,8 @@ document.addEventListener("click", function (e) {
   showCopyAlert(e.pageX, e.pageY);
 });
 
-function showCopyAlert(x, y) {
-  let note = document.getElementById("copyAlert");
-  if (!note) {
-    note = document.createElement("div");
-    note.id = "copyAlert";
-    note.textContent = "✔ تم النسخ";
-    Object.assign(note.style, {
-      position: "absolute",
-      background: "#285eff",
-      color: "#fff",
-      padding: "5px 10px",
-      borderRadius: "6px",
-      fontSize: "13px",
-      fontFamily: "Cairo, sans-serif",
-      zIndex: "999999",
-      opacity: "0",
-      transition: "opacity .3s ease, transform .3s ease",
-      pointerEvents: "none",
-    });
-    document.body.appendChild(note);
-  }
 
-  note.style.left = `${x + 15}px`;
-  note.style.top = `${y - 10}px`;
-  note.style.opacity = "1";
-  note.style.transform = "translateY(-8px)";
-  setTimeout(() => {
-    note.style.opacity = "0";
-    note.style.transform = "translateY(0)";
-  }, 1000);
-}
+
 
 // 🔹 تعويض فقط
 
@@ -2761,10 +2583,10 @@ window.addEventListener("load", () => {
     <p style="color:#1a1a1a;font-size:15px;">اقرأ الملاحظات ثم اضغط على تمّ القراءة 👇</p>
 
     <ul style="text-align:right;color:#333;font-size:20px;line-height:2;margin:15px 0;">
-      <li style="color:#285eff;margin-bottom:12px;" >  ياريت مثل ما انا ساعدتك ولو شيء بسيط تقرا المكتوب  </li>
-      <li style="color:#285eff;margin-bottom:12px;" > اسمحلي اكسب معك شويه اجر</li>
-      <li>حدثت كل اشي طلبتوه مني وياريت لو في اشي احكولي عنها في الملاحظات</li>
-      <li>  ضروري لما ارسلك خانه التحديث تحدث ✅</li>
+      <li style="color:#285eff;margin-bottom:12px;" > Thank you for using this project </li>
+      <li style="color:#285eff;margin-bottom:12px;" > Scan the code if you have a suggestion or have any problem.</li>
+      <li style="color:#285eff;margin-bottom:12px;" > All the required changes have been added.</li>
+      <li>  Please always update when you receive a notification. ✅</li>
     </ul>
 
     <button id="readBtn" style="
@@ -2778,7 +2600,7 @@ window.addEventListener("load", () => {
       font-weight:bold;
       transition:all .3s ease;
       animation: shake 2s infinite ease-in-out;
-    ">📖 تمّت القراءة</button>
+    ">📖  Click to Check</button>
 
     <br><br>
 
@@ -2793,7 +2615,7 @@ window.addEventListener("load", () => {
       position: relative;
       transition: transform 0.25s ease; /* أسرع */
       margin-top:10px;
-    ">تخطي ✨</button>
+    ">Skip ✨</button>
 
     <p id="funnyMsg" style="
       display:none;
@@ -2801,7 +2623,7 @@ window.addEventListener("load", () => {
       font-size:13px;
       font-weight:bold;
       margin-top:10px;
-    ">😂 مش قادر تكبس؟ اقرأ أول!</p>
+    ">Please click on Confirm. It is important that you read the notes.</p>
   </div>
 </div>
 
@@ -2908,7 +2730,7 @@ document.addEventListener("click", function(e) {
     ">✖ إغلاق</button>
   </div>
 
-  <h3 style="color:#285eff; text-align:center; margin-top:5px;">سكربتات مخصصه لكل حاله  </h3>
+  <h3 style="color:#285eff; text-align:center; margin-top:5px;">Specific apology</h3>
 
   <!-- 🔘 أزرار الحالات -->
   <div style="text-align:center; margin-bottom:12px;">
@@ -2926,7 +2748,7 @@ document.addEventListener("click", function(e) {
 
   <!-- Missing -->
   <div id="aplg_missing" class="aplg_caseBox">
-    <button onclick="aplg_generate('missing')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('missing')" class="aplg_genBtn"> Create apology</button>
     <div class="aplg_output">
       <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
@@ -2935,7 +2757,7 @@ document.addEventListener("click", function(e) {
 
   <!-- Wrong -->
   <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
@@ -2944,7 +2766,7 @@ document.addEventListener("click", function(e) {
 
   <!-- Cold food -->
   <div id="aplg_coldfood" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_coldfood" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_coldfood" class="aplg_msg aplg_copy">—</div>
@@ -2953,7 +2775,7 @@ document.addEventListener("click", function(e) {
 
   <!-- Not delicious -->
   <div id="aplg_notdelicious" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_notdelicious" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_notdelicious" class="aplg_msg aplg_copy">—</div>
@@ -2962,7 +2784,7 @@ document.addEventListener("click", function(e) {
 
   <!-- Portion size -->
   <div id="aplg_portion" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('portion')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('portion')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_portion" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_portion" class="aplg_msg aplg_copy">—</div>
@@ -2971,7 +2793,7 @@ document.addEventListener("click", function(e) {
 
   <!-- General -->
   <div id="aplg_general" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('general')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('general')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
@@ -3293,8 +3115,8 @@ function aplg_showCopiedNotice(x, y) {
 <!-- ✅ زر الواجهة الثانية -->
  <!-- ✅ الشريط السفلي الموحد -->
 <div id="bottomBar">
-  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#000000;">كل السكربتات </button>
-  <button onclick="goHome()" style="color:#000000;">الرئيسية </button>
+  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#295eff;">All scripts</button>
+  <button onclick="goHome()" style="color:#c8c8c8;">Main </button>
 </div>
 
 <div id="page2Overlay">
@@ -3468,7 +3290,7 @@ overlay.addEventListener("transitionstart", () => {
   padding:10px 18px;cursor:pointer;
   font-family:'Cairo',sans-serif;
   box-shadow:0 4px 15px rgba(0,0,0,0.3);
-  z-index:99999;">🧭 شرح المشروع</button>
+  z-index:99999;">🧭 Project guide  </button>
 
 <!-- ⚙️ شريط التحكم -->
 <div id="guideControls" style="
@@ -3480,10 +3302,10 @@ overlay.addEventListener("transitionstart", () => {
   font-family:'Cairo',sans-serif;z-index:999999;">
   <button id="nextGuide" style="
     background:#285eff;color:white;border:none;
-    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">التالي ⏭️</button>
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Next ⏭️</button>
   <button id="endGuide" style="
     background:#ff4d4d;color:white;border:none;
-    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">إنهاء 🏁</button>
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Done 🏁</button>
 </div>
 
 <!-- 🌫️ القناع الزجاجي -->
@@ -3541,7 +3363,7 @@ overlay.addEventListener("transitionstart", () => {
 document.addEventListener("DOMContentLoaded", ()=>{
   // الأقسام الأربعة
   const sections = [
-    {id:"apology", ar:"كلمة انشاء تقوم بوضع سكربت مختلف دائما نقره واحده لنسخ النص", en:"The word “Generate” creates a different script each time — one click to copy the text."},
+    {id:"apology", ar:"كلمة انشاء تقوم بوضع سكربت مختلف دائما نقره واحده لنسخ النص", en:"The word “Create” creates a different script each time — one click to copy the text."},
     {id:"hold", ar:"هنا لدينا القسم الهولد مشابه للاعتذار والسوليوشن لتسهيل صنع التكيت", en:"Here we have the Hold section, similar to the Apology and Solution sections, designed to make ticket creation easier."},
     {id:"chatScriptsSimple", ar:"هنا القسم المختص في بدايه الشات ضع اسمك حتى يظهر في السكربت ", en:"Here is the section dedicated to the beginning of the chat — enter your name so it appears in the script."},
     {id:"compensationSection", ar:"لدينا هنا التعويض في كل الحالات ثم الحاسبه وفي زاويه الشاشة سكربتات مخصصه لكل مشكله", en:"Here we have the compensation section for all cases, followed by the calculator, and in the corner of the screen, you’ll find special scripts for each issue."}
@@ -3625,7 +3447,7 @@ readBtn.animate([
 readBtn.onclick = () => {
   hasRead = true;
   readBtn.style.background = "#22c55e";
-  readBtn.textContent = "✅ تم التأكيد";
+  readBtn.textContent = "✅ Done";
   funnyMsg.style.display = "none";
   skipBtn.style.transform = "translateX(0)";
 };
@@ -3684,6 +3506,80 @@ function closePopup() {
   }, 500);
 }
 </script>
+<script>
+// 🧊 إعداد إشعار النسخ الزجاجي المتحرك
+let followNote = null;
+let mouseX = 0, mouseY = 0;
 
+// 🔹 تتبع حركة الماوس
+document.addEventListener("mousemove", (e)=>{
+  mouseX = e.clientX + 20;
+  mouseY = e.clientY + 20;
+  if (followNote) {
+    followNote.style.left = mouseX + "px";
+    followNote.style.top = mouseY + "px";
+  }
+});
+
+// 💬 إنشاء وإظهار الإشعار الزجاجي
+function showCopyNotice(sectionName){
+  if (!followNote){
+    followNote = document.createElement("div");
+    Object.assign(followNote.style, {
+      position: "fixed",
+      pointerEvents: "none",
+      zIndex: "999999",
+      padding: "10px 18px",
+      borderRadius: "14px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      fontWeight: "600",
+      backdropFilter: "blur(12px)",
+      background: "rgba(255,255,255,0.35)",
+      color: "#003cff",
+      boxShadow: "0 4px 18px rgba(0,0,0,0.25)",
+      transition: "opacity 0.3s ease, transform 0.3s ease",
+      opacity: "0",
+      transform: "scale(0.95)"
+    });
+    document.body.appendChild(followNote);
+  }
+
+  followNote.innerHTML = `<span style="color:#285eff;">${sectionName}</span>`;
+  followNote.style.left = mouseX + "px";
+  followNote.style.top = mouseY + "px";
+  followNote.style.opacity = "1";
+  followNote.style.transform = "scale(1)";
+
+  clearTimeout(followNote.hideTimeout);
+  followNote.hideTimeout = setTimeout(()=>{
+    followNote.style.opacity = "0";
+    followNote.style.transform = "scale(0.95)";
+  }, 1800);
+}
+
+// 🧠 النسخ الذكي فقط لعناصر النصوص المحددة
+document.addEventListener("click", (e)=>{
+  // ✅ تجاهل الأزرار وحقول الإدخال
+  if (["BUTTON", "INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+  // ✅ العناصر المسموح فيها النسخ فقط
+  const el = e.target.closest(
+    ".msg, .aplg_msg, .req-card, .chat-row div, .aplg_copy"
+  );
+  if (!el) return;
+
+  const text = el.textContent?.trim();
+  if (!text || text === "—" || text === "~" || text.length < 2) return;
+
+  // 🔍 تحديد اسم القسم تلقائيًا
+
+
+  // 📋 تنفيذ النسخ
+  navigator.clipboard.writeText(text)
+    .then(()=> showCopyNotice(sectionName))
+    .catch(()=> showCopyNotice("تم النسخ"));
+});
+</script>
 </body>
 </html>
