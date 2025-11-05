@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.0.5"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.1.1"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -450,8 +450,8 @@ function showUpdateNotice() {
   notice.id = "updateNotice";
   notice.innerHTML = `
     <div class="update-glass">
-      <h3>✨ يامعلم حدثنا النظام</h3>
-      <p>الله لايهينك اكبس  <b>Enter</b> خنحدث هلصفحه </p>
+      <h3>✨ System need update  </h3>
+     <p>Press Enter to refresh and get the latest version.</p>
     </div>
   `;
   document.body.appendChild(notice);
@@ -515,7 +515,7 @@ setInterval(checkVersion, 5000);
 }
 </style>
 
-  <div class="madeby">Made by Abdelrahman & Reem </div>
+  <div class="madeby">Made by Abdelrahman soub </div>
 
   <!-- 🕒 ساعة الأردن (12 ساعة) -->
 <div id="jordanClock">🕒 00:00:00 AM 🇯🇴</div>
@@ -548,7 +548,7 @@ setInterval(checkVersion, 5000);
     cursor:pointer;
     box-shadow:0 4px 15px rgba(40,94,255,0.25);
     transition:0.3s;
-  ">🔗 الروابط</button>
+  ">🔗 Links</button>
 </div>
 
 <div id="linksPanel" style="
@@ -578,236 +578,8 @@ setInterval(checkVersion, 5000);
     <div class="link-item"><a href="https://keeservice-eu.mykeeta.com/index.html#/login" target="_blank"> keeservice</a></div>
 </div>
 
-<!-- 🌐 زر المترجم -->
-<div id="translatorBtn" style="
-  position:fixed;
-  top:10px;
-  right:600px;
-  z-index:99999;
-">
-  <button onclick="toggleTranslator()" style="
-    background:rgba(255,255,255,0.25);
-    border:1px solid rgba(40,94,255,0.4);
-    color:#285eff;
-    font-weight:600;
-    padding:6px 14px;
-    border-radius:12px;
-    backdrop-filter:blur(12px) saturate(180%);
-    -webkit-backdrop-filter:blur(12px) saturate(180%);
-    cursor:pointer;
-    transition:all .3s ease;
-  ">🌐 المترجم</button>
-</div>
 
-<!-- ✨ نافذة المترجم -->
-<div id="translatorBox" style="
-  display:none;
-  position:fixed;
-  top:55px;
-  right:200px;
-  width:300px;
-  background:rgba(255,255,255,0.45);
-  border:1px solid rgba(40,94,255,0.3);
-  border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  padding:14px;
-  backdrop-filter:blur(12px) saturate(180%);
-  -webkit-backdrop-filter:blur(12px) saturate(180%);
-  z-index:99998;
-  opacity:0;
-  transform:translateY(-10px);
-  transition:all .4s ease;
-  font-family:'Cairo',sans-serif;
-">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <span id="langDir" style="color:#285eff;font-weight:600;">عربي ➜ English</span>
-    <button onclick="toggleLang()" style="
-      background:#285eff;color:white;
-      border:none;border-radius:8px;
-      padding:4px 8px;cursor:pointer;
-    ">🔁 تبديل</button>
-  </div>
 
-  <label id="inputLabel" style="font-size:13px;color:#285eff;font-weight:600;">النص بالعربية:</label>
-  <input id="translateInput" placeholder="اكتب النص هنا..." style="
-    width:70%;
-    padding:8px;
-    border:1px solid #c9dafd;
-    border-radius:8px;
-    margin-bottom:6px;
-  ">
-
-  <button onclick="translateText()" style="
-    background:#285eff;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    padding:6px 12px;
-    cursor:pointer;
-    width:100%;
-    font-weight:600;
-  ">ترجمة</button>
-
-  <label id="outputLabel" style="font-size:13px;color:#285eff;font-weight:600;display:block;margin-top:8px;">النتيجة بالإنجليزية:</label>
-  
-  <div id="translateResultBox" style="
-    position:relative;
-    background:#f1f6ff;
-    border-radius:8px;
-    padding:8px;
-    font-weight:600;
-    color:#285eff;
-    text-align:center;
-    min-height:30px;
-    margin-top:4px;
-    cursor:pointer;
-    user-select:none;
-    transition:background .3s;
-  ">
-    <span id="translateResult">—</span>
-  </div>
-</div>
-<script>
-// ✅ فتح وإغلاق المترجم بانميشن
-function toggleTranslator(){
-  const box = document.getElementById("translatorBox");
-  if(box.style.display === "none" || !box.style.display){
-    box.style.display = "block";
-    requestAnimationFrame(()=>{
-      box.style.opacity = "1";
-      box.style.transform = "translateY(0)";
-    });
-  } else {
-    box.style.opacity = "0";
-    box.style.transform = "translateY(-10px)";
-    setTimeout(()=> box.style.display = "none", 300);
-  }
-}
-
-// 🌍 الاتجاه الافتراضي
-let currentLang = "ar-en";
-
-function toggleLang(){
-  if(currentLang === "ar-en"){
-    currentLang = "en-ar";
-    document.getElementById("langDir").textContent = "English ➜ عربي";
-    document.getElementById("inputLabel").textContent = "Text in English:";
-    document.getElementById("outputLabel").textContent = "النتيجة بالعربية:";
-  } else {
-    currentLang = "ar-en";
-    document.getElementById("langDir").textContent = "عربي ➜ English";
-    document.getElementById("inputLabel").textContent = "النص بالعربية:";
-    document.getElementById("outputLabel").textContent = "النتيجة بالإنجليزية:";
-  }
-}
-
-// 🧠 فلترة الكلمات قبل الترجمة (استبدال مدخلات)
-const preReplacements = {
-  "كيتا": "Keeta",
-  "كيتا.": "Keeta",
-  "السائق": "rider",
-  "المندوب": "rider",
-  "المطعم": "merchant",
-  "العميل": "customer",
-  "تم الطلب غلط": "الطلب مختلف",
-  "ناقص": "جزء مفقود",
-  "بارد": "لم يكن دافئًا"
-};
-
-// 🔤 تصحيح الترجمة بعد الترجمة (استبدال مخرجات)
-const postReplacements = {
-  "Kita": "Keeta",
-  "kita": "Keeta",
-  "the driver": "the rider",
-  "driver": "rider",
-  "representative": "rider",
-  "restaurant": "merchant",
-  "Restaurant": "Merchant",
-  "customer": "customer"
-};
-
-// 🌐 الترجمة من Google Translate مع التصحيح الذكي
-async function translateText() {
-  let text = document.getElementById("translateInput").value.trim();
-  if(!text) return;
-
-  // 🔹 استبدال قبل الإرسال (يدعم العربي والإنجليزي)
-  for (let key in preReplacements) {
-    if (text.includes(key)) text = text.replaceAll(key, preReplacements[key]);
-  }
-
-  const sl = currentLang === "ar-en" ? "ar" : "en";
-  const tl = currentLang === "ar-en" ? "en" : "ar";
-
-  // لو النص كله عبارة عن كلمة من القاموس نرجعها مباشرة بدون ترجمة
-  let isCustomOnly = Object.keys(preReplacements).some(k => text.trim() === preReplacements[k]);
-  if(isCustomOnly){
-    document.getElementById("translateResult").textContent = text;
-    return;
-  }
-
-  const res = await fetch(
-    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
-  );
-  const data = await res.json();
-  let translated = data[0][0][0];
-
-  // 🔧 تصحيح بعد الترجمة
-  for (let key in postReplacements) {
-    const regex = new RegExp(`\\b${key}\\b`, "gi");
-    translated = translated.replace(regex, postReplacements[key]);
-  }
-
-  document.getElementById("translateResult").textContent = translated;
-}
-
-// 📋 النسخ بمجرد الضغط على النتيجة
-document.getElementById("translateResultBox").addEventListener("click", ()=>{
-  const box = document.getElementById("translateResultBox");
-  const text = document.getElementById("translateResult").textContent.trim();
-  if(!text || text === "—") return;
-  
-  navigator.clipboard.writeText(text);
-  showCopyNotice();
-
-  // ✨ أنميشن وميض عند النسخ
-  box.style.background = "#d4ffe1";
-  setTimeout(()=> box.style.background = "#f1f6ff", 300);
-});
-
-// ✨ إشعار زجاجي فوق الماوس عند النسخ
-function showCopyNotice(){
-  const note = document.createElement("div");
-  note.textContent = "✅ تم النسخ";
-  Object.assign(note.style, {
-    position:"fixed",
-    bottom:"20px",
-    right:"50%",
-    transform:"translateX(50%)",
-    background:"rgba(255,255,255,0.7)",
-    color:"#00b36b",
-    padding:"6px 14px",
-    borderRadius:"10px",
-    fontSize:"14px",
-    fontWeight:"600",
-    backdropFilter:"blur(10px)",
-    boxShadow:"0 4px 15px rgba(0,0,0,0.2)",
-    zIndex:"999999",
-    opacity:"0",
-    transition:"opacity 0.3s ease, bottom 0.3s ease"
-  });
-  document.body.appendChild(note);
-  requestAnimationFrame(()=>{
-    note.style.opacity="1";
-    note.style.bottom="40px";
-  });
-  setTimeout(()=>{
-    note.style.opacity="0";
-    note.style.bottom="60px";
-    setTimeout(()=>note.remove(),300);
-  },900);
-}
-</script>
 
 <style>
 .link-item {
@@ -978,20 +750,97 @@ document.addEventListener("click", (e) => {
     isVisible = !isVisible;
     list.style.display = isVisible ? "block" : "none";
   });
+
+  
+</script>
+
+<!-- 🔘 زر عرض QR (فوق بجانب الترجمة) -->
+<button onclick="toggleQR()" style="
+  position:fixed;
+  top:10px;
+  left:650px; /* ← عدّلها حسب موقع الترجمة عندك */
+  background:#285eff;
+  color:white;
+  border:none;
+  border-radius:50px;
+  padding:10px 18px;
+  cursor:pointer;
+  font-family:'Cairo',sans-serif;
+  font-size:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  z-index:99999;
+  transition:transform 0.3s ease, background 0.3s ease;
+">
+    ?  For any suggestions 
+</button>
+
+<!-- 🖼️ نافذة QR -->
+<div id="qrPopup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  justify-content:center;
+  align-items:center;
+  z-index:99998;
+">
+  <div style="text-align:center;">
+    <p style="
+      color:white;
+      font-family:'Cairo',sans-serif;
+      font-size:16px;
+      margin-bottom:10px;
+      animation:fadeIn 0.8s ease;">📱    Scan code please </p>
+    <img src="https://soubabood15.github.io/sulotion/qr.png"
+         alt="QR Code"
+         style="width:230px;border-radius:12px;
+                box-shadow:0 4px 25px rgba(0,0,0,0.4);
+                opacity:0;transform:scale(0.8);
+                transition:opacity 0.4s ease, transform 0.4s ease;">
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+
+<script>
+function toggleQR(){
+  const qr = document.getElementById("qrPopup");
+  const img = qr.querySelector("img");
+  const isVisible = qr.style.display === "flex";
+
+  if (!isVisible) {
+    qr.style.display = "flex";
+    setTimeout(()=>{
+      img.style.opacity = "1";
+      img.style.transform = "scale(1)";
+    },10);
+  } else {
+    img.style.opacity = "0";
+    img.style.transform = "scale(0.8)";
+    setTimeout(()=> qr.style.display = "none",300);
+  }
+}
+document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 </script>
 <div class="main-sections">
 <!-- القسم الأيمن -->
 <div class="section" id="apology">
-  <h2 style="color:#285eff;">قسم الاعتذارات</h2>
+  <h2 style="color:#285eff;"> Apology</h2>
 
-  <h3 style="color:#285eff;">الاعتذارات الطويلة</h3>
-  <button onclick="generate('longApology')">انشاء اعتذار طويل مختلف</button>
+  <h3 style="color:#285eff;">Long apologies </h3>
+  <button onclick="generate('longApology')">Create apology</button>
   <div class="box">
     <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
     <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
   </div>
-  <h3 style="color:#285eff;">الاعتذارات القصيرة</h3>
-  <button onclick="generate('shortApology')">انشاء اعتذار قصير مختلف</button>
+  <h3 style="color:#285eff;"> Short Apologies</h3>
+  <button onclick="generate('shortApology')">Create apology </button>
   <div class="box">
     <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
     <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
@@ -999,7 +848,7 @@ document.addEventListener("click", (e) => {
  </div>
  
 
-  <h2>🔹 هولد المطعم</h2>
+  <h2>🔹 Hold for merchant </h2>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.</div>
@@ -1009,7 +858,7 @@ document.addEventListener("click", (e) => {
 
 </div>
 
- <h2>🔹 هولد المندوب</h2>
+ <h2>🔹 Hold for rider</h2>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.</div>
@@ -1018,7 +867,7 @@ document.addEventListener("click", (e) => {
   Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience</div>
    
 </div>
-<h3>🔹 الغاء الطلب </h3>
+<h3>🔹 Cancel order</h3>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.</div>
@@ -1027,7 +876,7 @@ document.addEventListener("click", (e) => {
   After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order.</div>
   </div>
   
-   <h5>🔹 ماوافق  </h5>
+   <h5>🔹 Refused to cancel</h5>
   <div class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه</div>
@@ -1041,8 +890,8 @@ document.addEventListener("click", (e) => {
 <!-- القسم الأيسر -->
  
 <div class="section" id="hold">
-  <h2 style="color:#285eff;">قسم الهولد</h2>
-  <button onclick="generate('hold')">انشاء هولد مختلف</button>
+  <h2 style="color:#285eff;"> Hold</h2>
+  <button onclick="generate('hold')"> Create hold</button>
   <div class="box">
     <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
@@ -1062,14 +911,14 @@ document.addEventListener("click", (e) => {
 
   <!-- 💬 قسم الشكر على الانتظار -->
 <div class="card" style="position:relative;">
-  <h2 style="color:#285eff;">قسم الشكر على الانتظار</h2>
+  <h2 style="color:#285eff;"> Thanks after hold</h2>
 
   <!-- زر التوليد -->
   <div style="text-align:center; margin-bottom:12px;">
     <button class="btn primary" 
             style="background:#285eff;color:#fff;border:none;
                    padding:10px 18px;border-radius:10px;cursor:pointer;"
-            onclick="generateThanks()"> انشاء شكر مختلف </button>
+            onclick="generateThanks()"> Create </button>
   </div>
 
   <!-- الكروت الزجاجية -->
@@ -1232,7 +1081,7 @@ function showNotice(text) {
   
   <!-- قسم السولوشن -->
  <div class="card">
-  <h2 style="color:#285eff;">قسم السولوشن </h2>
+  <h2 style="color:#285eff;"> Solution maker</h2>
 
   <div class="grid">
     <!-- 🧩 Call Line -->
@@ -1296,29 +1145,29 @@ function showNotice(text) {
       <option value="Full refund">Full refund</option>
     </select>
 
-    <label for="compensation">Compensation (قيمة التعويض لو مافي اتركها فاضيه)</label>
+    <label for="compensation">Compensation (Optional)</label>
     <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
   </div>
 
   <div class="actions">
-    <button class="btn primary" id="build">صنع الحل</button>
-    <button class="btn" id="clear">مسح</button>
+    <button class="btn primary" id="build"> Create solution</button>
+    <button class="btn" id="clear">Reset</button>
   </div>
 
-  <textarea id="output" readonly placeholder="بس تخلص اضغط علي"></textarea>
-  <div class="hint">كبسه على الحقل ينسخ كلشي</div>
+  <textarea id="output" readonly placeholder="Click here"></textarea>
+  <div class="hint"> Click inside to copy</div>
 </div>
  </div>
   <!-- القسم الثالث -->
 <!-- سكربتات المحادثة (نسخة مضغوطة) -->
 <div class="section" id="chatScriptsSimple" style="width:500px; padding:16px;">
-  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">سكربتات المحادثة</h2>
+  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">Conversation scripts </h2>
 
   <!-- الترحيب -->
    <!-- الترحيب -->
   <!-- 🔹 قسم الترحيب (يحدث تلقائي أثناء الكتابة) -->
 <div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
-  <h3 class="chat-title" style="color:#285eff;">👋 الترحيب</h3>
+  <h3 class="chat-title" style="color:#285eff;">👋  Greeting</h3>
 
   <!-- 🧩 حقول الاسم -->
   <div style="text-align:center; margin-bottom:12px;">
@@ -1377,11 +1226,11 @@ window.addEventListener("load", () => {
   <!-- الاعتذار والتأكيد -->
   <!-- 🍽️ قسم الاعتذار والتأكيد (تفاعلي) -->
 <div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
-  <h3 class="chat-title" style="color:#009a61;">🍽️ الاعتذار والتأكيد</h3>
+  <h3 class="chat-title" style="color:#009a61;">🍽️ Apology & confirmation </h3>
 
   <!-- 🧩 حقل اسم المطعم -->
   <div style="text-align:center; margin-bottom:15px;">
-    <label for="restaurantName" style="color:#285eff; font-weight:600;">اسم المطعم (اختياري)</label><br>
+    <label for="restaurantName" style="color:#285eff; font-weight:600;">Merchant name (optional)</label><br>
     <input 
       type="text" 
       id="restaurantName" 
@@ -1431,7 +1280,7 @@ function updateRestaurant() {
 </script>
   <!-- أي خدمة إضافية -->
   <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
-    <h3 class="chat-title" style="color:#c77b00;">❓ خدمة إضافية</h3>
+    <h3 class="chat-title" style="color:#c77b00;">❓ After solve issue </h3>
     <div id="extraServiceBox" 
      style="background:#fffbea;padding:16px;border-radius:14px;
             border:1px solid #ffe58a;text-align:center;font-family:'Cairo',sans-serif;">
@@ -1444,7 +1293,7 @@ function updateRestaurant() {
            font-size:14px;
            cursor:pointer;
            transition:0.3s;">
-    توليد
+    Create
   </button>
 
   <div id="serviceContainer"
@@ -1470,7 +1319,6 @@ const servicePairs = [
   ["هل هناك أي خدمة إضافية يمكنني تقديمها لك؟","Is there any additional service I can provide?"],
   ["هل ترغب أن أتحقق لك من شيء آخر؟","Would you like me to check something else for you?"],
   ["هل يمكنني دعمك في أي نقطة أخرى؟","Can I support you with anything else?"],
-  ["هل تحتاج أي مساعدة أخرى قبل أن ننهي؟","Do you need any further help before we finish?"],
   ["هل يوجد شيء آخر يمكنني توضيحه لك؟","Is there anything else I can clarify for you?"]
 ];
 
@@ -1495,7 +1343,7 @@ document.getElementById("generateService").addEventListener("click", () => {
 
   <!-- الختامية -->
   <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
-    <h3 class="chat-title" style="color:#7b2cbf;">✅ الختامية</h3>
+    <h3 class="chat-title" style="color:#7b2cbf;">✅ End of conversation</h3>
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
       <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
@@ -1591,20 +1439,20 @@ function showCopiedNotice() {
 </script>
 <!-- 🟦 القسم الرابع: التعويض والاسترداد -->
 <div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
-  <h2 style="text-align:center; color:#285eff;"> قسم التعويض والاسترداد</h2>
+  <h2 style="text-align:center; color:#285eff;">   Refund and compensation</h2>
 
   
   <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
-    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">تعويض</button>
-    <button id="refundcompBtn" class="btn" onclick="startRefund()">استرداد وتعويض</button>
-    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">استرداد</button>
+    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">compensation</button>
+    <button id="refundcompBtn" class="btn" onclick="startRefund()"> Refund & compensation</button>
+    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">Refund</button>
     <div id="scriptBox" style="margin-top:10px;"></div>
   </div>
 
 <!-- الآلة الحاسبة داخل قسم الاعتذارات -->
  
 <div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
-  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢 الآلة الحاسبة</h3>
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢  calculator</h3>
 
   <input id="calcInput" type="number" placeholder="أدخل السعر" 
          oninput="resetAutoTimer()" 
@@ -1652,8 +1500,17 @@ function addItem(type, multiplier) {
     return;
   }
 
-  const result = value * multiplier;
-  total += result;
+ let result = value * multiplier;
+
+// 🧠 تحديد الحد الأقصى لبعض الأصناف
+if (type === "Drink" && result > 20) {
+  result = 20;
+}
+if (type === "Cutlery" && result > 5) {
+  result = 5;
+}
+
+total += result;
 
   items.push(`${type}: ${result.toFixed(2)} ريال`);
   document.getElementById("itemList").innerHTML = items.join("<br>");
@@ -1676,35 +1533,186 @@ function resetAutoTimer() {
   resetTimer = setTimeout(() => {
     resetCalc();
     showAutoResetNotice();
-  }, 120000); // 120000 = دقيقتين (بالملّي ثانية)
-}
-
-// 💬 إشعار بسيط يظهر عند التصفير التلقائي
-function showAutoResetNotice() {
-  const msg = document.createElement("div");
-  msg.textContent = "🔄 تمت إعادة ضبط الحاسبة تلقائيًا بعد 2 دقيقة";
-  Object.assign(msg.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    background: "rgba(255,255,255,0.8)",
-    color: "#003cff",
-    border: "1px solid #c9dafd",
-    padding: "10px 14px",
-    borderRadius: "10px",
-    fontFamily: "Cairo, sans-serif",
-    fontSize: "14px",
-    zIndex: "99999",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-  });
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 2500);
+  }, 30000); // 120000 = دقيقتين (بالملّي ثانية)
 }
 
 // تشغيل المؤقت أول مرة عند تحميل الصفحة
 resetAutoTimer();
 </script>
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 Customer Requests Section -->
+<div class="customer-requests" style="margin-top:25px;font-family:'Cairo',sans-serif;">
+  
+  <h3 style="color:#285eff;text-align:center;margin-bottom:18px;">🧾 Customer Requests</h3>
 
+  <!-- 💰 Compensation -->
+  <div class="req-package">
+    <h4 class="req-title">💰 Compensation & Refund</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to get comepensation</div>
+      <div class="req-card">The cusmtomer wants to get refund</div>
+      <div class="req-card">The cusmtomer wants to get more comepensation</div>
+    </div>
+  </div>
+
+  <!-- 📝 Note -->
+  <div class="req-package">
+    <h4 class="req-title">📝 Note</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to change order</div>
+      <div class="req-card">The cusmtomer wants to add a note</div>
+      <div class="req-card red">The cusmtomer wants to cancel order</div>
+    </div>
+  </div>
+
+  <!-- 📞 Call -->
+  <div class="req-package">
+    <h4 class="req-title">📞 Call Requested</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card">The cusmtomer wants to rider number</div>
+      <div class="req-card">The cusmtomer wants to merchant number</div>
+      <div class="req-card">The cusmtomer wants to agent to call him</div>
+    </div>
+  </div>
+
+  <!-- 💬 Complaint -->
+  <div class="req-package">
+    <h4 class="req-title">💬 Complaint</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to Complain about restaurant</div>
+      <div class="req-card">The cusmtomer wants to Complain about rider</div>
+      <div class="req-card">The cusmtomer wants to Complain about agent</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  
+.req-package {
+  background:#fff;
+  border:1px solid #e0e8ff;
+  border-radius:14px;
+  padding:10px 14px;
+  margin:12px auto;
+  max-width:900px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.req-title {
+  color:#285eff;
+  font-size:15px;
+  margin-bottom:8px;
+  text-align:right;
+  border-right:4px solid #285eff33;
+  padding-right:8px;
+}
+
+/* 👇 السر هنا: auto-fit + minmax */
+.req-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:10px;
+  justify-items:center;
+  align-items:center;
+}
+
+.req-card {
+  width:100%;
+  height:55px;
+  background:#f9fbff;
+  border:1px solid #dce6ff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12.5px;
+  font-weight:500;
+  color:#1a2a55;
+  cursor:pointer;
+  transition:all .25s ease;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.req-card:hover {
+  background:#eaf1ff;
+  transform:scale(1.06);
+  box-shadow:0 3px 10px rgba(40,94,255,0.25);
+}
+
+/* 📱 للجوال */
+@media(max-width:600px){
+  .req-grid {
+    grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .req-card {
+    font-size:11.5px;
+    height:50px;
+  }
+}
+.req-card.blue {
+  background:#e7f0ff;
+  color:#0044cc;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(0,90,255,0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(0,80,255,0.25);
+}
+.req-card.green {
+  background:#9effca;
+  color:#0c7a29;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(5, 97, 32, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(7, 97, 43, 0.25);
+}
+.req-card.red {
+  background:#fd8383;
+  color:#720b0b;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(67, 8, 8, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(47, 9, 9, 0.25);
+}
+</style>
+
+<script>
+// 📋 نسخ النص عند الضغط
+document.addEventListener("click", e=>{
+  if(e.target.classList.contains("req-card")){
+    const text = e.target.textContent.trim();
+    navigator.clipboard.writeText(text);
+    showCopiedNotice(e.pageX, e.pageY);
+  }
+});
+
+// ✅ إشعار النسخ
+function showCopiedNotice(x,y){
+  const note=document.createElement("div");
+  note.textContent="✅ Copied!";
+  Object.assign(note.style,{
+    position:"fixed",left:x+"px",top:y-25+"px",
+    background:"rgba(255,255,255,0.9)",color:"#285eff",
+    padding:"5px 12px",borderRadius:"8px",
+    fontSize:"12px",fontWeight:"600",
+    backdropFilter:"blur(8px)",boxShadow:"0 4px 10px rgba(0,0,0,0.2)",
+    zIndex:"99999",opacity:"0",
+    transition:"opacity 0.3s ease, top 0.4s ease"
+  });
+  document.body.appendChild(note);
+  requestAnimationFrame(()=>{note.style.opacity="1";note.style.top=(y-45)+"px"});
+  setTimeout(()=>{note.style.opacity="0";note.style.top=(y-65)+"px";setTimeout(()=>note.remove(),400)},900);
+}
+</script>
 </div>
 <script>
 // دالة النسخ الذكية 👇
@@ -1738,37 +1746,8 @@ document.addEventListener("click", function (e) {
   showCopyAlert(e.pageX, e.pageY);
 });
 
-function showCopyAlert(x, y) {
-  let note = document.getElementById("copyAlert");
-  if (!note) {
-    note = document.createElement("div");
-    note.id = "copyAlert";
-    note.textContent = "✔ تم النسخ";
-    Object.assign(note.style, {
-      position: "absolute",
-      background: "#285eff",
-      color: "#fff",
-      padding: "5px 10px",
-      borderRadius: "6px",
-      fontSize: "13px",
-      fontFamily: "Cairo, sans-serif",
-      zIndex: "999999",
-      opacity: "0",
-      transition: "opacity .3s ease, transform .3s ease",
-      pointerEvents: "none",
-    });
-    document.body.appendChild(note);
-  }
 
-  note.style.left = `${x + 15}px`;
-  note.style.top = `${y - 10}px`;
-  note.style.opacity = "1";
-  note.style.transform = "translateY(-8px)";
-  setTimeout(() => {
-    note.style.opacity = "0";
-    note.style.transform = "translateY(0)";
-  }, 1000);
-}
+
 
 // 🔹 تعويض فقط
 
@@ -2600,13 +2579,14 @@ window.addEventListener("load", () => {
     animation: fadeIn .5s ease;
   ">
     <h2 style="color:#285eff;margin-bottom:12px;">اللهم هون على اهلنا في غزه والسودان</h2>
+    <h2 style="color:#285eff;margin-bottom:12px;">وَاتَّقُوا يَوْمًا تُرْجَعُونَ فِيهِ إِلَى اللَّهِ ۖ ثُمَّ تُوَفَّىٰ كُلُّ نَفْسٍ مَّا كَسَبَتْ وَهُمْ لَا يُظْلَمُونَ</h2>
     <p style="color:#1a1a1a;font-size:15px;">اقرأ الملاحظات ثم اضغط على تمّ القراءة 👇</p>
 
     <ul style="text-align:right;color:#333;font-size:20px;line-height:2;margin:15px 0;">
-      <li>  حتى لو عملت ريفريش اسمك راح يضل مكتوب</li>
-      <li>     مولد شكر انتظار ومولد تاكيد حل مشكله</li>
-      <li>صارت الاله الحاسبه ذكيه بتجمع ارقامك لو اكثر من صنف وكبسه تعيين جديد</li>
-      <li>  ضروري لما ارسلك خانه التحديث تحدث ✅</li>
+      <li style="color:#285eff;margin-bottom:12px;" > Thank you for using this project </li>
+      <li style="color:#285eff;margin-bottom:12px;" > Scan the code if you have a suggestion or have any problem.</li>
+      <li style="color:#285eff;margin-bottom:12px;" > All the required changes have been added.</li>
+      <li>  Please always update when you receive a notification. ✅</li>
     </ul>
 
     <button id="readBtn" style="
@@ -2620,7 +2600,7 @@ window.addEventListener("load", () => {
       font-weight:bold;
       transition:all .3s ease;
       animation: shake 2s infinite ease-in-out;
-    ">📖 تمّت القراءة</button>
+    ">📖  Click to Check</button>
 
     <br><br>
 
@@ -2635,7 +2615,7 @@ window.addEventListener("load", () => {
       position: relative;
       transition: transform 0.25s ease; /* أسرع */
       margin-top:10px;
-    ">تخطي ✨</button>
+    ">Skip ✨</button>
 
     <p id="funnyMsg" style="
       display:none;
@@ -2643,7 +2623,7 @@ window.addEventListener("load", () => {
       font-size:13px;
       font-weight:bold;
       margin-top:10px;
-    ">😂 مش قادر تكبس؟ اقرأ أول!</p>
+    ">Please click on Confirm. It is important that you read the notes.</p>
   </div>
 </div>
 
@@ -2702,214 +2682,6 @@ document.addEventListener("click", function(e) {
   setTimeout(() => (note.style.opacity = "0"), 1000);
 });
 </script>
-<!-- 🐍 لعبة الحية المتطورة -->
-<script>
-let snakeContainer, canvas, ctx, snake, direction, nextDirection, food, score, gameLoop, speed = 100, grid = 10;
-let isPaused = false; // ⏸️ حالة الإيقاف
-
-// 🎮 المفاتيح
-document.addEventListener("keydown", (e) => {
-  const key = e.key.toLowerCase();
-
-  // 🔹 Ctrl + M → إظهار أو إخفاء اللعبة
-  if ((e.ctrlKey || e.metaKey) && key === "m") {
-    e.preventDefault();
-    toggleSnake();
-  }
-
-  // 🔸 Shift → إيقاف أو استئناف
-  if (key === "shift") {
-    e.preventDefault();
-    togglePause();
-  }
-});
-
-function toggleSnake() {
-  // ✅ إذا مفتوحة: نخفيها ونوقفها
-  if (snakeContainer && snakeContainer.style.display === "block") {
-    pauseSnake(); // يوقف
-    snakeContainer.style.display = "none";
-  } 
-  // ✅ إذا مخفية: نرجعها، لكن تبقى موقوفة
-  else {
-    if (!snakeContainer) initSnake();
-    else {
-      snakeContainer.style.display = "block";
-      applyPausedStyle(); // ترجع بنفس شكل الإيقاف
-    }
-  }
-}
-
-function initSnake() {
-  if (!snakeContainer) {
-    snakeContainer = document.createElement("div");
-    Object.assign(snakeContainer.style, {
-      position: "fixed",
-      bottom: "20px",
-      left: "20px",
-      background: "rgba(15,15,25,0.95)",
-      border: "3px solid #b066ff",
-      borderRadius: "16px",
-      padding: "12px",
-      boxShadow: "0 0 25px rgba(176,102,255,0.6)",
-      zIndex: "99999",
-      transition: "all 0.3s ease"
-    });
-    snakeContainer.innerHTML = `
-      <canvas id="snakeCanvas" width="320" height="320" style="border-radius:12px; background:#000;"></canvas>
-      <div style="text-align:center; color:#fff; font-family:'Cairo',sans-serif; margin-top:8px;">
-        <span id="snakeScore">النقاط: 0</span>
-        <button id="restartSnake" style="background:#9b5cff;color:#fff;border:none;padding:6px 12px;border-radius:8px;margin-left:8px;cursor:pointer;">🔄 إعادة</button>
-        <button id="pauseSnake" style="background:#ff9900;color:#fff;border:none;padding:6px 12px;border-radius:8px;margin-left:8px;cursor:pointer;">⏸️ إيقاف</button>
-      </div>
-    `;
-    document.body.appendChild(snakeContainer);
-
-    document.getElementById("restartSnake").addEventListener("click", restartGame);
-    document.getElementById("pauseSnake").addEventListener("click", togglePause);
-  }
-
-  canvas = document.getElementById("snakeCanvas");
-  ctx = canvas.getContext("2d");
-
-  restartGame();
-  document.addEventListener("keydown", handleDirection);
-}
-
-function restartGame() {
-  snake = [
-    { x: 15 * grid, y: 15 * grid },
-    { x: 14 * grid, y: 15 * grid },
-    { x: 13 * grid, y: 15 * grid },
-  ];
-  direction = "RIGHT";
-  nextDirection = "RIGHT";
-  food = randomFood();
-  score = 0;
-  document.getElementById("snakeScore").textContent = "النقاط: 0";
-  clearInterval(gameLoop);
-  gameLoop = setInterval(drawGame, speed);
-  isPaused = false;
-  resetPausedStyle();
-}
-
-function handleDirection(e) {
-  const key = e.key.toLowerCase();
-  if (key === "arrowup" && direction !== "DOWN") nextDirection = "UP";
-  else if (key === "arrowdown" && direction !== "UP") nextDirection = "DOWN";
-  else if (key === "arrowleft" && direction !== "RIGHT") nextDirection = "LEFT";
-  else if (key === "arrowright" && direction !== "LEFT") nextDirection = "RIGHT";
-}
-
-function drawGame() {
-  if (isPaused) return; // 🚫 لا تتحرك أثناء الإيقاف
-
-  direction = nextDirection;
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, 320, 320);
-
-  // 🍎 رسم الطعام
-  const foodGradient = ctx.createRadialGradient(food.x + 5, food.y + 5, 2, food.x + 5, food.y + 5, 8);
-  foodGradient.addColorStop(0, "#ffaaaa");
-  foodGradient.addColorStop(1, "#ff3333");
-  ctx.fillStyle = foodGradient;
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = "#ff0000";
-  ctx.beginPath();
-  ctx.arc(food.x + 5, food.y + 5, 6, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // 🐍 حركة الرأس
-  const head = { ...snake[0] };
-  if (direction === "UP") head.y -= grid;
-  if (direction === "DOWN") head.y += grid;
-  if (direction === "LEFT") head.x -= grid;
-  if (direction === "RIGHT") head.x += grid;
-
-  // 💀 التحقق من الخسارة
-  if (head.x < 0 || head.y < 0 || head.x >= 320 || head.y >= 320 || snake.some(s => s.x === head.x && s.y === head.y)) {
-    clearInterval(gameLoop);
-    ctx.fillStyle = "#ff3333";
-    ctx.font = "22px Cairo";
-    ctx.textAlign = "center";
-    ctx.fillText("💀 خسرت! النقاط: " + score, 160, 160);
-    return;
-  }
-
-  // 🧩 أكل الطعام
-  snake.unshift(head);
-  if (head.x === food.x && head.y === food.y) {
-    score++;
-    document.getElementById("snakeScore").textContent = "النقاط: " + score;
-    food = randomFood();
-  } else {
-    snake.pop();
-  }
-
-  // 🟢 الحية المتوهجة بخط متصل ناعم
-  ctx.lineWidth = 16;
-  ctx.lineCap = "round";
-  ctx.shadowBlur = 18;
-  ctx.shadowColor = "#00ffcc";
-  const grad = ctx.createLinearGradient(snake[0].x, snake[0].y, snake[snake.length - 1].x, snake[snake.length - 1].y);
-  grad.addColorStop(0, "#00ffcc");
-  grad.addColorStop(1, "#6600ff");
-  ctx.strokeStyle = grad;
-
-  ctx.beginPath();
-  ctx.moveTo(snake[0].x + 5, snake[0].y + 5);
-  for (let i = 1; i < snake.length; i++) {
-    const prev = snake[i - 1];
-    const curr = snake[i];
-    ctx.quadraticCurveTo(prev.x + 5, prev.y + 5, (prev.x + curr.x) / 2 + 5, (prev.y + curr.y) / 2 + 5);
-  }
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-}
-
-function randomFood() {
-  const x = Math.floor(Math.random() * 31) * grid;
-  const y = Math.floor(Math.random() * 31) * grid;
-  return { x, y };
-}
-
-// 🟣 التحكم بالإيقاف والاستئناف
-function togglePause() {
-  isPaused = !isPaused;
-  document.getElementById("pauseSnake").textContent = isPaused ? "▶️ استئناف" : "⏸️ إيقاف";
-  isPaused ? applyPausedStyle() : resetPausedStyle();
-}
-
-function pauseSnake() {
-  isPaused = true;
-  clearInterval(gameLoop);
-  applyPausedStyle();
-}
-
-function resumeSnake() {
-  clearInterval(gameLoop);
-  gameLoop = setInterval(drawGame, speed);
-}
-
-function applyPausedStyle() {
-  if (!snakeContainer) return;
-  snakeContainer.style.border = "3px solid #777";
-  snakeContainer.style.boxShadow = "0 0 20px rgba(200,200,200,0.3)";
-  snakeContainer.animate(
-    [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }],
-    { duration: 1000, iterations: Infinity, easing: "ease-in-out" }
-  );
-}
-
-function resetPausedStyle() {
-  if (!snakeContainer) return;
-  snakeContainer.style.border = "3px solid #b066ff";
-  snakeContainer.style.boxShadow = "0 0 25px rgba(176,102,255,0.6)";
-  snakeContainer.getAnimations().forEach(a => a.cancel());
-}
-</script>
-
 <!-- 📜 زر فتح مولد الاعتذارات (مستقل تمامًا) -->
 <!-- 💬 زر فتح مولد الاعتذارات -->
 <button id="aplg_toggle" style="
@@ -2958,7 +2730,7 @@ function resetPausedStyle() {
     ">✖ إغلاق</button>
   </div>
 
-  <h3 style="color:#285eff; text-align:center; margin-top:5px;">سكربتات مخصصه لكل حاله  </h3>
+  <h3 style="color:#285eff; text-align:center; margin-top:5px;">Specific apology</h3>
 
   <!-- 🔘 أزرار الحالات -->
   <div style="text-align:center; margin-bottom:12px;">
@@ -2976,7 +2748,7 @@ function resetPausedStyle() {
 
   <!-- Missing -->
   <div id="aplg_missing" class="aplg_caseBox">
-    <button onclick="aplg_generate('missing')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('missing')" class="aplg_genBtn"> Create apology</button>
     <div class="aplg_output">
       <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
@@ -2985,7 +2757,7 @@ function resetPausedStyle() {
 
   <!-- Wrong -->
   <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
@@ -2994,7 +2766,7 @@ function resetPausedStyle() {
 
   <!-- Cold food -->
   <div id="aplg_coldfood" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_coldfood" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_coldfood" class="aplg_msg aplg_copy">—</div>
@@ -3003,7 +2775,7 @@ function resetPausedStyle() {
 
   <!-- Not delicious -->
   <div id="aplg_notdelicious" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_notdelicious" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_notdelicious" class="aplg_msg aplg_copy">—</div>
@@ -3012,7 +2784,7 @@ function resetPausedStyle() {
 
   <!-- Portion size -->
   <div id="aplg_portion" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('portion')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('portion')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_portion" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_portion" class="aplg_msg aplg_copy">—</div>
@@ -3021,7 +2793,7 @@ function resetPausedStyle() {
 
   <!-- General -->
   <div id="aplg_general" class="aplg_caseBox" style="display:none;">
-    <button onclick="aplg_generate('general')" class="aplg_genBtn">توليد اعتذار</button>
+    <button onclick="aplg_generate('general')" class="aplg_genBtn">Create apology </button>
     <div class="aplg_output">
       <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
       <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
@@ -3343,8 +3115,8 @@ function aplg_showCopiedNotice(x, y) {
 <!-- ✅ زر الواجهة الثانية -->
  <!-- ✅ الشريط السفلي الموحد -->
 <div id="bottomBar">
-  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#9ecbff;">السكربتات 🧩</button>
-  <button onclick="goHome()" style="color:#9ecbff;">الرئيسية 🏠</button>
+  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#295eff;">All scripts</button>
+  <button onclick="goHome()" style="color:#c8c8c8;">Main </button>
 </div>
 
 <div id="page2Overlay">
@@ -3518,7 +3290,7 @@ overlay.addEventListener("transitionstart", () => {
   padding:10px 18px;cursor:pointer;
   font-family:'Cairo',sans-serif;
   box-shadow:0 4px 15px rgba(0,0,0,0.3);
-  z-index:99999;">🧭 شرح المشروع</button>
+  z-index:99999;">🧭 Project guide  </button>
 
 <!-- ⚙️ شريط التحكم -->
 <div id="guideControls" style="
@@ -3530,10 +3302,10 @@ overlay.addEventListener("transitionstart", () => {
   font-family:'Cairo',sans-serif;z-index:999999;">
   <button id="nextGuide" style="
     background:#285eff;color:white;border:none;
-    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">التالي ⏭️</button>
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Next ⏭️</button>
   <button id="endGuide" style="
     background:#ff4d4d;color:white;border:none;
-    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">إنهاء 🏁</button>
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Done 🏁</button>
 </div>
 
 <!-- 🌫️ القناع الزجاجي -->
@@ -3591,7 +3363,7 @@ overlay.addEventListener("transitionstart", () => {
 document.addEventListener("DOMContentLoaded", ()=>{
   // الأقسام الأربعة
   const sections = [
-    {id:"apology", ar:"كلمة انشاء تقوم بوضع سكربت مختلف دائما نقره واحده لنسخ النص", en:"The word “Generate” creates a different script each time — one click to copy the text."},
+    {id:"apology", ar:"كلمة انشاء تقوم بوضع سكربت مختلف دائما نقره واحده لنسخ النص", en:"The word “Create” creates a different script each time — one click to copy the text."},
     {id:"hold", ar:"هنا لدينا القسم الهولد مشابه للاعتذار والسوليوشن لتسهيل صنع التكيت", en:"Here we have the Hold section, similar to the Apology and Solution sections, designed to make ticket creation easier."},
     {id:"chatScriptsSimple", ar:"هنا القسم المختص في بدايه الشات ضع اسمك حتى يظهر في السكربت ", en:"Here is the section dedicated to the beginning of the chat — enter your name so it appears in the script."},
     {id:"compensationSection", ar:"لدينا هنا التعويض في كل الحالات ثم الحاسبه وفي زاويه الشاشة سكربتات مخصصه لكل مشكله", en:"Here we have the compensation section for all cases, followed by the calculator, and in the corner of the screen, you’ll find special scripts for each issue."}
@@ -3675,7 +3447,7 @@ readBtn.animate([
 readBtn.onclick = () => {
   hasRead = true;
   readBtn.style.background = "#22c55e";
-  readBtn.textContent = "✅ تم التأكيد";
+  readBtn.textContent = "✅ Done";
   funnyMsg.style.display = "none";
   skipBtn.style.transform = "translateX(0)";
 };
@@ -3734,6 +3506,80 @@ function closePopup() {
   }, 500);
 }
 </script>
-</body>
+<script>
+// 🧊 إعداد إشعار النسخ الزجاجي المتحرك
+let followNote = null;
+let mouseX = 0, mouseY = 0;
 
+// 🔹 تتبع حركة الماوس
+document.addEventListener("mousemove", (e)=>{
+  mouseX = e.clientX + 20;
+  mouseY = e.clientY + 20;
+  if (followNote) {
+    followNote.style.left = mouseX + "px";
+    followNote.style.top = mouseY + "px";
+  }
+});
+
+// 💬 إنشاء وإظهار الإشعار الزجاجي
+function showCopyNotice(sectionName){
+  if (!followNote){
+    followNote = document.createElement("div");
+    Object.assign(followNote.style, {
+      position: "fixed",
+      pointerEvents: "none",
+      zIndex: "999999",
+      padding: "10px 18px",
+      borderRadius: "14px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      fontWeight: "600",
+      backdropFilter: "blur(12px)",
+      background: "rgba(255,255,255,0.35)",
+      color: "#003cff",
+      boxShadow: "0 4px 18px rgba(0,0,0,0.25)",
+      transition: "opacity 0.3s ease, transform 0.3s ease",
+      opacity: "0",
+      transform: "scale(0.95)"
+    });
+    document.body.appendChild(followNote);
+  }
+
+  followNote.innerHTML = `<span style="color:#285eff;">${sectionName}</span>`;
+  followNote.style.left = mouseX + "px";
+  followNote.style.top = mouseY + "px";
+  followNote.style.opacity = "1";
+  followNote.style.transform = "scale(1)";
+
+  clearTimeout(followNote.hideTimeout);
+  followNote.hideTimeout = setTimeout(()=>{
+    followNote.style.opacity = "0";
+    followNote.style.transform = "scale(0.95)";
+  }, 1800);
+}
+
+// 🧠 النسخ الذكي فقط لعناصر النصوص المحددة
+document.addEventListener("click", (e)=>{
+  // ✅ تجاهل الأزرار وحقول الإدخال
+  if (["BUTTON", "INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+  // ✅ العناصر المسموح فيها النسخ فقط
+  const el = e.target.closest(
+    ".msg, .aplg_msg, .req-card, .chat-row div, .aplg_copy"
+  );
+  if (!el) return;
+
+  const text = el.textContent?.trim();
+  if (!text || text === "—" || text === "~" || text.length < 2) return;
+
+  // 🔍 تحديد اسم القسم تلقائيًا
+
+
+  // 📋 تنفيذ النسخ
+  navigator.clipboard.writeText(text)
+    .then(()=> showCopyNotice(sectionName))
+    .catch(()=> showCopyNotice("تم النسخ"));
+});
+</script>
+</body>
 </html>
