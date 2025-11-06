@@ -536,5 +536,84 @@ function scrollToSection(id) {
   }, 10000); // يختفي بعد ثانيتين
 }
 </script>
+<!-- 🌙 زر الوضع الليلي -->
+<button id="darkModeBtn" style="
+  position:fixed;bottom:100px;right:25px;
+  background:linear-gradient(135deg,#111,#333);
+  color:#fff;border:none;border-radius:50px;
+  padding:10px 20px;font-size:16px;
+  font-family:'Cairo',sans-serif;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  cursor:pointer;z-index:99999;
+  transition:all 0.3s ease;">🌙 الوضع الليلي</button>
+
+<script>
+const darkBtn = document.getElementById("darkModeBtn");
+let darkMode = localStorage.getItem("darkMode") === "true";
+applyTheme();
+
+darkBtn.addEventListener("click", () => {
+  darkMode = !darkMode;
+  localStorage.setItem("darkMode", darkMode);
+  applyTheme();
+});
+
+function applyTheme() {
+  const sections = document.querySelectorAll(".section");
+  const titles = document.querySelectorAll("h1,h2,h3");
+  const msgs = document.querySelectorAll(".msg");
+  const body = document.body;
+
+  if (darkMode) {
+    body.style.background = "#0b0f1a";
+    body.style.color = "#fff";
+    titles.forEach(t => t.style.color = "#7ab0ff");
+    msgs.forEach(m => {
+      m.style.background = "#141a2a";
+      m.style.color = "#ffffff";
+      m.style.border = "1px solid rgba(255,255,255,0.1)";
+    });
+    sections.forEach(s => {
+      // يغمّق اللون الأصلي بدون ما يخربه
+      let grad = window.getComputedStyle(s).backgroundImage;
+      s.style.backgroundImage = grad.replace(/#[0-9a-fA-F]{6}/g, m => darkenColor(m, 0.5));
+      s.style.color = "#fff";
+      s.style.boxShadow = "0 4px 20px rgba(255,255,255,0.05)";
+    });
+    darkBtn.innerHTML = "☀️ الوضع النهاري";
+    darkBtn.style.background = "linear-gradient(135deg,#285eff,#00bfff)";
+  } else {
+    body.style.background = "linear-gradient(120deg,#eef3ff,#f7faff)";
+    body.style.color = "#222";
+    titles.forEach(t => t.style.color = "#285eff");
+    msgs.forEach(m => {
+      m.style.background = "#f9fbff";
+      m.style.color = "#111";
+      m.style.border = "1px solid #dce6ff";
+    });
+    sections.forEach(s => {
+      let grad = s.getAttribute("style");
+      s.setAttribute("style", grad); // نرجع الألوان الأصلية
+      s.style.color = "#111";
+      s.style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)";
+    });
+    darkBtn.innerHTML = "🌙 الوضع الليلي";
+    darkBtn.style.background = "linear-gradient(135deg,#111,#333)";
+  }
+}
+
+// 🌓 دالة لتغميق اللون
+function darkenColor(hex, amount = 0.3) {
+  let c = hex.substring(1);
+  let num = parseInt(c, 16);
+  let r = (num >> 16) - (255 * amount);
+  let g = ((num >> 8) & 0x00FF) - (255 * amount);
+  let b = (num & 0x0000FF) - (255 * amount);
+  r = Math.max(0, r);
+  g = Math.max(0, g);
+  b = Math.max(0, b);
+  return "#" + ((1 << 24) + (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b)).toString(16).slice(1);
+}
+</script>
 </body>
 </html>
