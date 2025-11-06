@@ -433,7 +433,7 @@ async function checkVersion() {
     const res = await fetch("version.json?nocache=" + Date.now());
     const data = await res.json();
 
-    const currentVersion = "1.1.1"; // ← غيّر رقم النسخة الحالية في صفحتك
+    const currentVersion = "1.1.2"; // ← غيّر رقم النسخة الحالية في صفحتك
 
     // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
     if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
@@ -849,7 +849,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
  
 
   <h2>🔹 Hold for merchant </h2>
-  <div class="fixed-hold-cards">
+  <div  style="color: black ;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.</div>
 
@@ -859,16 +859,16 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
 </div>
 
  <h2>🔹 Hold for rider</h2>
-  <div class="fixed-hold-cards">
+  <div style="color: black ;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.</div>
 
-  <div class="hold-card" onclick="copyMsg(this)">
+  <div style="color: black ;" class="hold-card" onclick="copyMsg(this)">
   Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience</div>
    
 </div>
 <h3>🔹 Cancel order</h3>
-  <div class="fixed-hold-cards">
+  <div style="color: black ;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.</div>
 
@@ -877,7 +877,7 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
   </div>
   
    <h5>🔹 Refused to cancel</h5>
-  <div class="fixed-hold-cards">
+  <div style="color: black ;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه</div>
 
@@ -897,14 +897,14 @@ document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
     <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
   </div>
   <!-- كروت سكربتات ثابتة للهولد -->
-<div class="fixed-hold-cards">
+<div  style="color:black;" class="fixed-hold-cards">
   <div class="hold-card" onclick="copyMsg(this)">
     ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟
 شكراً على صبرك.
 
 
   </div>
-  <div class="hold-card" onclick="copyMsg(this)">
+  <div  style="color:black;" class="hold-card" onclick="copyMsg(this)">
    Could you please give me a minute to check on this for you? Thank you for your patience.
   </div>
 </div>
@@ -1281,7 +1281,7 @@ function updateRestaurant() {
   <!-- أي خدمة إضافية -->
   <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
     <h3 class="chat-title" style="color:#c77b00;">❓ After solve issue </h3>
-    <div id="extraServiceBox" 
+    <div style="color: black;" id="extraServiceBox" 
      style="background:#fffbea;padding:16px;border-radius:14px;
             border:1px solid #ffe58a;text-align:center;font-family:'Cairo',sans-serif;">
 
@@ -1300,13 +1300,13 @@ function updateRestaurant() {
        style="display:flex;justify-content:center;align-items:stretch;
               gap:10px;margin-top:10px;flex-wrap:wrap;">
     <div id="arabicBox" class="msgBox"
-         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+         style="flex:1;min-width:180px;background:#ffffff00;border:1px solid #dddddd00;
                 border-radius:10px;padding:10px;text-align:right;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
       هل يمكنني مساعدتك بأي خدمة أخرى عميلنا العزيز؟
     </div>
 
     <div id="englishBox" class="msgBox"
-         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+         style="flex:1;min-width:180px;background:#ffffff00;border:1px solid #dddddd00;
                 border-radius:10px;padding:10px;text-align:left;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
       Is there anything else I can help you with?
     </div>
@@ -1314,7 +1314,8 @@ function updateRestaurant() {
 </div>
 
 <script>
-const servicePairs = [
+
+const  servicePairs   = [
   ["هل أستطيع مساعدتك في أمر آخر اليوم؟","Can I assist you with anything else today?"],
   ["هل هناك أي خدمة إضافية يمكنني تقديمها لك؟","Is there any additional service I can provide?"],
   ["هل ترغب أن أتحقق لك من شيء آخر؟","Would you like me to check something else for you?"],
@@ -1342,7 +1343,7 @@ document.getElementById("generateService").addEventListener("click", () => {
   </div>
 
   <!-- الختامية -->
-  <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
+  <div  class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
     <h3 class="chat-title" style="color:#7b2cbf;">✅ End of conversation</h3>
     <div class="chat-row">
       <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
@@ -1551,9 +1552,9 @@ resetAutoTimer();
     <h4 class="req-title">💰 Compensation & Refund</h4>
     <div class="req-grid">
       <div class="req-card blue">The customer has no specific request</div>
-      <div class="req-card green">The cusmtomer wants to get comepensation</div>
-      <div class="req-card">The cusmtomer wants to get refund</div>
-      <div class="req-card">The cusmtomer wants to get more comepensation</div>
+      <div class="req-card green">The customer wants to get comepensation</div>
+      <div class="req-card">The customer wants to get refund</div>
+      <div class="req-card">The customer wants to get more comepensation</div>
     </div>
   </div>
 
@@ -1562,9 +1563,9 @@ resetAutoTimer();
     <h4 class="req-title">📝 Note</h4>
     <div class="req-grid">
       <div class="req-card blue">The customer has no specific request</div>
-      <div class="req-card green">The cusmtomer wants to change order</div>
-      <div class="req-card">The cusmtomer wants to add a note</div>
-      <div class="req-card red">The cusmtomer wants to cancel order</div>
+      <div class="req-card green">The customer wants to change order</div>
+      <div class="req-card">The customer wants to add a note</div>
+      <div class="req-card red">The customer wants to cancel order</div>
     </div>
   </div>
 
@@ -1573,9 +1574,9 @@ resetAutoTimer();
     <h4 class="req-title">📞 Call Requested</h4>
     <div class="req-grid">
       <div class="req-card blue">The customer has no specific request</div>
-      <div class="req-card">The cusmtomer wants to rider number</div>
-      <div class="req-card">The cusmtomer wants to merchant number</div>
-      <div class="req-card">The cusmtomer wants to agent to call him</div>
+      <div class="req-card">The customer wants to rider number</div>
+      <div class="req-card">The customer wants to merchant number</div>
+      <div class="req-card">The customer wants to agent to call him</div>
     </div>
   </div>
 
@@ -1584,9 +1585,9 @@ resetAutoTimer();
     <h4 class="req-title">💬 Complaint</h4>
     <div class="req-grid">
       <div class="req-card blue">The customer has no specific request</div>
-      <div class="req-card green">The cusmtomer wants to Complain about restaurant</div>
-      <div class="req-card">The cusmtomer wants to Complain about rider</div>
-      <div class="req-card">The cusmtomer wants to Complain about agent</div>
+      <div class="req-card green">The customer wants to Complain about restaurant</div>
+      <div class="req-card">The customer wants to Complain about rider</div>
+      <div class="req-card">The customer wants to Complain about agent</div>
     </div>
   </div>
 </div>
@@ -1758,14 +1759,14 @@ function startCompensation() {
 
     <!-- سكربت عربي -->
     <div class="msgBox" onclick="copyText(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+      style="background:#black;border:1px solid #d6e4ff;
       padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
       نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.
     </div>
 
     <!-- سكربت إنجليزي -->
     <div class="msgBox" onclick="copyText(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+      style="background:#blackred;border:1px solid #d6e4ff;
       padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
       Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.
     </div>
@@ -1809,8 +1810,8 @@ function startRefund() {
     <h2 style="color:#285eff;"> قسم الاسترداد والتعويض</h2>
 
     <!-- سكربت عربي -->
-    <div class="msgBox" onclick="copyText(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+    <div  class="msgBox" onclick="copyText(this)" 
+      style="background:#black;border:1px solid #d6e4ff;
       padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
       نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، 
       مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
@@ -1818,7 +1819,7 @@ function startRefund() {
 
     <!-- سكربت إنجليزي -->
     <div class="msgBox" onclick="copyText(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+      style="background:#black;border:1px solid #d6e4ff;
       padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
       Sorry for the inconvenience. We can refund (      ) SAR 
       and apply total of (      ) SAR compensation.
@@ -1973,14 +1974,14 @@ function startOnlyRefund() {
 
     <!-- سكربت عربي -->
     <div id="refundAr" class="msgBox" onclick="copyMsg(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+      style="background:#black;border:1px solid #d6e4ff;
       padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
       نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (<b id="refundValAr">—</b>) ريال سعودي لطلبك
     </div>
 
     <!-- سكربت إنجليزي -->
     <div id="refundEn" class="msgBox" onclick="copyMsg(this)" 
-      style="background:#f7faff;border:1px solid #d6e4ff;
+      style="background:#black;border:1px solid #d6e4ff;
       padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
       Sorry for the inconvenience. We can refund (<b id="refundValEn">—</b>) SAR for your order right away
     </div>
@@ -3581,5 +3582,96 @@ document.addEventListener("click", (e)=>{
     .catch(()=> showCopyNotice("تم النسخ"));
 });
 </script>
+<!-- 🌙 زر التبديل -->
+<button id="darkToggle" style="
+  position:fixed;bottom:90px;right:25px;
+  background:#222;color:#fff;
+  border:none;border-radius:50px;
+  padding:10px 22px;font-size:16px;
+  font-family:'Cairo',sans-serif;
+  cursor:pointer;z-index:9999;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  transition:all 0.3s ease;">🌙 الوضع الليلي</button>
+
+<script>
+const darkBtn = document.getElementById("darkToggle");
+const body = document.body;
+
+darkBtn.addEventListener("click", () => {
+  body.classList.toggle("dark-mode");
+  const dark = body.classList.contains("dark-mode");
+  localStorage.setItem("darkMode", dark);
+  darkBtn.textContent = dark ? "☀️ الوضع النهاري" : "🌙 الوضع الليلي";
+});
+
+// 🔁 استرجاع الوضع عند إعادة التحميل
+if (localStorage.getItem("darkMode") === "true") {
+  body.classList.add("dark-mode");
+  darkBtn.textContent = "☀️ الوضع النهاري";
+}
+</script>
+
+<style>
+/* ✨ الوضع الليلي العام */
+.dark-mode {
+  background: #0b0f1a !important;
+  color: #fff !important;
+  transition: all 0.4s ease;
+}
+
+/* 🧱 كل الأقسام */
+.dark-mode .section {
+  background: #12121264 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* 💬 الكروت */
+.dark-mode .msg {
+  background: #00000033 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.08) !important;
+}
+
+/* 💡 كروت عند المرور */
+.dark-mode .msg:hover {
+  background: #11111100 !important;
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(100,150,255,0.25) !important;
+}
+
+/* 🩵 العناوين */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode .sub-title {
+  color: #7fb6ff !important;
+}
+
+/* 🌫️ الشريط السفلي */
+.dark-mode #bottomBar {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 0 20px rgba(255,255,255,0.05) !important;
+}
+
+/* 🔘 زر الوضع */
+#darkToggle:hover {
+  transform: scale(1.07);
+  background:#285eff;
+}
+
+/* 🩶 حتى العناصر ذات الخلفيات المحددة */
+.dark-mode [style*="background:linear-gradient"],
+.dark-mode [style*="background:#fff"],
+.dark-mode [style*='background: #fff'],
+.dark-mode [style*='background: white'] {
+  background: #121212 !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+</style>
 </body>
 </html>
