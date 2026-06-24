@@ -1,0 +1,3585 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" href="jordan.png" type="image/png" sizes="32x32">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>اعتذارات وهولد</title>
+<style>
+ .madeby {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #285eff; 
+  background: #ffffffcc; 
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  opacity: 0.9;
+  z-index: 99999;
+  transition: opacity .6s ease, transform .6s ease, background .3s;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.madeby:hover {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.madeby--hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
+  @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  button {
+    background: linear-gradient(45deg,#4b8cff,#72a9ff);
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .3s;
+  }
+  button:hover { transform: scale(1.05); background: linear-gradient(45deg,#3f7eff,#609dff); }
+  .box {
+    margin-top:14px;
+    display: flex;
+    justify-content: space-between;
+    gap:10px;
+  }
+  .msg {
+    background:#f3f7ff;
+    border:1px solid #d8e5ff;
+    border-radius:10px;
+    padding:12px;
+    flex:1;
+    cursor:pointer;
+    transition:.2s;
+    min-height:90px;
+    overflow-y:auto;
+  }
+  .msg:hover { background:#e9f1ff; }
+  .popup {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    padding:30px 40px;
+    text-align:center;
+    z-index:999;
+    animation: pop .5s ease;
+  }
+  @keyframes pop {from{opacity:0;transform:translate(-50%,-60%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .hidden{display:none;}
+  .popup button{margin-top:20px;}
+  .calc-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.calc-box input {
+  padding: 12px;
+  font-size: px;
+  border-radius: 5px;
+  border: 1px solid #c9dafd;
+  outline: none;
+  text-align: center;
+  transition: .3s;
+}
+.calc-box input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 3px #5b8def22;
+}
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+.calc-result {
+  background: #f3f7ff;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #e1e9ff;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px 16px;
+  align-items: center;
+}
+.call-box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  direction: ltr;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.btn {
+  cursor: pointer;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.btn.primary {
+  background: #285eff;
+  color: #fff;
+  border: none;
+}
+textarea#output {
+  width: 90%;
+  min-height: 160px;
+  resize: none;
+  white-space: pre-wrap;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #d8e5ff;
+}
+
+.solution {
+  margin-top: 10px;
+}
+
+.solution-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.solution-grid label {
+  font-weight: 600;
+  color: #285eff;
+}
+
+.solution-grid select,
+.solution-grid input {
+  padding: 8px;
+  border: 1px solid #c9dafd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.solution-grid select:focus,
+.solution-grid input:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 2px #5b8def33;
+}
+
+.solution textarea {
+  width: 100%;
+  margin-top: 12px;
+  min-height: 90px;
+  resize: none;
+  border: 1px solid #c9dafd;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.main-sections {
+  display: flex;
+  flex-wrap: nowrap; /* ما ينزل شيء */
+  gap: 25px;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-x: auto; /* تمرير أفقي فقط لو الشاشة صغيرة */
+  scroll-behavior: smooth;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100vw; /* يمنع التمدد الزايد */
+
+  /* مظهر الشريط */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.4) rgba(0,0,0,0.1);
+}
+
+.main-sections::-webkit-scrollbar {
+  height: 8px;
+}
+.main-sections::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.main-sections::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+}
+
+/* البوكسات نفس العرض حتى ما تنزل */
+.section {
+  flex: 0 0 350px; /* 👈 عرض ثابت يمنع النزول */
+  max-width: 350px;
+}
+/* 💎 الصناديق الزجاجية */
+.section {
+  flex: 1 1 340px;
+  max-width: 360px;
+  min-height: 520px; /* 👈 يثبت طول البوكس */
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✨ تأثير ناعم عند المرور */
+.section:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(80, 150, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 💡 لمعان زجاجي خفيف */
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.05));
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+
+/* 💎 ستايل زجاجي بحدود مضيئة ثابتة */
+/* 🧊 الحقول */
+.card select,
+.card input,
+.card textarea {
+  background: rgba(255, 255, 255, 0.20);
+  border: 1.5px solid rgba(150, 180, 255, 0.6);
+  color: #111;
+  border-radius: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card select:focus,
+.card input:focus,
+.card textarea:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(120, 160, 255, 1);
+  box-shadow: 0 0 10px rgba(120, 160, 255, 0.5);
+  outline: none;
+}
+
+/* 💙 الأزرار */
+.card .btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(70, 120, 255, 0.9), rgba(120, 160, 255, 0.9));
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(90, 140, 255, 0.35);
+  backdrop-filter: blur(10px);
+}
+.card .btn:hover {
+  background: linear-gradient(135deg, rgba(80, 130, 255, 1), rgba(140, 180, 255, 1));
+  transform: scale(1.05);
+}
+
+/* ✨ تلميح النص */
+.card .hint {
+  text-align: center;
+  font-size: 13px;
+  color: #2e5fff;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+/* 🎯 تصغير الطول لحقل Compensation مع الحفاظ على نفس المظهر */
+#compensation {
+  width: 85%;
+  height: 34px; /* 👈 أقصر شوي فقط */
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(200, 220, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15); /* 👈 نفس خلفية الزجاج */
+  backdrop-filter: blur(12px);
+  color: #1a1a1a;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* ✨ تأثير عند التفاعل */
+#compensation:hover,
+#compensation:focus {
+  border-color: rgba(91, 141, 239, 0.9);
+  box-shadow: 0 0 10px rgba(91, 141, 239, 0.25);
+  
+}
+/* 💰 زر التعويض */
+#compensationBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(15, 25, 60, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#compensationBtn:hover {
+  background: rgba(50, 70, 150, 0.9) !important;
+  box-shadow: 0 0 15px rgba(90, 150, 255, 0.5) !important;
+  transform: scale(1.06) !important;
+}
+
+/* 💳 زر الاسترداد */
+#refundcompBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(50, 20, 10, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#refundcompBtn:hover {
+  background: rgba(110, 40, 20, 0.9) !important;
+  box-shadow: 0 0 15px rgba(255, 180, 100, 0.5) !important;
+  transform: scale(1.06) !important;
+}
+
+#refundBtn {
+  all: unset !important;
+  display: inline-block !important;
+  background: rgba(179, 67, 30, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 10px 22px !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  text-align: center !important;
+}
+#refundBtn:hover {
+  background: rgba(110, 40, 20, 0.9) !important;
+  box-shadow: 0 0 15px rgba(255, 180, 100, 0.5) !important;
+  transform: scale(1.06) !important;
+}
+</style>
+</head>
+<body>
+  
+ <script>
+async function checkVersion() {
+  try {
+    const res = await fetch("version.json?nocache=" + Date.now());
+    const data = await res.json();
+
+    const currentVersion = "1.1.1"; // ← غيّر رقم النسخة الحالية في صفحتك
+
+    // 🔹 إذا وجد نسخة جديدة، أظهر التنبيه مرة واحدة فقط
+    if (data.version.trim() !== currentVersion.trim() && !document.getElementById("updateNotice")) {
+      showUpdateNotice();
+    }
+  } catch (e) {
+    console.log("⚠️ فشل التحقق من النسخة:", e);
+  }
+}
+
+function showUpdateNotice() {
+  // 🔹 إنشاء العنصر الزجاجي
+  const notice = document.createElement("div");
+  notice.id = "updateNotice";
+  notice.innerHTML = `
+    <div class="update-glass">
+      <h3>✨ System need update  </h3>
+     <p>Press Enter to refresh and get the latest version.</p>
+    </div>
+  `;
+  document.body.appendChild(notice);
+
+  // 🔹 عند الضغط على Enter يتم التحديث
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      location.reload(true);
+    }
+  });
+}
+
+// ⏳ التحقق كل 20 ثانية (يمكنك زيادتها)
+setInterval(checkVersion, 5000);
+</script>
+
+<style>
+/* 🧊 صندوق التحديث الزجاجي */
+.update-glass {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 18px 26px;
+  text-align: center;
+  color: #1c2742;
+  font-family: 'Cairo', sans-serif;
+  min-width: 260px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  z-index: 99999;
+  animation: glassFade 0.8s ease forwards, gentlePulse 3s ease-in-out infinite;
+}
+
+.update-glass h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #003cff;
+}
+
+.update-glass p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  color: #243b70;
+}
+
+/* ✨ الدخول الناعم */
+@keyframes glassFade {
+  from {opacity: 0; transform: translateY(15px) scale(0.95);}
+  to {opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* 💫 اهتزاز ناعم متكرر */
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 120, 255, 0.25); }
+  50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(0, 120, 255, 0.5); }
+}
+</style>
+
+  <div class="madeby">Made by Abdelrahman soub </div>
+
+  <!-- 🕒 ساعة الأردن (12 ساعة) -->
+<div id="jordanClock">🕒 00:00:00 AM 🇯🇴</div>
+
+<!-- 🌍 قائمة الدول (تظهر عند الضغط على الساعة) -->
+<div id="countryTimes">
+  <div class="country-time" id="sa-time">🇸🇦 السعودية: --:--:-- --</div>
+  <div class="country-time" id="ae-time">🇦🇪 الإمارات: --:--:-- --</div>
+  <div class="country-time" id="kw-time">🇰🇼 الكويت: --:--:-- --</div>
+</div>
+
+<!-- 🌐 روابط مهمة للشركة (جانب الساعة) -->
+<div id="linksBtn" style="
+  position:fixed;
+  top:10px;
+  right:500px; /* عدّل المسافة إذا الساعة قريبة */
+  z-index:99999;
+">
+  <button id="toggleLinks" style="
+    background:rgba(255,255,255,0.25);
+    backdrop-filter:blur(12px) saturate(160%);
+    -webkit-backdrop-filter:blur(12px) saturate(160%);
+    border:1px solid rgba(40,94,255,0.3);
+    border-radius:12px;
+    color:#285eff;
+    padding:8px 14px;
+    font-family:'Cairo',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    box-shadow:0 4px 15px rgba(40,94,255,0.25);
+    transition:0.3s;
+  ">🔗 Links</button>
+</div>
+
+<div id="linksPanel" style="
+  display:none;
+  position:fixed;
+  top:55px;
+  right:360px;
+  width:280px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(12px) saturate(180%);
+  -webkit-backdrop-filter:blur(12px) saturate(180%);
+  border:1px solid rgba(40,94,255,0.25);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(40,94,255,0.2);
+  padding:14px;
+  z-index:99998;
+  font-family:'Cairo',sans-serif;
+  color:#002b77;
+">
+  <h3 style="text-align:center; margin:0 0 10px 0; color:#285eff;">روابط الشركة</h3>
+
+  <div class="link-item"><a href="https://cstickets.csmena.com/csmenahrms/Odoo/signin.php" target="_blank"> Csmena</a></div>
+  <div class="link-item"><a href="https://meituan.my.salesforce.com" target="_blank"> Salesforce</a></div>
+  <div class="link-item"><a href="https://opcenter.mykeeta.com/" target="_blank"> Keeta</a></div>
+  <div class="link-item"><a href="https://km.sankuai.com/" target="_blank"> SOP</a></div>
+  <div class="link-item"><a href="https://x.sankuai.com/" target="_blank"> Daxiang</a></div>
+    <div class="link-item"><a href="https://keeservice-eu.mykeeta.com/index.html#/login" target="_blank"> keeservice</a></div>
+</div>
+
+
+
+
+<style>
+.link-item {
+  margin:8px 0;
+  text-align:center;
+  transition:0.2s;
+}
+.link-item a {
+  display:inline-block;
+  background:rgba(255,255,255,0.6);
+  padding:8px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  color:#0037ff;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(40,94,255,0.15);
+  transition:all 0.25s ease;
+}
+.link-item a:hover {
+  background:#285eff;
+  color:#fff;
+  transform:scale(1.06);
+}
+</style>
+
+<script>
+const btn = document.getElementById("toggleLinks");
+const panel = document.getElementById("linksPanel");
+
+btn.addEventListener("click", () => {
+  const isVisible = panel.style.display === "block";
+  panel.style.display = isVisible ? "none" : "block";
+});
+
+// يغلق اللوحة عند النقر خارجها
+document.addEventListener("click", (e) => {
+  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.style.display = "none";
+  }
+});
+</script>
+
+
+<style>
+  /* 🎨 شكل الساعة الرئيسي */
+  #jordanClock {
+    position: fixed;
+    top: 10px;
+    right: 260px;
+    color: #285eff;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(40, 94, 255, 0.4);
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 22px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 0 3px 15px rgba(40, 94, 255, 0.25);
+    z-index: 99999;
+    user-select: none;
+    animation: fadeInClock 1s ease, floatClock 3s ease-in-out infinite alternate;
+    cursor: pointer;
+  }
+
+  @keyframes fadeInClock {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes floatClock {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-6px); }
+  }
+
+  /* 💠 القائمة الزجاجية أسفل الساعة */
+  #countryTimes {
+    position: fixed;
+    top: 65px;
+    right: 260px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(40, 94, 255, 0.4);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+    color: #285eff;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 0 3px 15px rgba(40, 94, 255, 0.25);
+    z-index: 99998;
+    text-align: center;
+    display: none;
+    animation: fadeInList 0.4s ease forwards;
+  }
+
+  .country-time {
+    margin: 6px 0;
+    font-weight: 600;
+    text-shadow: 0 1px 5px rgba(40, 94, 255, 0.15);
+  }
+
+  @keyframes fadeInList {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  // 🕒 الأردن
+  function updateJordanClock() {
+    const now = new Date();
+    const jordanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Amman" }));
+    
+    let hours = jordanTime.getHours();
+    const minutes = String(jordanTime.getMinutes()).padStart(2, "0");
+    const seconds = String(jordanTime.getSeconds()).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    
+    document.getElementById("jordanClock").textContent = `🕒 ${hours}:${minutes}:${seconds} ${ampm} 🇯🇴`;
+  }
+
+  // 🌍 الدول الثلاث
+  function getCountryTime(zone) {
+    const now = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: zone,
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    }).formatToParts(now);
+
+    let h = '12', m = '00', s = '00', am = 'AM';
+    for (const p of fmt) {
+      if (p.type === 'hour') h = p.value.padStart(2, '0');
+      if (p.type === 'minute') m = p.value.padStart(2, '0');
+      if (p.type === 'second') s = p.value.padStart(2, '0');
+      if (p.type === 'dayPeriod') am = p.value.toUpperCase();
+    }
+    return `${h}:${m}:${s} ${am}`;
+  }
+
+  function updateCountries() {
+    document.getElementById("sa-time").textContent = `🇸🇦 السعودية: ${getCountryTime("Asia/Riyadh")}`;
+    document.getElementById("ae-time").textContent = `🇦🇪 الإمارات: ${getCountryTime("Asia/Dubai")}`;
+    document.getElementById("kw-time").textContent = `🇰🇼 الكويت: ${getCountryTime("Asia/Kuwait")}`;
+  }
+
+  setInterval(() => {
+    updateJordanClock();
+    updateCountries();
+  }, 1000);
+
+  updateJordanClock();
+  updateCountries();
+
+  // 📱 عرض وإخفاء القائمة
+  const clock = document.getElementById("jordanClock");
+  const list = document.getElementById("countryTimes");
+  let isVisible = false;
+
+  clock.addEventListener("click", () => {
+    isVisible = !isVisible;
+    list.style.display = isVisible ? "block" : "none";
+  });
+
+  
+</script>
+
+<!-- 🔘 زر عرض QR (فوق بجانب الترجمة) -->
+<button onclick="toggleQR()" style="
+  position:fixed;
+  top:10px;
+  left:650px; /* ← عدّلها حسب موقع الترجمة عندك */
+  background:#285eff;
+  color:white;
+  border:none;
+  border-radius:50px;
+  padding:10px 18px;
+  cursor:pointer;
+  font-family:'Cairo',sans-serif;
+  font-size:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  z-index:99999;
+  transition:transform 0.3s ease, background 0.3s ease;
+">
+    ?  For any suggestions 
+</button>
+
+<!-- 🖼️ نافذة QR -->
+<div id="qrPopup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  justify-content:center;
+  align-items:center;
+  z-index:99998;
+">
+  <div style="text-align:center;">
+    <p style="
+      color:white;
+      font-family:'Cairo',sans-serif;
+      font-size:16px;
+      margin-bottom:10px;
+      animation:fadeIn 0.8s ease;">📱    Scan code please </p>
+    <img src="https://soubabood15.github.io/sulotion/qr.png"
+         alt="QR Code"
+         style="width:230px;border-radius:12px;
+                box-shadow:0 4px 25px rgba(0,0,0,0.4);
+                opacity:0;transform:scale(0.8);
+                transition:opacity 0.4s ease, transform 0.4s ease;">
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+
+<script>
+function toggleQR(){
+  const qr = document.getElementById("qrPopup");
+  const img = qr.querySelector("img");
+  const isVisible = qr.style.display === "flex";
+
+  if (!isVisible) {
+    qr.style.display = "flex";
+    setTimeout(()=>{
+      img.style.opacity = "1";
+      img.style.transform = "scale(1)";
+    },10);
+  } else {
+    img.style.opacity = "0";
+    img.style.transform = "scale(0.8)";
+    setTimeout(()=> qr.style.display = "none",300);
+  }
+}
+document.getElementById("qrPopup").addEventListener("click",()=>toggleQR());
+</script>
+<div class="main-sections">
+<!-- القسم الأيمن -->
+<div class="section" id="apology">
+  <h2 style="color:#285eff;"> Apology</h2>
+
+  <h3 style="color:#285eff;">Long apologies </h3>
+  <button onclick="generate('longApology')">Create apology</button>
+  <div class="box">
+    <div class="msg" id="longAr" onclick="copyText('longAr')"></div>
+    <div class="msg" id="longEn" onclick="copyText('longEn')"></div>
+  </div>
+  <h3 style="color:#285eff;"> Short Apologies</h3>
+  <button onclick="generate('shortApology')">Create apology </button>
+  <div class="box">
+    <div class="msg" id="shortAr" onclick="copyText('shortAr')"></div>
+    <div class="msg" id="shortEn" onclick="copyText('shortEn')"></div>
+
+ </div>
+ 
+
+  <h2>🔹 Hold for merchant </h2>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع المطعم ؟ شكرا لتفهمك وصبرك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me 2–3 minutes to contact the the merchant ? Thank you for your understanding and patience</div>
+
+</div>
+
+ <h2>🔹 Hold for rider</h2>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن تعطيني دقيقتين - ثلاث دقائق لاتواصل مع السائق ؟ شكرا لتفهمك وصبرك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+  Could you please give me 2–3 minutes to contact the the rider ? Thank you for your understanding and patience</div>
+   
+</div>
+<h3>🔹 Cancel order</h3>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    بعد ما تفاهمت مع المطعم، راح ألغي لك الطلب. تقدر تسوي طلب جديد ولا يهمك.</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+  After negotiating with the restaurant, I will proceed to cancel the order for you. You can place a new order.</div>
+  </div>
+  
+   <h5>🔹 Refused to cancel</h5>
+  <div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    نعتذر، المطعم بدأ بتجهيز الطلب، فما يمدينا نلغيه</div>
+
+  <div class="hold-card" onclick="copyMsg(this)">
+  We apologize, but the merchant has already started preparing the food, so the order cannot be canceled</div>
+   </div>
+  
+</div>
+
+<!-- القسم الأيسر -->
+ 
+<div class="section" id="hold">
+  <h2 style="color:#285eff;"> Hold</h2>
+  <button onclick="generate('hold')"> Create hold</button>
+  <div class="box">
+    <div class="msg" id="holdAr" onclick="copyText('holdAr')"></div>
+    <div class="msg" id="holdEn" onclick="copyText('holdEn')"></div>
+  </div>
+  <!-- كروت سكربتات ثابتة للهولد -->
+<div class="fixed-hold-cards">
+  <div class="hold-card" onclick="copyMsg(this)">
+    ممكن دقيقة من فضلك عشان أشيك لك على الموضوع؟
+شكراً على صبرك.
+
+
+  </div>
+  <div class="hold-card" onclick="copyMsg(this)">
+   Could you please give me a minute to check on this for you? Thank you for your patience.
+  </div>
+</div>
+
+  <!-- 💬 قسم الشكر على الانتظار -->
+<div class="card" style="position:relative;">
+  <h2 style="color:#285eff;"> Thanks after hold</h2>
+
+  <!-- زر التوليد -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <button class="btn primary" 
+            style="background:#285eff;color:#fff;border:none;
+                   padding:10px 18px;border-radius:10px;cursor:pointer;"
+            onclick="generateThanks()"> Create </button>
+  </div>
+
+  <!-- الكروت الزجاجية -->
+  <div id="thanksBox" style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+    <div id="arabicThanks" class="msgBox glass-box">شكراً على صبرك</div>
+    <div id="englishThanks" class="msgBox glass-box">Thank you for your patience</div>
+  </div>
+</div>
+
+<style>
+.glass-box {
+  flex:1;
+  min-width:240px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(40, 94, 255, 0.4);
+  border-radius: 14px;
+  padding: 12px 16px;
+  text-align: center;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 500;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 3px 15px rgba(40,94,255,0.15);
+  transition: all 0.3s ease;
+}
+.glass-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(40,94,255,0.3);
+}
+#thanksNotice {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(40,94,255,0.4);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 15px;
+  color: #003cff;
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: opacity .4s ease, transform .4s ease;
+  transform: translateY(10px);
+  z-index: 99999;
+}
+#thanksNotice.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
+<script>
+const arabicPhrases = [
+  "شكراً على صبرك",
+  "أقدّر وقتك كثير",
+  "شكراً لتفهمك",
+  "أقدر انتظارك فعلاً",
+  "ممتن لوقتك",
+  "شكراً على تفاعلك وصبرك",
+  "أقدر إنك كنت متعاون بصبرك",
+  "شكراً على انتظارك",
+  "أقدّر إنك عطيتنا من وقتك",
+  "شكراً على سعة صدرك",
+  "شكراً على وقتك وتفهمك",
+  "أقدر تعاونك وصبرك",
+  "ممتن على وقتك فعلاً",
+  "شكراً على صبرك الجميل",
+  "أقدر وقتك جدًا وشكراً من القلب"
+];
+
+const englishPhrases = [
+  "Thank you for your patience",
+  "Really appreciate your time",
+  "Thanks for understanding",
+  "Appreciate your wait",
+  "Grateful for your time",
+  "Thanks for staying with us",
+  "Appreciate your patience",
+  "Thank you for waiting",
+  "Really value your time",
+  "Thanks for your understanding",
+  "Appreciate your cooperation",
+  "Grateful for your patience",
+  "Thanks for being patient with us",
+  "Truly appreciate your time and patience",
+  "Thanks for waiting"
+];
+
+let usedArabic = new Set();
+let usedEnglish = new Set();
+
+function getUniquePhrase(set, phrases) {
+  if (set.size === phrases.length) {
+    showNotice("🪄 تم استخدام جميع العبارات، تم إعادة التوليد ✨");
+    set.clear();
+  }
+  let phrase;
+  do {
+    phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  } while (set.has(phrase));
+  set.add(phrase);
+  return phrase;
+}
+
+function generateThanks() {
+  document.getElementById("arabicThanks").textContent = getUniquePhrase(usedArabic, arabicPhrases);
+  document.getElementById("englishThanks").textContent = getUniquePhrase(usedEnglish, englishPhrases);
+  animateCards();
+}
+
+// حركة بسيطة عند التوليد
+function animateCards() {
+  document.querySelectorAll(".glass-box").forEach(card => {
+    card.style.transform = "scale(1.05)";
+    setTimeout(() => card.style.transform = "scale(1)", 200);
+  });
+}
+
+// إشعار زجاجي أنيق
+function showNotice(text) {
+  let note = document.getElementById("thanksNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "thanksNotice";
+    document.body.appendChild(note);
+  }
+  note.textContent = text;
+  note.classList.add("show");
+  clearTimeout(window.noticeTimeout);
+  window.noticeTimeout = setTimeout(() => note.classList.remove("show"), 2000);
+}
+</script>
+
+<style>
+.fixed-hold-cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.hold-card {
+  flex: 1;
+  background: #e8f1ff;
+  border: 1px solid #e5efff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.hold-card:hover {
+  background: #e5efff;
+  transform: scale(1.03);
+}
+</style>
+  
+  <!-- قسم السولوشن -->
+ <div class="card">
+  <h2 style="color:#285eff;"> Solution maker</h2>
+
+  <div class="grid">
+    <!-- 🧩 Call Line -->
+    <label for="callType">Call line</label>
+    <select id="callType" onchange="toggleCallInput()">
+      <option value="none">اختر نوع المكالمة</option>
+      <option value="noneed"selected>No need</option>
+      <option value="merchant">Merchant</option>
+      <option value="rider">Rider</option>
+    </select>
+
+    <div id="callResultBox" style="display:none; grid-column: 1 / span 2;">
+      <label for="callResult">Call Result</label>
+      <input id="callResult" type="text" placeholder="اكتب نتيجة المكالمة هنا" />
+    </div>
+
+    <!-- 🧩 Risk Label -->
+    <label for="riskLabel">Case Solution Risk Label</label>
+    <select id="riskLabel" onchange="toggleRCOptions()">
+      <option value="">Select</option>
+      <option value="0RC"selected>0RC</option>
+      <option value="1RC">1RC</option>
+      <option value="2RC">2RC</option>
+      <option value="3RC">3RC</option>
+      <option value="3RC>">3RC></option>
+      <option value="Red">Red</option>
+      <option value="Purple">Purple</option>
+    </select>
+
+    <!-- 🔹 يظهر فقط مع Red أو Purple -->
+    <div id="rcOptions" style="display:none; grid-column:1 / span 2; margin-top:8px;">
+      <label style="font-weight:bold; color:#285eff;">اختر RC</label>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+        <label><input type="radio" name="subRC" value="0RC">0RC</label>
+        <label><input type="radio" name="subRC" value="1RC">1RC</label>
+        <label><input type="radio" name="subRC" value="2RC">2RC</label>
+        <label><input type="radio" name="subRC" value="3RC">3RC</label>
+        <label><input type="radio" name="subRC" value="3RC>">3RC></label>
+      </div>
+    </div>
+
+    <label for="evidence">Evidence</label>
+    <select id="evidence">
+      <option value="Clear" >Clear</option>
+      <option value="Unclear"selected>Unclear</option>
+      <option value="No need"selected>No need</option>
+    </select>
+
+    <label for="receipt">Receipt</label>
+    <select id="receipt">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+      <option value="No need"selected>No need</option>
+    </select>
+
+    <label for="refund">Refund</label>
+    <select id="refund">
+      
+      <option value="No refund"selected>No refund</option>
+      <option value="Partial refund">Partial refund</option>
+      <option value="Full refund">Full refund</option>
+    </select>
+
+    <label for="compensation">Compensation (Optional)</label>
+    <input id="compensation" type="text" inputmode="decimal" placeholder="اكتب المبلغ أو اتركها فاضية" />
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="build"> Create solution</button>
+    <button class="btn" id="clear">Reset</button>
+  </div>
+
+  <textarea id="output" readonly placeholder="Click here"></textarea>
+  <div class="hint"> Click inside to copy</div>
+</div>
+ </div>
+  <!-- القسم الثالث -->
+<!-- سكربتات المحادثة (نسخة مضغوطة) -->
+<div class="section" id="chatScriptsSimple" style="width:500px; padding:16px;">
+  <h2 style="text-align:center; color:#285eff; margin-bottom:12px;">Conversation scripts </h2>
+
+  <!-- الترحيب -->
+   <!-- الترحيب -->
+  <!-- 🔹 قسم الترحيب (يحدث تلقائي أثناء الكتابة) -->
+<div class="chat-block" style="background:#f1f6ff; border-radius:10px; padding:10px; margin-bottom:10px;">
+  <h3 class="chat-title" style="color:#285eff;">👋  Greeting</h3>
+
+  <!-- 🧩 حقول الاسم -->
+  <div style="text-align:center; margin-bottom:12px;">
+  <input id="nameAr" type="text" placeholder="اكتب الاسم بالعربي" 
+  oninput="updateGreeting(); saveName();" 
+  style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;">
+<input id="nameEn" type="text" placeholder="Enter name in English" 
+  oninput="updateGreeting(); saveName();" 
+  style="padding:8px 10px;border:1px solid #c9dafd;border-radius:8px;width:36%;text-align:center;margin:4px;"> 
+  </div>
+  
+
+  <!-- 🗨️ نصوص الترحيب -->
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting1">مرحبًا معك ، كيف بقدر أساعدك اليوم؟</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting1">Hello Im, how can I help you today?</div>
+  </div>
+
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arGreeting2">مرحبًا معك، أنا هنا لمساعدتك</div>
+    <div class="msg" onclick="copyMsg(this)" id="enGreeting2">Hello Im, I am here to help you.</div>
+  </div>
+</div>
+
+<script>
+// 🔹 تحديث الجمل أثناء الكتابة
+function updateGreeting() {
+
+  const nameAr = document.getElementById("nameAr").value.trim();
+  const nameEn = document.getElementById("nameEn").value.trim();
+
+  const ar1 = document.getElementById("arGreeting1");
+  const en1 = document.getElementById("enGreeting1");
+  const ar2 = document.getElementById("arGreeting2");
+  const en2 = document.getElementById("enGreeting2");
+
+  ar1.textContent = nameAr ? `مرحبًا معك ${nameAr}، كيف بقدر أساعدك اليوم؟` : `مرحبًا معك ، كيف بقدر أساعدك اليوم؟`;
+  en1.textContent = nameEn ? `Hello Im ${nameEn}, how can I help you today?` : `Hello Im, how can I help you today?`;
+  ar2.textContent = nameAr ? `مرحبًا معك ${nameAr}، أنا هنا لمساعدتك` : `مرحبًا معك، أنا هنا لمساعدتك`;
+  en2.textContent = nameEn ? `Hello Im ${nameEn}, I am here to help you.` : `Hello Im, I am here to help you.`;
+}
+function saveName() {
+  localStorage.setItem("savedNameAr", document.getElementById("nameAr").value);
+  localStorage.setItem("savedNameEn", document.getElementById("nameEn").value);
+}
+window.addEventListener("load", () => {
+  const savedAr = localStorage.getItem("savedNameAr");
+  const savedEn = localStorage.getItem("savedNameEn");
+
+  if (savedAr) document.getElementById("nameAr").value = savedAr;
+  if (savedEn) document.getElementById("nameEn").value = savedEn;
+
+  updateGreeting();
+});
+</script>
+  <!-- الاعتذار والتأكيد -->
+  <!-- 🍽️ قسم الاعتذار والتأكيد (تفاعلي) -->
+<div class="chat-block" style="background:#eaf9f3; border-radius:10px; padding:10px; margin-bottom:10px;">
+  <h3 class="chat-title" style="color:#009a61;">🍽️ Apology & confirmation </h3>
+
+  <!-- 🧩 حقل اسم المطعم -->
+  <div style="text-align:center; margin-bottom:15px;">
+    <label for="restaurantName" style="color:#285eff; font-weight:600;">Merchant name (optional)</label><br>
+    <input 
+      type="text" 
+      id="restaurantName" 
+      placeholder="اكتب اسم المطعم هنا" 
+      oninput="updateRestaurant()" 
+      style="padding:8px 12px; border:1px solid #ccc; border-radius:8px; width:60%; max-width:300px; text-align:center;">
+  </div>
+
+  <!-- 🗨️ سكربتات التفاعل -->
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arApology">
+      آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟
+    </div>
+    <div class="msg" onclick="copyMsg(this)" id="enApology">
+      I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?
+    </div>
+  </div>
+
+  <div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)" id="arSorry">
+      أنا آسف جداً على المشكلة اللي حصلت لك
+    </div>
+    <div class="msg" onclick="copyMsg(this)" id="enSorry">
+      I am very sorry for the inconvenience you have experienced.
+    </div>
+  </div>
+</div>
+
+<script>
+// ✨ تحديث النصوص تلقائي عند الكتابة
+function updateRestaurant() {
+  const name = document.getElementById("restaurantName").value.trim();
+
+  const arApology = document.getElementById("arApology");
+  const enApology = document.getElementById("enApology");
+
+  // تحديث النص العربي
+  arApology.textContent = name
+    ? `آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (${name}) ؟`
+    : `آسف جدًا على أي إزعاج صار معك. هل تقصد طلبك الأخير من مطعم (      ) ؟`;
+
+  // تحديث النص الإنجليزي
+  enApology.textContent = name
+    ? `I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (${name})?`
+    : `I’m very sorry for any inconvenience. Are you referring to your most recent order from the restaurant (      )?`;
+}
+</script>
+  <!-- أي خدمة إضافية -->
+  <div class="chat-block" style="background:#fff6e5; border-radius:10px; padding:10px; margin-bottom:10px;">
+    <h3 class="chat-title" style="color:#c77b00;">❓ After solve issue </h3>
+    <div id="extraServiceBox" 
+     style="background:#fffbea;padding:16px;border-radius:14px;
+            border:1px solid #ffe58a;text-align:center;font-family:'Cairo',sans-serif;">
+
+  <button id="generateService"
+    style="background:#fff;border:1px solid #ccc;
+           color:#333;
+           border-radius:8px;
+           padding:6px 12px;
+           font-size:14px;
+           cursor:pointer;
+           transition:0.3s;">
+    Create
+  </button>
+
+  <div id="serviceContainer"
+       style="display:flex;justify-content:center;align-items:stretch;
+              gap:10px;margin-top:10px;flex-wrap:wrap;">
+    <div id="arabicBox" class="msgBox"
+         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+                border-radius:10px;padding:10px;text-align:right;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      هل يمكنني مساعدتك بأي خدمة أخرى عميلنا العزيز؟
+    </div>
+
+    <div id="englishBox" class="msgBox"
+         style="flex:1;min-width:180px;background:#fff;border:1px solid #ddd;
+                border-radius:10px;padding:10px;text-align:left;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      Is there anything else I can help you with?
+    </div>
+  </div>
+</div>
+
+<script>
+const servicePairs = [
+  ["هل أستطيع مساعدتك في أمر آخر اليوم؟","Can I assist you with anything else today?"],
+  ["هل هناك أي خدمة إضافية يمكنني تقديمها لك؟","Is there any additional service I can provide?"],
+  ["هل ترغب أن أتحقق لك من شيء آخر؟","Would you like me to check something else for you?"],
+  ["هل يمكنني دعمك في أي نقطة أخرى؟","Can I support you with anything else?"],
+  ["هل يوجد شيء آخر يمكنني توضيحه لك؟","Is there anything else I can clarify for you?"]
+];
+
+document.getElementById("generateService").addEventListener("click", () => {
+  const [ar, en] = servicePairs[Math.floor(Math.random() * servicePairs.length)];
+  document.getElementById("arabicBox").textContent = ar;
+  document.getElementById("englishBox").textContent = en;
+
+  // تأثير بسيط
+  [arabicBox, englishBox].forEach(box => {
+    box.style.transition = "transform 0.2s ease";
+    box.style.transform = "scale(1.05)";
+    setTimeout(() => box.style.transform = "scale(1)", 200);
+  });
+});
+</script>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">مرحبًا. لم نتلق ردك بعد، وسيتم إغلاق المحادثة قريبًا. إذا كان عندك أي استفسار آخر، لا تتردد بالتواصل معنا.</div>
+      <div class="msg" onclick="copyMsg(this)">Hello! We haven’t received your response yet. The chat will close soon. Feel free to contact us anytime.</div>
+    </div>
+  </div>
+
+  <!-- الختامية -->
+  <div class="chat-block" style="background:#f8eefc; border-radius:10px; padding:10px;">
+    <h3 class="chat-title" style="color:#7b2cbf;">✅ End of conversation</h3>
+    <div class="chat-row">
+      <div class="msg" onclick="copyMsg(this)">شكراً لتواصلك مع خدمة عملاء كيتا. راح نكون شاكرين لو تقدر تأخذ لحظة لتقييم خدمتنا. شكراً لتعاونك، ونتمنى لك يوماً سعيد</div>
+      <div class="msg" onclick="copyMsg(this)">Thank you for contacting Keeta customer service. We appreciate it if you could take a moment to rate our service. ​Have a great day!</div>
+    </div>
+<div class="chat-row">
+    <div class="msg" onclick="copyMsg(this)">سُعدتُ بخدمتك اليوم. بعد انتهاء المحادثة سيظهر لك إشعار لتقييم تجربتك معنا، ونود إبلاغك أن التقييم يكون من 1 إلى 5، حيث 5 هو أعلى تقييم و1 هو الأقل. نشكر تواصلك مع كيتا ونتمنى لك يوماً سعيداً.</div>
+      <div class="msg" onclick="copyMsg(this)">I am happy to serve you today. After the end of the conversation,a message will appear to evaluate your experience, and it will inform you that the rating will be from 1 to 5, where 5 is the highest rating and 1 is the lowest. Thank you for contacting Keeta and I wish you a happy day.</div>
+</div>
+  </div>
+</div>
+
+<style>
+.chat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.msg {
+  background: #fff;
+  border: 1px solid #d8e5ff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: 0.25s;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+}
+.msg:hover {
+  background: #e9f1ff;
+  transform: scale(1.02);
+}
+.chat-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+</style>
+
+<script>
+// 🎯 دالة النسخ الذكية (تتعامل مع كل أنواع الأقواس)
+function copyMsg(el) {
+  // ناخذ النص داخل العنصر
+  let text = el.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restaurantField = document.getElementById("restaurantName");
+  const restaurant = restaurantField ? restaurantField.value.trim() : "";
+
+  // 🔹 نستبدل أي أقواس فيها فراغات أو شرطات أو نقاط أو خطوط تحت
+  if (restaurant) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restaurant + ")");
+  }
+
+  // نسخ النص
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار تم النسخ
+  showCopiedNotice();
+}
+
+// 🎯 دالة عرض الإشعار
+function showCopiedNotice() {
+  let note = document.getElementById("copyNotice");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNotice";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1200);
+}
+</script>
+<!-- 🟦 القسم الرابع: التعويض والاسترداد -->
+<div class="section" id="compensationSection" style="flex:1; min-width:350px; max-width:480px;">
+  <h2 style="text-align:center; color:#285eff;">   Refund and compensation</h2>
+
+  
+  <div class="actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">
+    <button id="compensationBtn" class="btn primary" onclick="startCompensation()">compensation</button>
+    <button id="refundcompBtn" class="btn" onclick="startRefund()"> Refund & compensation</button>
+    <button id="refundBtn" class="btn" style="background:#2c5679; color:#fff;" onclick="startOnlyRefund()">Refund</button>
+    <div id="scriptBox" style="margin-top:10px;"></div>
+  </div>
+
+<!-- الآلة الحاسبة داخل قسم الاعتذارات -->
+ 
+<div class="calc-box" style="margin-top: 20px; border-top: 1px solid #d8e5ff; padding-top: 16px;">
+  <h3 style="color:#285eff; margin-bottom:8px; text-align:center;">🔢  calculator</h3>
+
+  <input id="calcInput" type="number" placeholder="أدخل السعر" 
+         oninput="resetAutoTimer()" 
+         style="padding:10px;border:1px solid #c9dafd;border-radius:8px;width:90%;text-align:center;font-size:15px;">
+
+  <div class="calc-buttons" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+    <button onclick="addItem('Main dish', 0.8)">🍛 Main dish</button>
+    <button onclick="addItem('Side dish', 0.5)">🥗 Side dish</button>
+    <button onclick="addItem('Drink', 0.3)">🥤 Drink</button>
+    <button onclick="addItem('Cutlery', 0.1)">🍴 Cutlery</button>
+  </div>
+
+  <div id="calcItems" style="margin-top:15px;text-align:right;font-family:'Cairo',sans-serif;font-size:14px;color:#1d2b5c;">
+    <b>📋 الأصناف المضافة:</b><br>
+    <span id="itemList" style="display:block;margin-top:6px;color:#444;">—</span>
+  </div>
+
+  <div id="calcResult" class="calc-result" 
+       style="background:#f3f7ff;border-radius:8px;padding:8px;margin-top:10px;text-align:center;
+              font-weight:bold;border:1px solid #e1e9ff;color:#003cff;">
+    النتيجة: —
+  </div>
+
+  <div style="text-align:center;margin-top:10px;">
+    <button onclick="resetCalc(true)" 
+            style="background:#ff4b4b;color:#fff;border:none;padding:8px 16px;
+                   border-radius:8px;cursor:pointer;font-weight:bold;">
+      🔁 Reset
+    </button>
+  </div>
+</div>
+
+<script>
+let total = 0;
+let items = [];
+let resetTimer; // ⏳ مؤقت التصفير التلقائي
+
+function addItem(type, multiplier) {
+  resetAutoTimer(); // ← أي تفاعل يمدد الوقت
+  const input = document.getElementById("calcInput");
+  const value = parseFloat(input.value);
+
+  if (isNaN(value) || value <= 0) {
+    alert("⚠️ الرجاء إدخال سعر صحيح أولاً");
+    return;
+  }
+
+ let result = value * multiplier;
+
+// 🧠 تحديد الحد الأقصى لبعض الأصناف
+if (type === "Drink" && result > 20) {
+  result = 20;
+}
+if (type === "Cutlery" && result > 5) {
+  result = 5;
+}
+
+total += result;
+
+  items.push(`${type}: ${result.toFixed(2)} ريال`);
+  document.getElementById("itemList").innerHTML = items.join("<br>");
+  document.getElementById("calcResult").textContent = `النتيجة: ${total.toFixed(2)} ريال`;
+
+  input.value = "";
+}
+
+function resetCalc(manual = false) {
+  total = 0;
+  items = [];
+  document.getElementById("itemList").innerHTML = "—";
+  document.getElementById("calcResult").textContent = "النتيجة: —";
+  if (manual) clearTimeout(resetTimer);
+}
+
+// ⏳ دالة التصفير التلقائي بعد دقيقتين من عدم التفاعل
+function resetAutoTimer() {
+  clearTimeout(resetTimer);
+  resetTimer = setTimeout(() => {
+    resetCalc();
+    showAutoResetNotice();
+  }, 30000); // 120000 = دقيقتين (بالملّي ثانية)
+}
+
+// تشغيل المؤقت أول مرة عند تحميل الصفحة
+resetAutoTimer();
+</script>
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 قسم طلبات العميل -->
+<!-- 🧾 Customer Requests Section -->
+<div class="customer-requests" style="margin-top:25px;font-family:'Cairo',sans-serif;">
+  
+  <h3 style="color:#285eff;text-align:center;margin-bottom:18px;">🧾 Customer Requests</h3>
+
+  <!-- 💰 Compensation -->
+  <div class="req-package">
+    <h4 class="req-title">💰 Compensation & Refund</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to get comepensation</div>
+      <div class="req-card">The cusmtomer wants to get refund</div>
+      <div class="req-card">The cusmtomer wants to get more comepensation</div>
+    </div>
+  </div>
+
+  <!-- 📝 Note -->
+  <div class="req-package">
+    <h4 class="req-title">📝 Note</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to change order</div>
+      <div class="req-card">The cusmtomer wants to add a note</div>
+      <div class="req-card red">The cusmtomer wants to cancel order</div>
+    </div>
+  </div>
+
+  <!-- 📞 Call -->
+  <div class="req-package">
+    <h4 class="req-title">📞 Call Requested</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card">The cusmtomer wants to rider number</div>
+      <div class="req-card">The cusmtomer wants to merchant number</div>
+      <div class="req-card">The cusmtomer wants to agent to call him</div>
+    </div>
+  </div>
+
+  <!-- 💬 Complaint -->
+  <div class="req-package">
+    <h4 class="req-title">💬 Complaint</h4>
+    <div class="req-grid">
+      <div class="req-card blue">The customer has no specific request</div>
+      <div class="req-card green">The cusmtomer wants to Complain about restaurant</div>
+      <div class="req-card">The cusmtomer wants to Complain about rider</div>
+      <div class="req-card">The cusmtomer wants to Complain about agent</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  
+.req-package {
+  background:#fff;
+  border:1px solid #e0e8ff;
+  border-radius:14px;
+  padding:10px 14px;
+  margin:12px auto;
+  max-width:900px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.req-title {
+  color:#285eff;
+  font-size:15px;
+  margin-bottom:8px;
+  text-align:right;
+  border-right:4px solid #285eff33;
+  padding-right:8px;
+}
+
+/* 👇 السر هنا: auto-fit + minmax */
+.req-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:10px;
+  justify-items:center;
+  align-items:center;
+}
+
+.req-card {
+  width:100%;
+  height:55px;
+  background:#f9fbff;
+  border:1px solid #dce6ff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12.5px;
+  font-weight:500;
+  color:#1a2a55;
+  cursor:pointer;
+  transition:all .25s ease;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.req-card:hover {
+  background:#eaf1ff;
+  transform:scale(1.06);
+  box-shadow:0 3px 10px rgba(40,94,255,0.25);
+}
+
+/* 📱 للجوال */
+@media(max-width:600px){
+  .req-grid {
+    grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .req-card {
+    font-size:11.5px;
+    height:50px;
+  }
+}
+.req-card.blue {
+  background:#e7f0ff;
+  color:#0044cc;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(0,90,255,0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(0,80,255,0.25);
+}
+.req-card.green {
+  background:#9effca;
+  color:#0c7a29;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(5, 97, 32, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(7, 97, 43, 0.25);
+}
+.req-card.red {
+  background:#fd8383;
+  color:#720b0b;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(67, 8, 8, 0.15);
+}
+.req-card.blue:hover {
+  background:#d8e7ff;
+  box-shadow:0 3px 12px rgba(47, 9, 9, 0.25);
+}
+</style>
+
+<script>
+// 📋 نسخ النص عند الضغط
+document.addEventListener("click", e=>{
+  if(e.target.classList.contains("req-card")){
+    const text = e.target.textContent.trim();
+    navigator.clipboard.writeText(text);
+    showCopiedNotice(e.pageX, e.pageY);
+  }
+});
+
+// ✅ إشعار النسخ
+function showCopiedNotice(x,y){
+  const note=document.createElement("div");
+  note.textContent="✅ Copied!";
+  Object.assign(note.style,{
+    position:"fixed",left:x+"px",top:y-25+"px",
+    background:"rgba(255,255,255,0.9)",color:"#285eff",
+    padding:"5px 12px",borderRadius:"8px",
+    fontSize:"12px",fontWeight:"600",
+    backdropFilter:"blur(8px)",boxShadow:"0 4px 10px rgba(0,0,0,0.2)",
+    zIndex:"99999",opacity:"0",
+    transition:"opacity 0.3s ease, top 0.4s ease"
+  });
+  document.body.appendChild(note);
+  requestAnimationFrame(()=>{note.style.opacity="1";note.style.top=(y-45)+"px"});
+  setTimeout(()=>{note.style.opacity="0";note.style.top=(y-65)+"px";setTimeout(()=>note.remove(),400)},900);
+}
+</script>
+</div>
+<script>
+// دالة النسخ الذكية 👇
+document.addEventListener("click", function (e) {
+  const el = e.target.closest(".msgBox");
+  if (!el) return;
+
+  // النص الأصلي
+  let text = el.textContent;
+
+  // قراءة القيم من الحقول الحالية
+  const refVal = document.querySelector("#refundValue")?.value.trim() || "";
+  const compMain = document.querySelector("#compValue")?.value.trim() || "";
+  const compAlt = document.querySelector("#compValue2")?.value.trim() || "";
+
+  // استبدال الأقواس مهما كانت المسافات
+  const matches = [...text.matchAll(/\([\s\S]*?\)/g)];
+  if (matches.length) {
+    if (matches[0]) text = text.replace(matches[0][0], `(${refVal || compMain || "—"})`);
+    if (matches[1]) text = text.replace(matches[1][0], `(${compAlt || compMain || "—"})`);
+  }
+
+  // نسخ للنص النهائي
+  navigator.clipboard.writeText(text.trim());
+
+  // تأثير بسيط
+  el.style.background = "#cde6ff";
+  setTimeout(() => (el.style.background = "#fff"), 300);
+
+  // إشعار النسخ
+  showCopyAlert(e.pageX, e.pageY);
+});
+
+
+
+
+// 🔹 تعويض فقط
+
+function startCompensation() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم التعويض</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. نعتذر عن ذلك، وسنقوم بتعويضك بمبلغ إجمالي قدره (      ) ريال سعودي.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. To express our apologies, we can apply total of (      ) SAR compensation to your account.
+    </div>
+
+    <!-- حقل القيمة -->
+    <input type="number" id="compValue" placeholder="قيمة التعويض (اختياري)" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔹 سكربتات المحفظة الخاصة بالتعويض -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#eaf9f3;border:1px solid #cceedd;
+      color:#006b3b;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+     Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+
+    <!-- زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+// 🔸 استرداد وتعويض
+
+function startRefund() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = `
+    <h2 style="color:#285eff;"> قسم الاسترداد والتعويض</h2>
+
+    <!-- سكربت عربي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نأسف للإزعاج. يمكننا استرداد مبلغ (      ) ريال سعودي لطلبك فورًا، 
+      مع إضافة مبلغ إجمالي قدره (      ) ريال سعودي كتعويض.
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (      ) SAR 
+      and apply total of (      ) SAR compensation.
+    </div>
+
+    <!-- 🔹 الحقول -->
+    <input type="number" id="refundValue" placeholder="قيمة الاسترداد" 
+      style="margin-top:12px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+    <input type="number" id="compValue2" placeholder="قيمة التعويض" 
+      style="margin-top:8px;padding:8px;border:1px solid #ccc;
+      border-radius:8px;width:90%;">
+
+    <!-- 🔴 السكربتات الجديدة (لون أحمر) -->
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:16px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyText(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- 🔘 الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="walletFlow()">محفظة</button>
+
+      <button class="btn secondary" 
+        style="background:#00b36b;color:#fff;border:none;
+        padding:8px 18px;border-radius:8px;cursor:pointer;" 
+        onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔁 زر إعادة -->
+    <div style="text-align:center;margin-top:15px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 إعادة من البداية</button>
+    </div>
+  `;
+}
+
+
+
+// 🔹 خيار المحفظة
+function walletFlow() {
+  document.getElementById('extraScripts')?.remove();
+  const box = document.getElementById('scriptBox');
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.innerHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+راح نضيف التعويض لمحفظة كيتا الخاصة بك على الفور. الرصيد ما له صلاحية وتقدر تستخدمه على الطلبات المؤهلة.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#eaf9f3;">
+Your compensation will be added to your Keeta wallet immediately. The balance won't expire and can be used for eligible orders.
+    </div>
+  `;
+  box.appendChild(div);
+}
+
+// 🔸 خيار الطريقة الأصلية
+
+function originalFlow() {
+  // نحذف أي سكربتات مضافة مسبقًا
+  document.getElementById('extraScripts')?.remove();
+
+  const box = document.getElementById('scriptBox');
+
+  // ننشئ الحاوية الجديدة
+  const div = document.createElement('div');
+  div.id = 'extraScripts';
+  div.style.marginTop = '12px';
+  div.style.display = 'grid';
+  div.style.gap = '10px';
+
+  // سكربتات الطريقة الأصلية الأساسية
+  const mainScriptsHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+  تمام، الحين بنرجع لك مبلغ الاسترجاع والتعويض على طريقة الدفع اللي استخدمتها، وسيظهر المبلغ في حسابك خلال أيام، إذا لم يظهر المبلغ خلال 10 أيام، نرجو الاتصال بالبنك الخاصة بعملية الدفع لمساعدتك.
+    </div>
+    <div class="msg" onclick="copyMsg(this)" style="background:#fff6e5; border:1px solid #f7d9a2; padding:10px; border-radius:10px; cursor:pointer;">
+     We will process the refund and compensation back to your original payment method. The amount would be reflected in your account within a few days. If it hasn't appeared within 10 days, please contact your payment provider for help
+    </div>
+  `;
+
+  // ✅ سكربتات إضافية (لون أحمر - حالة الاسترداد)
+  const extraScriptHTML = `
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      margin-top:18px;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      لا يزال الاسترداد ضمن فترة المعالجة، نرجو منك الانتظار بصبر. يمكنك أيضًا الحصول على رقم ARN/RRN من قسم "تتبع استردادي" للتواصل مع بنكك المصدر والتحقق من حالة المبلغ.
+    </div>
+
+    <div class="msg" onclick="copyMsg(this)" style="
+      background:#ffeaea;
+      border:1px solid #ffb3b3;
+      color:#b30000;
+      border-radius:10px;
+      padding:10px;
+      cursor:pointer;
+      font-weight:500;
+    ">
+      It's still within the refund process timeline, please wait patiently. You also can have the ARN/RRN in "track my refund" to contact your issuer bank to check the status of money.
+    </div>
+  `;
+
+  // نجمع الكل
+  div.innerHTML = mainScriptsHTML + extraScriptHTML;
+
+  // نضيفهم بعد أزرار المحفظة والطريقة الأصلية مباشرة
+  const buttons = box.querySelector('.action-buttons');
+  if (buttons) {
+    buttons.insertAdjacentElement('afterend', div);
+  } else {
+    box.appendChild(div);
+  }
+}
+
+// 🔁 إعادة من البداية
+function resetComp() {
+  const box = document.getElementById('scriptBox');
+  box.innerHTML = '';
+}
+// 🟩 قسم "استرداد فقط"
+function startOnlyRefund() {
+  const box = document.getElementById('scriptBox');
+  if (!box) return;
+
+  box.innerHTML = `
+    <h2 style="color:#285eff;">قسم الاسترداد فقط</h2>
+
+    <!-- سكربت عربي -->
+    <div id="refundAr" class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:10px;border-radius:10px;cursor:pointer;">
+      نعتذر عن التجربة الغير مرضية. يمكننا إعادة المبلغ فوراً بقيمة (<b id="refundValAr">—</b>) ريال سعودي لطلبك
+    </div>
+
+    <!-- سكربت إنجليزي -->
+    <div id="refundEn" class="msgBox" onclick="copyMsg(this)" 
+      style="background:#f7faff;border:1px solid #d6e4ff;
+      padding:10px;margin-top:8px;border-radius:10px;cursor:pointer;">
+      Sorry for the inconvenience. We can refund (<b id="refundValEn">—</b>) SAR for your order right away
+    </div>
+
+    <!-- 🧾 حقل القيمة -->
+    <div style="margin:16px 0;text-align:center;">
+      <label style="display:block;font-weight:600;color:#285eff;margin-bottom:6px;">🧾 قيمة الاسترداد</label>
+      <input type="number" id="refundValue" placeholder="اكتب المبلغ هنا"
+             style="padding:10px 12px;border:1px solid #c9dafd;border-radius:8px;width:60%;max-width:240px;text-align:center;">
+    </div>
+
+    <!-- 🔹 فاصل أنيق -->
+    <hr style="border:none; border-top:1px dashed #ccc; margin:18px 0;">
+
+    <!-- سكربتات الحمراء -->
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      أعتذر بصدق عن الإزعاج الذي تسببنا به. 
+      سنقوم بمعالجة استرداد المبلغ إلى محفظتك على الفور، 
+      وسيكون متاحًا مباشرة.<br>هل تفضل ذلك؟
+    </div>
+
+    <div class="msgBox" onclick="copyMsg(this)" 
+      style="background:#ffeaea;border:1px solid #ffb3b3;
+      color:#b30000;padding:10px;margin-top:8px;border-radius:10px;
+      cursor:pointer;font-weight:500;">
+      I sincerely apologize for the inconvenience caused. 
+      We will process a refund to your wallet right away, 
+      and it will be available immediately.<br>Do you prefer this?
+    </div>
+
+    <!-- الأزرار -->
+    <div style="margin-top:14px;">
+      <button class="btn primary" style="background:#285eff;color:#fff;" onclick="walletFlow()">محفظة</button>
+      <button class="btn secondary" style="background:#00b36b;color:#fff;" onclick="originalFlow()">الطريقة الأصلية</button>
+    </div>
+
+    <!-- 🔄 زر إعادة من البداية -->
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn primary" 
+        style="background:#285eff;color:#fff;border:none;
+        padding:10px 20px;border-radius:8px;cursor:pointer;" 
+        onclick="resetComp()">🔄 البدء من جديد</button>
+    </div>
+  `;
+
+  // 💡 تحديث النصوص تلقائيًا
+  const input = document.getElementById("refundValue");
+  input.addEventListener("input", () => {
+    const val = input.value || "—";
+    document.getElementById("refundValAr").textContent = val;
+    document.getElementById("refundValEn").textContent = val;
+  });
+}
+
+</script>
+
+
+
+</div> <!-- نهاية main-sections -->
+
+
+<!-- popup -->
+<div id="popup" class="popup hidden">
+  <p id="popupMsg"></p>
+  <button onclick="resetLists()">🔄 توليد من البداية</button>
+</div>
+
+<script>
+const longApology = [
+  {ar:`نعتذر من أعماق قلبنا عن أي إزعاج قد تسببت به تجربتك، ونحن نقدر تماماً مشاعرك. نحن نأخذ ملاحظاتك بكل جدية ونعمل جاهدين على نقلها إلى المطعم لتحسين الخدمة وتقديم الأفضل دائمًا. هدفنا هو أن نمنحك تجربة استثنائية تتناسب مع توقعاتك وتفوقها في المستقبل. نحن نسعى دائماً لإرضائك، ونتمنى أن نتمكن من استعادة ثقتك الغالية فينا. شكراً لك على دعمك وصبرك، وسنواصل العمل بجد ليكون مستوى تجربتك القادمة أفضل إن شاء الله.`, en:`We sincerely apologize for any inconvenience your experience may have caused, and we deeply value your feelings. We take your feedback very seriously and are working hard to pass it on to the restaurant to improve the service and provide the best at all times. Our aim is to offer you an exceptional experience that meets and exceeds your expectations in the future. We always strive to satisfy you, and we hope to regain your valuable trust in us. Thank you for your support and patience, and we will continue working hard so that your next experience will be at a better level, God willing.`},
+  {ar:` نعتذر بصدق عن أي إزعاج قد تسببت به تجربتك معنا، ونقدر ملاحظاتك التي تساعدنا في التحسين. سيتم نقلها إلى المطعم للمساهمة في تقديم خدمة أفضل إن شاء الله. هدفنا هو أن نمنحك تجربة مميزة، ونسعى جاهدين لاستعادة ثقتك بنا. شكرًا لصبرك ودعمك، ونتطلع إلى خدمتك مجددًا بتجربة أفضل.`, en:`We sincerely apologize for any inconvenience your experience with us may have caused, and we truly value your feedback that helps us improve. It will be shared with the restaurant to contribute to providing better service, God willing. Our aim is to offer you a special experience that exceeds your expectations, and we strive to regain your trust. Thank you for your patience and support, and we look forward to serving you again with an even better experience.`},
+  {ar:`نأسف لعدم تلبية توقعاتك هذه المرة، ونشكرك على إبلاغنا بملاحظاتك. نأخذ كل الملاحظات على محمل الجد ونعمل على تحسين خدماتنا باستمرار. نأمل أن تمنحنا فرصة أخرى لنقدم لك تجربة تفوق تطلعاتك في المستقبل. `, en:` We truly apologize if your experience did not meet your expectations. Customer satisfaction is at the heart of what we do, and we are constantly working on refining our service. We hope to have the opportunity to serve you again under better circumstances.`},
+  {ar:`نحن آسفون لأن تجربتك لم تكن بالمستوى الذي نطمح إليه. نقدر ملاحظاتك ونعمل باستمرار على تطوير الخدمة. شكراً على تفهمك، ونتمنى أن نراك قريبًا بتجربة أكثر تميزًا`, en:`We are sorry that your experience was not at the level we strive for. We appreciate your feedback and continuously work on improving our service. Thank you for your understanding, and we hope to see you again soon with a more distinguished experience. `},
+  {ar:` نعتذر من أعماق قلبنا عن أي إزعاج قد تسببت به تجربتك، ونحن نقدر تماماً مشاعرك. نحن نأخذ ملاحظاتك بكل جدية ونعمل جاهدين على نقلها إلى المطعم لتحسين الخدمة وتقديم الأفضل دائمًا. هدفنا هو أن نمنحك تجربة استثنائية تتناسب مع توقعاتك وتفوقها في المستقبل ان شاء الله.
+
+`, en:`We sincerely apologize from the bottom of our hearts for any inconvenience your experience may have caused, and we truly value your feelings. We take your feedback very seriously and are working diligently to share it with the restaurant to improve the service and always deliver the best. Our goal is to provide you with an exceptional experience that meets and, God willing, exceeds your expectations in the future.
+
+ `},
+  {ar:`بنعتذر من حضرتك عميلنا العزيز نحن ملتزمون تماماً لإرضائك، ونتمنى أن نتمكن من استعادة ثقتك الغالية فينا. شكراً لك على دعمك وصبرك، وسنحرص على العمل بجد لتكون تجربتك القادمة أفضل ان شاء الله.
+
+ `, en:`We sincerely apologize to you, our valued customer. We are fully committed to your satisfaction and hope to regain your precious trust in us. Thank you for your support and patience, and we promise to keep working hard to ensure that, God willing, your next experience will be much better.
+
+ `},
+  {ar:`اؤكد بأنني متفهم استياء حضرتك على التجربة الغير مرضية ونحن نقدم لك كامل الاعتذار، لقد تم أخذ ملاحظتك بعين الاعتبار، بتمنى تقبل اعتذارنا و ان لا يعكس أي انطباع سلبي. سنعمل على تحسين الخدمة بإذن الله عز وجل لك في المرات القادمة
+
+ `, en:` We sincerely apologize for any inconvenience or disappointment you have encountered. We appreciate the time you took to share your feedback, as it helps us enhance our service. We hope to have the opportunity to serve you better in the future.
+
+`},
+  {ar:`نأسف لأن تجربتك لم تكن كما توقعت، فنحن نحرص على تقديم الأفضل دائمًا. ملاحظاتك ستساعدنا في التحسين، وسنسعى جاهدين لإرضائك. شكرًا لدعمك، ونتمنى أن تكون تجربتك القادمة أكثر راحة وسعادة.
+
+ `, en:` We are sorry that your experience was not as you expected, as we always strive to provide the best. Your feedback will help us improve, and we will do our best to satisfy you. Thank you for your support, and we hope your next experience will be more comfortable and enjoyable.
+
+`},
+  {ar:`نعتذر عن أي إزعاج قد تسببت به هذه التجربة، فهدفنا هو تقديم خدمة ترضيك بالكامل. نحن نأخذ ملاحظاتك على محمل الجد ونعمل على تحسين الجودة باستمرار. شكراً لتفهمك، وسنبذل جهدنا لجعل تجربتك القادمة أكثر إرضاءً.
+
+ `, en:` We are truly sorry for any disappointment you may have felt. Your experience is important to us, and we are implementing necessary improvements to prevent any recurrence of this issue. Thank you for your feedback and for allowing us the chance to enhance our service.
+
+`},
+  {ar:` نأسف لأي إزعاج قد واجهته، ونشكرك على ملاحظاتك القيمة. نحن نأخذ رضاك بجدية ونعمل باستمرار على تحسين مستوى الخدمة. نأمل أن تمنحنا فرصة أخرى لنقدم لك تجربة أفضل في المستقبل.
+
+`, en:`We regret that your experience did not reflect the high standards we strive for. Please rest assured that we are working hard to prevent similar occurrences in the future. We greatly appreciate your understanding and the opportunity to make things better.
+
+ `},
+  {ar:`نعتذر عن أي تقصير حدث، ونتفهم أهمية تجربتك معنا. نحن نأخذ ملاحظاتك بعين الاعتبار لتحسين خدماتنا. شكراً لدعمك، ونسعى جاهدين لإرضائك مستقبلاً.
+
+ `, en:` We apologize for any shortcomings and understand the importance of your experience with us. We take your feedback into account to improve our services. Thank you for your support, and we will strive to satisfy you in the future.
+
+`},
+  {ar:`نحن نأسف لأي تجربة غير مرضية، فهدفنا هو توفير خدمة ترقى إلى مستوى توقعاتك. نقدر ملاحظاتك وسنعمل على التحسين المستمر لإرضائك في المستقبل. شكراً لتفهمك، ونتمنى أن نراك قريبًا.
+
+ `, en:` We apologize for any unsatisfactory experience, as our goal is to provide service that meets your expectations. We value your feedback and will work on continuous improvement to satisfy you in the future. Thank you for your understanding, and we hope to see you soon.
+
+`},
+  {ar:`نعتذر بصدق إذا لم تكن تجربتك بالمستوى الذي تأملته. نؤكد لك أن ملاحظاتك مهمة لنا، وسنعمل على تحسين الأمور لتكون تجربتك القادمة أفضل. نشكرك على دعمك ونتطلع إلى خدمتك مرة أخرى قريبًا.
+
+ `, en:`We sincerely apologize if your experience was not at the level you expected. Please know that your feedback is important to us, and we will work on improving things to make your next experience better. Thank you for your support, and we look forward to serving you again soon.
+
+ `},
+  {ar:`نأسف لأي تجربة غير مرضية مررت بها. نحن ملتزمون بتقديم أفضل خدمة ممكنة وسنعمل على تحسينها بناءً على ملاحظاتك. نشكرك على ثقتك بنا ونتمنى أن نراك قريبًا بتجربة أكثر راحة وسعادة.
+
+ `, en:` We deeply regret that we were unable to provide the seamless experience that you deserve. Please know that we are actively working to resolve any issues and ensure that future experiences meet and exceed your expectations. We truly appreciate your patience.
+
+`},
+  {ar:` نحن آسفون لأن تجربتك لم تكن بالمستوى الذي نطمح إليه. شكرًا لملاحظاتك، وهي محل اهتمامنا لتحسين جودة الخدمات. نقدر تفهمك ونتمنى أن تمنحنا فرصة لنقدم لك تجربة أفضل مستقبلاً.
+
+`, en:` We understand that your time and satisfaction are valuable, and we apologize for any inconvenience you may have encountered. Please know that we take all feedback seriously and are continuously working to enhance our service to better meet your needs.
+
+`},
+  {ar:`نعتذر عن أي خلل قد واجهته خلال تجربتك، ونشكرك على إبلاغنا بذلك. رضاك هو أولويتنا ونسعى جاهدين لتحسين الخدمة مستقبلاً. نتمنى أن تمنحنا فرصة أخرى لنثبت لك مدى التزامنا برضاك.
+
+ `, en:` We apologize for any issues you encountered during your experience, and we thank you for bringing them to our attention. Your satisfaction is our priority, and we strive to improve our service in the future. We hope you give us another opportunity to show you our commitment to your satisfaction.
+
+`},
+  {ar:` نأسف لأي تقصير قد حدث، فهدفنا هو توفير تجربة مثالية لعملائنا. نحن نعمل بجد لتحسين الخدمة بناءً على ملاحظاتك. شكراً لصبرك، ونتمنى أن تكون تجربتك القادمة أكثر راحة ان شاء الله.
+
+`, en:`We apologize for any shortcomings that may have occurred, as our goal is to provide an ideal experience for our customers. We are working hard to improve the service based on your feedback. Thank you for your patience, and we hope your next experience will be more comfortable.
+
+ `},
+  {ar:`نعتذر بصدق عن أي إزعاج حدث خلال طلبك، فنحن نسعى دائمًا لتقديم الأفضل. ملاحظاتك محل اهتمامنا، وسنسعى لتحسين التجربة لإرضائك مستقبلاً. شكراً لدعمك، ونتمنى أن نراك قريبًا.
+
+ `, en:` We sincerely apologize for any inconvenience during your order, as we always strive to provide the best. Your feedback is important to us, and we will work to improve the experience to satisfy you in the future. Thank you for your support, and we hope to see you soon.
+
+`},
+  {ar:`نأسف لأن تجربتك لم تكن كما توقعت، وسنعمل على تحسين خدماتنا لتفادي تكرار ذلك إن شاء الله. شكراً لوقتك وثقتك بنا، وسنسعى جاهدين لتقديم تجربة مرضية لك مستقبلاً.
+
+ `, en:`We are sorry that your experience was not as you expected, and we will work on improving our services to prevent this from happening again, God willing. Thank you for your time and trust in us, and we will strive to provide you with a satisfactory experience in the future.
+
+ `},
+  {ar:`نعتذر عن أي تجربة غير مرضية قد مررت بها، ونعمل على تحسين الخدمة بناءً على ملاحظاتك. نشكرك على تفهمك، و سنحرص على أن تكون تجربتك القادمة أكثر راحة.
+
+ `, en:`  We’re truly sorry for any inconvenience caused. We understand this wasn’t ideal and are committed to improving your experience next time. Thank you for trusting us.
+
+`},
+  {ar:`نعتذر عن أي تقصير قد واجهته، وسنعمل على تحسين خدماتنا لإرضائك قدر الإمكان. شكراً لك على ملاحظاتك القيمة، ونتمنى أن تمنحنا فرصة أخرى لخدمتك بشكل أفضل.
+
+ `, en:` We apologize for any shortcomings you may have experienced, and we will work on improving our services to satisfy you as much as possible. Thank you for your valuable feedback, and we hope you give us another opportunity to serve you better.
+
+`},
+  {ar:`نأسف لأي إزعاج قد سبّبته تجربتك معنا، وسنسعى بتحسين الخدمة لتكون على مستوى توقعاتك. نشكر لك تفهمك، ونتمنى أن نراك مجددًا في تجربة أكثر راحة وسعادة.
+
+ `, en:` We are truly sorry that your recent order did not go as expected. Your trust is important to us, and we are dedicated to improving our service based on your valuable feedback. Please accept our apologies, and we hope to provide you with a much smoother experience in the future.
+
+`},
+  {ar:` نحن نأسف لأي قصور قد حدث أثناء تجربتك، وندرك تمامًا مدى أهمية تقديم خدمة مميزة تلبي تطلعاتك. رضاك هو حجر الأساس الذي نبني عليه خدماتنا، ولذلك فإننا نأخذ جميع الملاحظات على محمل الجد ونعمل جاهدين على تحسين التجربة لتقديم مستوى عالٍ من الجودة مستقبلاً. نشكر لك تفهمك وثقتك بنا، ونسعى باستمرار لجعل كل تجربة لك معنا أفضل من السابقة.
+
+`, en:` We are sorry for any shortcomings you may have experienced, and we fully recognize the importance of providing outstanding service that meets your expectations. Your satisfaction is the foundation upon which we build our services, which is why we take all feedback seriously and work hard to improve the experience to deliver a high level of quality in the future. Thank you for your understanding and trust, and we continuously strive to make each experience with us better than the last.
+
+`},
+  {ar:`نأسف بشدة لأي تجربة غير مرضية قد واجهتها، ونتفهم تمامًا مدى الإحباط الذي قد تشعر به عند عدم الحصول على الخدمة بالمستوى المتوقع. نحن نعمل بجد لتحسين الجودة والاستجابة السريعة للملاحظات الخاصة بعملائنا، وسنسعى جاهدين لجعل تجربتك القادمة أكثر سلاسة وراحة. نشكرك على تفهمك، ونتطلع إلى خدمتك قريبًا بطريقة تليق بثقتك بنا.
+
+ `, en:` We deeply regret any unsatisfactory experience you may have had, and we fully understand the frustration of not receiving service at the expected level. We are working hard to improve quality and respond promptly to our customers’ feedback, and we will strive to make your next experience smoother and more comfortable. Thank you for your understanding, and we look forward to serving you soon in a manner worthy of your trust.
+
+`},
+  {ar:`نتفهم تمامًا أنك كنت تتوقع تجربة أفضل، ونحن نأسف لأننا لم نرتقِ إلى مستوى تطلعاتك هذه المرة. نقدّر صبرك وملاحظاتك التي تساعدنا على التطوير، ونعمل بلا توقف لتحسين الخدمة لتكون أكثر سلاسة وجودة إن شاء الله. نأمل أن تمنحنا فرصة أخرى لنثبت لك أننا نستحق ثقتك، ونتطلع لأن تكون تجربتك القادمة معنا أكثر راحة ورضا.
+
+ `, en:` We fully understand that you expected a better experience, and we are sorry that we did not meet your expectations this time. We appreciate your patience and feedback, which help us improve, and we continuously work to enhance the service to make it smoother and of higher quality, God willing. We hope you give us another opportunity to show that we deserve your trust, and we look forward to your next experience with us being more comfortable and satisfying.
+
+`},
+];
+
+const shortApology = [
+ {ar:`نعتذر يا الغالي عن التجربة اللي ما كانت بالمستوى، وراح نحرص تكون القادمة أفضل بإذن الله.`, en:`We’re sorry your experience wasn’t great, we’ll make sure the next one is better insha’Allah.`},
+{ar:`آسفين إذا واجهت أي إزعاج، ملاحظتك تهمنا وراح نحسن الخدمة للأفضل.`, en:`Sorry for the inconvenience — your feedback matters and we’ll improve our service.`},
+{ar:`نأسف إن التجربة ما كانت مثل توقعاتك، وراح نعمل على تحسينها مستقبلاً.`, en:`We’re sorry it didn’t meet your expectations, we’ll make it better next time.`},
+{ar:`نعتذر عن القصور، ونتفهم ملاحظاتك وراح نطور الخدمة قريب إن شاء الله.`, en:`We apologize for the shortfall and we’ll work on improving soon, God willing.`},
+{ar:`نأسف لو سبّبنا لك أي إزعاج، هدفنا دايمًا رضاك وتقديم الأفضل.`, en:`We’re sorry for any inconvenience — our goal is always your satisfaction.`},
+{ar:`نعتذر منك، بنحرص نكسب رضاك ونستعيد ثقتك فينا.`, en:`Our apologies, we’ll work to regain your trust and satisfaction.`},
+{ar:`نأسف على التجربة، وراح نراجع الملاحظات لضمان تحسين الخدمة.`, en:`Sorry about your experience — we’ll review your feedback to improve our service.`},
+{ar:`نعتذر عن اللي صار، وراح نسعى تكون تجربتك القادمة أسهل وأفضل.`, en:`We’re sorry about what happened — we’ll make your next experience smoother.`},
+{ar:`نأسف لأي تقصير، بنشتغل دايم على رفع الجودة وتطوير الخدمة.`, en:`Apologies for the shortfall — we’re constantly improving our quality.`},
+{ar:`آسفين على اللي صار، وشاكرين ملاحظاتك اللي تساعدنا نتحسن.`, en:`Sorry about what happened, your feedback helps us improve.`},
+{ar:`نعتذر على أي خلل، وراح نعمل على تحسين تجربتك القادمة بإذن الله.`, en:`We apologize for any issue and we’ll improve your next experience insha’Allah.`},
+{ar:`نأسف على التجربة الغير مرضية، وراح نعمل على تطوير الخدمة بشكل مستمر.`, en:`Sorry for the unsatisfactory experience — we’ll keep improving our service.`},
+{ar:`نعتذر إذا ما كانت التجربة بالمستوى، وراح نحسن الأمور لرضاك.`, en:`Sorry if it wasn’t as expected — we’ll make things right for you.`},
+{ar:`نأسف على أي إزعاج، وراح نتابع الملاحظات لضمان الأفضل.`, en:`Apologies for any inconvenience — we’ll follow up to ensure better service.`},
+{ar:`نعتذر عن التقصير، وملاحظتك بتفيدنا في تحسين الخدمة أكثر.`, en:`Sorry for any shortcomings — your feedback helps us get better.`},
+{ar:`آسفين على التجربة، وشكرًا لتفهمك وثقتك.`, en:`Sorry about the experience, and thank you for your understanding and trust.`},
+{ar:`نعتذر إذا واجهت مشكلة، ونعمل نتأكد إنها ما تتكرر.`, en:`We’re sorry for the issue and will make sure it doesn’t happen again.`},
+{ar:`نأسف لأي قصور، وبنحرص تكون المرات الجاية مرضية لك أكثر.`, en:`Apologies for any shortfall — we’ll make sure next time is better.`},
+{ar:`نعتذر عن الإزعاج، وملاحظتك محل اهتمام الفريق.`, en:`Sorry for the inconvenience — your feedback is being reviewed by the team.`},
+{ar:`نأسف إذا التجربة ما كانت بالمستوى، ونتمنى فرصة نعوضك فيها.`, en:`We’re sorry it wasn’t up to standards — we hope to make it up to you.`},
+{ar:`نعتذر عن أي تقصير، وراح نطور الأداء بناءً على ملاحظتك.`, en:`We apologize for any shortfall — we’ll improve our performance accordingly.`},
+{ar:`نأسف لو الخدمة ما كانت ترضيك، وراح نحرص تكون الجاية أريح وأسرع.`, en:`Sorry if the service wasn’t satisfying — we’ll make it smoother next time.`},
+{ar:`نعتذر على التجربة الغير مرضية، وهدفنا نخدمك بشكل أفضل الجاية.`, en:`Sorry for the disappointing experience — our goal is to serve you better next time.`},
+{ar:`نأسف لأي خلل صار، ونعمل على تحسين التجربة القادمة.`, en:`We’re sorry for any issue, and we’ll enhance your next experience.`},
+{ar:`نعتذر على اللي حصل، وثقتك تهمنا ونسعى نحافظ عليها.`, en:`Apologies for what happened — your trust matters and we’ll keep it.`},
+{ar:`نأسف إن التجربة ما كانت مثالية، ووعدنا لك إن الجاية تكون أفضل بإذن الله.`, en:`Sorry the experience wasn’t perfect — we promise the next one will be better, God willing.`}
+];
+
+const hold = [
+  // 🔟 الأصلية بدون أي تعديل
+  { ar: `أحتاج إلى دقيقة إضافية لإنهاء العمل المطلوب، وأقدّر تفهمك.`, en: `I need an extra minute to complete the required task, and I appreciate your understanding.` },
+  { ar: `سأستغرق دقيقة أخرى للتحقق من التفاصيل، شكرًا على صبرك.`, en: `I will take another minute to verify the details. Thank you for your patience.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، لكن قد أضطر لطلب وقت إضافي حسب المستجدات.`, en: `I need an additional minute now, but I might have to request more time depending on the updates.` },
+  { ar: `ما زال لدي بعض الأمور التي تحتاج إلى دقيقة أخرى للمراجعة، شاكر لتفهمك.`, en: `There are still some matters that require another minute for review. I appreciate your understanding.` },
+  { ar: `أحتاج إلى دقيقة أخرى في هذه المرحلة، وإذا احتجت وقتًا إضافيًا سأعلمك.`, en: `I need one more minute at this stage, and I will let you know if I require additional time.` },
+  { ar: `سأستغرق دقيقة أخرى في الوقت الحالي، وإذا احتجت إلى وقت إضافي سأخبرك.`, en: `I will take another minute for now, and I’ll inform you if I need more time.` },
+  { ar: `الرجاء الانتظار دقيقة أخرى حتى أتمكن من إنهاء العمل المطلوب بشكل دقيق، شكرًا لتفهمك.`, en: `Please wait one more minute so I can complete the task accurately. Thank you for your understanding.` },
+  { ar: `أحتاج إلى دقيقة إضافية الآن، وإذا لم يكتمل الأمر فقد أطلب وقتًا إضافيًا لاحقًا.`, en: `I need an extra minute now, and if the matter is not completed, I may request additional time later.` },
+  { ar: `أحتاج إلى دقيقة أخرى لاستكمال العمل على أكمل وجه، واشكرك على تعاونك.`, en: `I need another minute to complete the task properly, and I appreciate your cooperation.` },
+
+  // ➕ إضافات جديدة بنفس الأسلوب
+  { ar: `ممكن دقيقة إضافية لو سمحت حتى أتأكد من التفاصيل النهائية.`, en: `May I please have another minute to double-check the final details?` },
+  { ar: `أحتاج دقيقة واحدة فقط لأراجع آخر التحديثات قبل ما أرجع لك.`, en: `I just need one minute to review the latest updates before I get back to you.` },
+  { ar: `ممكن دقيقة واحدة بس أتحقق من النظام وأوافيك بالنتيجة.`, en: `Could you please give me a minute to check the system and provide you the result?` },
+  { ar: `أحتاج دقيقة إضافية لأتأكد من جميع النقاط المطلوبة بدقة.`, en: `I need an extra minute to make sure all points are reviewed accurately.` },
+  { ar: `أشيّك على الحالة الآن، وراح أرجع لك بعد دقيقة بالتأكيد النهائي.`, en: `I’m checking the case now and will get back to you within a minute with the final confirmation.` },
+  { ar: `لو سمحت، أحتاج دقيقة إضافية للتأكد من الإجراءات الجارية.`, en: `Please, I need one more minute to confirm the ongoing process.` },
+  { ar: `أتحقق من الملاحظات الآن وراح أبلغك خلال دقيقة بالنتيجة.`, en: `I’m reviewing the notes now and will update you within a minute with the result.` },
+  { ar: `ممكن دقيقة فقط للتأكد من كل شيء قبل أبلغك بالتفاصيل النهائية.`, en: `Just one minute please to make sure everything is clear before I share the final details.` }
+];
+
+let used = {longApology:[], shortApology:[], hold:[]};
+
+function generate(type){
+  let list = eval(type);
+  let remain = list.filter((_,i)=>!used[type].includes(i));
+  if(remain.length===0){
+    document.getElementById('popup').classList.remove('hidden');
+    document.getElementById('popupMsg').textContent = `🎉 تم عرض كل ${type==='hold'?'الهولد':'الاعتذارات'}، يمكنك البدء من جديد.`;
+    return;
+  }
+  let randomIndex = Math.floor(Math.random()*remain.length);
+  let idx = list.indexOf(remain[randomIndex]);
+  used[type].push(idx);
+  if(type==='hold'){
+    showText('holdAr','holdEn',list[idx]);
+  }else if(type==='shortApology'){
+    showText('shortAr','shortEn',list[idx]);
+  }else{
+    showText('longAr','longEn',list[idx]);
+  }
+}
+
+function showText(idAr,idEn,obj){
+  document.getElementById(idAr).textContent=obj.ar;
+  document.getElementById(idEn).textContent=obj.en;
+}
+
+function copyText(id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent);
+  el.style.background="#d8ecff";
+  setTimeout(()=>el.style.background="#f3f7ff",400);
+}
+
+function resetLists(){
+  used={longApology:[], shortApology:[], hold:[]};
+  document.getElementById('popup').classList.add('hidden');
+}
+function calc(rate){
+  const input = document.getElementById('calcInput').value;
+  const result = document.getElementById('calcResult');
+  if(!input || isNaN(input)){
+    result.textContent = 'الرجاء إدخال رقم صالح';
+    return;
+  }
+  const total = (input * rate).toFixed(2);
+  result.textContent = `النتيجة: ${total}`;
+}
+  const el = (id) => document.getElementById(id);
+const CALL_LINE = "Call merchant ,call results ; needed Restaurant admitted the mistake";
+const COMP_LINE = "no Compensation";
+
+function isNumericOrEmpty(v) {
+  if (!v) return true;
+  return /^-?\d+(\.\d+)?$/.test(v.trim());
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  let refund       = (el('refund').value || '').trim();
+  let compensation = (el('compensation').value || '').trim();
+
+ if (!refund) {
+  refund = "no refund";
+}
+  if (!isNumericOrEmpty(compensation)) {
+    alert('حقل Compensation يجب أن يحتوي رقمًا فقط أو يترك فارغًا.');
+    el('compensation').focus();
+    return;
+  }
+
+  if (!refund) refund = "no refund";
+  if (!compensation) compensation = "no compensation";
+
+  // بناء نص الكول لاين
+  // بناء نص الكول لاين
+let callLine = "";
+let normalizedCall = callType.toLowerCase().replace(/\s+/g, "");
+
+if (normalizedCall === "noneed") {
+  callLine = "Call merchant/Rider , Call result : No need";
+} else if (normalizedCall === "merchant") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع التاجر.");
+    return;
+  }
+  callLine = `Call merchant , Call result : ${callResult}`;
+} else if (normalizedCall === "rider") {
+  if (!callResult) {
+    alert("اكتب نتيجة المكالمة مع السائق.");
+    return;
+  }
+  callLine = `Call rider , Call result : ${callResult}`;
+} else {
+  callLine = "Call merchant/Rider , Call result : No need";
+}
+
+  const lines = [
+    `Call line: ${callLine}`,
+    `Case Solution Risk Label: (${risk})RC`,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund}) `,
+    `Compensation: (${compensation}) `
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+function clearAll() {
+  el('riskLabel').value = '0';
+  el('evidence').value = 'Clear';
+  el('receipt').value = 'yes';
+  el('refund').value = '';
+  el('output').value = '';
+}
+
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', clearAll);
+function toggleCallInput(){
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if(callType === "merchant" || callType === "rider"){
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
+ function toggleCallInput() {
+  const callType = el('callType').value;
+  const box = document.getElementById('callResultBox');
+  if (callType === "merchant" || callType === "rider") {
+    box.style.display = "grid";
+  } else {
+    box.style.display = "none";
+    el('callResult').value = "";
+  }
+}
+
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'block';
+
+    // ✅ يحدد أول خيار (0RC) تلقائيًا
+    const firstRC = document.querySelector('input[name="subRC"][value="0RC"]');
+    if (firstRC) firstRC.checked = true;
+
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => (i.checked = false));
+  }
+}
+
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+
+function buildTemplate() {
+  const selectedRC = getSelectedRC();
+  const riskLabelLine = `Case Solution Risk Label: ${selectedRC || '—'}`;
+  const evidence   = el('evidence').value;
+  const receipt    = el('receipt').value;
+  const callType   = el('callType').value;
+  const callResult = (el('callResult').value || '').trim();
+  const refund     = el('refund').value;
+  let compensation = (el('compensation').value || '').trim();
+
+  if (!compensation) compensation = "no compensation";
+
+  let callLine = "";
+  if (callType === "noneed") {
+    callLine = "Call merchant/Rider , Call result : No need";
+  } else if (callType === "merchant") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع التاجر.");
+      return;
+    }
+    callLine = `Call merchant , Call result : ${callResult}`;
+  } else if (callType === "rider") {
+    if (!callResult) {
+      alert("اكتب نتيجة المكالمة مع السائق.");
+      return;
+    }
+    callLine = `Call rider , Call result : ${callResult}`;
+  } else {
+    alert("اختَر نوع المكالمة أولاً.");
+    return;
+  }
+
+  const lines = [
+    ` ${callLine}`,
+    riskLabelLine,
+    `Evidence: ${evidence}`,
+    `Receipt: ${receipt}`,
+    `Refund: (${refund})`,
+    `Compensation: (${compensation}) compensation`
+  ];
+
+  el('output').value = lines.join("\n");
+}
+
+el('build').addEventListener('click', buildTemplate);
+el('clear').addEventListener('click', () => {
+  el('riskLabel').value = '0RC';
+  el('evidence').value = 'No need';
+  el('receipt').value = 'No need';
+  el('refund').value = 'No refund';
+  el('compensation').value = '';
+  el('output').value = '';
+  toggleRCOptions(); // يخفي الحقل عند المسح
+});
+}
+// ✅ لإظهار حقل RC فقط عند اختيار Red أو Purple
+function toggleRCOptions() {
+  const val = document.getElementById('riskLabel').value;
+  const box = document.getElementById('rcOptions');
+  if (val === 'Red' || val === 'Purple') {
+    box.style.display = 'grid';
+  } else {
+    box.style.display = 'none';
+    document.querySelectorAll('input[name="subRC"]').forEach(i => i.checked = false);
+  }
+}
+
+// ✅ لبناء النص النهائي في التيمبليت
+function getSelectedRC() {
+  const main = document.getElementById('riskLabel').value;
+  if (main === 'Red' || main === 'Purple') {
+    const sub = document.querySelector('input[name="subRC"]:checked');
+    return sub ? `${sub.value} (${main})` : `${main}`;
+  }
+  return main || '';
+}
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("callType").value = "noneed";
+  toggleCallInput();
+});
+</script>
+<script>
+window.addEventListener("load", () => {
+
+  // ✅ تأثير النسخ الزجاجي المتحرك
+  function copyMsg(el, e) {
+    const text = el.value || el.textContent.trim();
+    if (!text) return;
+
+    navigator.clipboard.writeText(text);
+
+    // 💚 وميض أخضر خفيف على الكرت
+    el.style.transition = "box-shadow 0.3s ease, transform 0.2s ease";
+    el.style.boxShadow = "0 0 15px rgba(0, 255, 100, 0.6)";
+    el.style.transform = "scale(1.03)";
+    setTimeout(() => {
+      el.style.boxShadow = "none";
+      el.style.transform = "scale(1)";
+    }, 300);
+
+    // 🫧 إنشاء فقاعة زجاجية
+    const bubble = document.createElement("div");
+    bubble.textContent = "تم النسخ ✅";
+    Object.assign(bubble.style, {
+      position: "fixed",
+      left: e.pageX + "px",
+      top: e.pageY + "px",
+      transform: "translate(-50%, -50%)",
+      background: "rgba(255, 255, 255, 0.25)",
+      backdropFilter: "blur(12px) saturate(180%)",
+      WebkitBackdropFilter: "blur(12px) saturate(180%)",
+      color: "#00b36b",
+      border: "1px solid rgba(255,255,255,0.4)",
+      padding: "6px 14px",
+      borderRadius: "12px",
+      fontSize: "14px",
+      fontFamily: "Cairo, sans-serif",
+      fontWeight: "600",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+      opacity: "0",
+      zIndex: "999999",
+      pointerEvents: "none",
+      transition: "opacity .2s ease, transform .2s ease"
+    });
+
+    document.body.appendChild(bubble);
+
+    // 💫 تتحرك خلف الماوس أثناء النصف ثانية الأولى
+    const moveWithMouse = (ev) => {
+      bubble.style.left = ev.pageX + "px";
+      bubble.style.top = ev.pageY - 20 + "px";
+    };
+    document.addEventListener("mousemove", moveWithMouse);
+
+    // ✨ ظهور تدريجي
+    requestAnimationFrame(() => {
+      bubble.style.opacity = "1";
+      bubble.style.transform = "translate(-50%, -80%)";
+    });
+
+    // ⏳ توقف عن ملاحقة الماوس بعد 0.3 ثانية
+    setTimeout(() => {
+      document.removeEventListener("mousemove", moveWithMouse);
+      bubble.style.opacity = "0";
+      bubble.style.transform = "translate(-50%, -150%)";
+    }, 300);
+
+    // 🧹 حذف بعد اختفاءها
+    setTimeout(() => bubble.remove(), 700);
+  }
+
+  // ✅ تفعيل النسخ لكل العناصر
+  function enableCopying() {
+    document.querySelectorAll(".msg, .msgBox, textarea#output, .fixed-msg").forEach(el => {
+      el.onclick = (e) => copyMsg(el, e);
+    });
+  }
+
+  enableCopying();
+
+  // 🎯 لو تمت إضافة عناصر جديدة
+  const observer = new MutationObserver(enableCopying);
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+ <!-- 🟦 نافذة التحديث (Popup) -->
+<!-- 🩵 نافذة التحديثات الجميلة -->
+<div id="updatePopup" style="
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  font-family: 'Cairo', sans-serif;
+">
+  <div id="updateBox" style="
+    position: relative;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(15px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    padding: 30px;
+    text-align: center;
+    width: 420px;
+    max-width: 90%;
+    animation: fadeIn .5s ease;
+  ">
+    <h2 style="color:#285eff;margin-bottom:12px;">اللهم هون على اهلنا في غزه والسودان</h2>
+    <h2 style="color:#285eff;margin-bottom:12px;">وَاتَّقُوا يَوْمًا تُرْجَعُونَ فِيهِ إِلَى اللَّهِ ۖ ثُمَّ تُوَفَّىٰ كُلُّ نَفْسٍ مَّا كَسَبَتْ وَهُمْ لَا يُظْلَمُونَ</h2>
+    <p style="color:#1a1a1a;font-size:15px;">اقرأ الملاحظات ثم اضغط على تمّ القراءة 👇</p>
+
+    <ul style="text-align:right;color:#333;font-size:20px;line-height:2;margin:15px 0;">
+      <li style="color:#285eff;margin-bottom:12px;" > Thank you for using this project </li>
+      <li style="color:#285eff;margin-bottom:12px;" > Scan the code if you have a suggestion or have any problem.</li>
+      <li style="color:#285eff;margin-bottom:12px;" > All the required changes have been added.</li>
+      <li>  Please always update when you receive a notification. ✅</li>
+    </ul>
+
+    <button id="readBtn" style="
+      background:#285eff;
+      color:#fff;
+      border:none;
+      padding:10px 25px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:bold;
+      transition:all .3s ease;
+      animation: shake 2s infinite ease-in-out;
+    ">📖  Click to Check</button>
+
+    <br><br>
+
+    <button id="skipBtn" style="
+      background:#fff;
+      color:#285eff;
+      border:2px solid #285eff;
+      padding:8px 20px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:14px;
+      position: relative;
+      transition: transform 0.25s ease; /* أسرع */
+      margin-top:10px;
+    ">Skip ✨</button>
+
+    <p id="funnyMsg" style="
+      display:none;
+      color:#ff4747;
+      font-size:13px;
+      font-weight:bold;
+      margin-top:10px;
+    ">Please click on Confirm. It is important that you read the notes.</p>
+  </div>
+</div>
+
+
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
+<script>
+document.addEventListener("click", function(e) {
+  const msg = e.target.closest(".msg");
+  if (!msg) return;
+
+  // نقرأ النص الأصلي
+  let text = msg.textContent.trim();
+
+  // نجيب اسم المطعم من الحقل
+  const restInput = document.getElementById("restaurantName");
+  const restName = restInput ? restInput.value.trim() : "";
+
+  // 🔹 لو فيه اسم مطعم نستبدله داخل أول قوسين فقط
+  if (restName && /\(\s*[^\)]*\s*\)/.test(text)) {
+    text = text.replace(/\(\s*[^\)]*\s*\)/, "(" + restName + ")");
+  }
+
+  // نسخ النص إلى الكليب بورد
+  navigator.clipboard.writeText(text);
+
+  // إظهار إشعار بسيط
+  let note = document.getElementById("copyNoteFinal");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "copyNoteFinal";
+    note.textContent = "✅ تم النسخ";
+    Object.assign(note.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      background: "#285eff",
+      color: "#fff",
+      padding: "8px 14px",
+      borderRadius: "8px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      opacity: "0",
+      transition: "opacity .3s ease",
+      zIndex: "99999"
+    });
+    document.body.appendChild(note);
+  }
+
+  note.style.opacity = "1";
+  setTimeout(() => (note.style.opacity = "0"), 1000);
+});
+</script>
+<!-- 📜 زر فتح مولد الاعتذارات (مستقل تمامًا) -->
+<!-- 💬 زر فتح مولد الاعتذارات -->
+<button id="aplg_toggle" style="
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:#285eff;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:55px;
+  height:55px;
+  font-size:22px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  z-index:99999;
+  transition:.3s;
+">💬</button>
+
+<!-- ⚙️ نافذة مولد الاعتذارات -->
+<div id="aplg_panel" style="
+  display:none;
+  position:fixed;
+  bottom:90px;
+  left:20px;
+  width:420px;
+  max-height:85vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:16px;
+  border:1px solid #d8e5ff;
+  padding:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+  z-index:99998;
+  font-family:'Cairo',sans-serif;
+">
+  <div style="text-align:right;">
+    <button onclick="aplg_togglePanel()" style="
+      background:#ff4d4d;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      padding:3px 10px;
+      cursor:pointer;
+      font-size:13px;
+    ">✖ إغلاق</button>
+  </div>
+
+  <h3 style="color:#285eff; text-align:center; margin-top:5px;">Specific apology</h3>
+
+  <!-- 🔘 أزرار الحالات -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <button onclick="aplg_showCase('missing')" class="aplg_caseBtn">Missing</button>
+    <button onclick="aplg_showCase('wrong')" class="aplg_caseBtn">Wrong</button>
+    <button onclick="aplg_showCase('coldfood')" class="aplg_caseBtn">Cold Food</button>
+    <button onclick="aplg_showCase('notdelicious')" class="aplg_caseBtn">Not Felicious</button>
+    <button onclick="aplg_showCase('portion')" class="aplg_caseBtn">Portion Size</button>
+    <button onclick="aplg_showCase('general')" class="aplg_caseBtn">General</button>
+  </div>
+
+  <!-- 🧩 صندوق الحالات -->
+ <!-- 🧩 صندوق الحالات -->
+<div id="aplg_casesArea">
+
+  <!-- Missing -->
+  <div id="aplg_missing" class="aplg_caseBox">
+    <button onclick="aplg_generate('missing')" class="aplg_genBtn"> Create apology</button>
+    <div class="aplg_output">
+      <div id="aplg_ar_missing" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_missing" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Wrong -->
+  <div id="aplg_wrong" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('wrong')" class="aplg_genBtn">Create apology </button>
+    <div class="aplg_output">
+      <div id="aplg_ar_wrong" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_wrong" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Cold food -->
+  <div id="aplg_coldfood" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('coldfood')" class="aplg_genBtn">Create apology </button>
+    <div class="aplg_output">
+      <div id="aplg_ar_coldfood" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_coldfood" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Not delicious -->
+  <div id="aplg_notdelicious" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('notdelicious')" class="aplg_genBtn">Create apology </button>
+    <div class="aplg_output">
+      <div id="aplg_ar_notdelicious" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_notdelicious" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- Portion size -->
+  <div id="aplg_portion" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('portion')" class="aplg_genBtn">Create apology </button>
+    <div class="aplg_output">
+      <div id="aplg_ar_portion" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_portion" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+  <!-- General -->
+  <div id="aplg_general" class="aplg_caseBox" style="display:none;">
+    <button onclick="aplg_generate('general')" class="aplg_genBtn">Create apology </button>
+    <div class="aplg_output">
+      <div id="aplg_ar_general" class="aplg_msg aplg_copy">—</div>
+      <div id="aplg_en_general" class="aplg_msg aplg_copy">—</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<style>
+.aplg_caseBtn {
+  background:#285eff;
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  margin:3px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.aplg_caseBtn:hover { background:#174de0; transform:scale(1.05); }
+
+.aplg_caseBox { margin-top:10px; text-align:center; }
+
+.aplg_genBtn {
+  background:#00b36b;
+  color:#fff;
+  border:none;
+  padding:8px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+.aplg_genBtn:hover { background:#00975a; transform:scale(1.05); }
+
+.aplg_output {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.aplg_msg {
+  flex:1;
+  min-width:160px;
+  background:#fff;
+  border:1px solid #d8e5ff;
+  border-radius:10px;
+  padding:8px;
+  text-align:center;
+  color:#222;
+  font-family:'Cairo',sans-serif;
+  cursor:pointer;
+  transition:.2s;
+}
+.aplg_msg:hover { background:#f0f5ff; }
+</style>
+
+<script>
+function aplg_togglePanel() {
+  const p = document.getElementById('aplg_panel');
+  p.style.display = (p.style.display === 'none' || !p.style.display) ? 'block' : 'none';
+}
+document.getElementById('aplg_toggle').addEventListener('click', aplg_togglePanel);
+
+function aplg_showCase(type) {
+  // إخفاء جميع الحالات
+  document.querySelectorAll('.aplg_caseBox').forEach(b => b.style.display = 'none');
+
+  // إظهار الحالة المختارة
+  const box = document.getElementById('aplg_' + type);
+  if (!box) return;
+  box.style.display = 'block';
+
+  // 🔹 توليد أول سكربت تلقائي عند الفتح
+  aplg_generate(type);
+}
+
+// 📜 قاعدة بيانات مبدئية فاضية (تقدر تعبيها بعدين)
+const aplg_data = {
+  missing: { 
+  ar:[  
+    "متفهم تمامًا انك استلمت الطلب ناقص وانا معك فعلاً هذا الشي يضايق بس اكيد راح نحرص انها ما تتكرر",
+    "اعرف ان النقص يسبب إحباط وانا فعلاً مقدر شعورك وواثق انها تجربة ما راح تتكرر معك",
+    "فعلاً النقص ما هو مقبول وانا شخصيًا متفهم اللي صار معك وراح نحرص يكون كل طلبك كامل دائمًا",
+    "انا في صفك تمامًا واللي صار من نقص ما يمثلنا وراح نتابع السبب عشان نمنع تكراره",
+    "اعتذر لك عن النقص اللي حصل واعرف انه مو موقف مريح وراح نضمن يكون التوصيل أدق المرات الجايه",
+    "اقدر تفهمك وصبرك وفعلاً آسف انك استلمت الطلب ناقص بس صدقني راح نحرص انها ما تصير ثاني",
+    "انا معك واتفهم احساسك تمامًا النقص احيانًا يضايق وراح نتابع الموضوع عشان نتفاداه المرات الجايه",
+    "اعرف ان النقص يسبب انزعاج وانا فعلاً متفهم اللي مريت فيه وراح نتأكد تكون تجاربك القادمة أفضل",
+    "فعلاً مو سهل تستلم طلب ناقص وانا معك واعتذر بكل صدق وراح نضمن دقة الطلبات الجاية",
+    "انا فعلاً مقدر اللي صار ومتأكد انك ما تستحق هالتجربة وراح نحرص ما تتكرر أبدًا",
+    "النقص اللي صار فعلاً ما يعكس شغلنا وراح نراجع السبب عشان نضمن جودة أفضل",
+    "متفهم الموقف جدًا وانا معك راح انقل الملاحظة للفريق حتى نمنعها من التكرار",
+    "انا فعلاً معك واعتذر عن النقص اللي صار وراح نتابع داخليًا حتى ما يتكرر",
+    "اقدر صبرك وفعلاً اللي صار ما المفروض يصير ابداً وراح نحرص على تحسن تجربتك الجاية",
+    "النقص فعلاً يسبب انزعاج وانا متفهمك جدًا وواثق انها ما راح تتكرر بإذن الله"], 
+
+  en:[
+    "I completely understand receiving a missing item is frustrating and we’ll make sure this doesn’t happen again",
+    "I know how disappointing it feels and I’m confident this experience won’t happen again",
+    "Missing items shouldn’t happen and we’ll ensure your next order arrives complete",
+    "I’m on your side and we’ll look into this to make sure it doesn’t repeat",
+    "I truly apologize for the missing part and we’ll make sure your future orders are accurate",
+    "I appreciate your patience and I promise we’ll be more careful moving forward",
+    "I’m with you this shouldn’t happen and we’ll work on improving our process",
+    "I understand it’s frustrating and we’ll do our best to make sure it doesn’t happen again",
+    "It’s not easy to receive an incomplete order and we’ll make sure it’s complete next time",
+    "I truly value your time and we’ll ensure this kind of issue doesn’t repeat",
+    "The missing item doesn’t reflect us and we’ll review the case to improve accuracy",
+    "I completely understand and I’ll make sure your feedback helps us improve",
+    "I’m really with you on this and we’ll take steps to avoid it happening again",
+    "I appreciate your understanding and we’ll make sure your next experience is better",
+    "I get how that felt and I promise we’ll do better moving forward"]},
+
+  wrong: { 
+  ar:[    "أفهم تمامًا إن استلامك لطلب مختلف عن المطلوب مزعج وراح نحرص ما يتكرر هالشي",
+    "عارف قديش يضايق لما الطلب ما يكون مثل ما كنت تتوقع وراح نشتغل على تحسين التجربة قدام",
+    "أعتذر بصدق عن الخطأ بالطلب وراح نحرص إن طلبك الجاي يوصل بشكل دقيق",
+    "فاهم إن هذا الخطأ ما المفروض يصير وراح أتأكد إن ملاحظتك توصل للفريق المعني",
+    "أنا معك وراح أتابع مع المطعم علشان ما يتكرر الخطأ",
+    "أتخيل قد إيش الموقف كان مربك وراح نتصرف ونعالجه",
+    "فاهم إن الموضوع مزعج وإنه مو مقبول توصل غرض مختلف وراح نحسن العملية",
+    "فاهم قلقك تمامًا وراح أتأكد الفريق المختص يشوف الحالة",
+    "أقدّر تفهمك وراح نحرص إن تجربتك الجاية تكون صحيحة ومريحة",
+    "عارف إن الموضوع مخيب وراح نكون أدق إن شاء الله في المرات الجاية",
+    "أشوف كيف الموقف ممكن يزعجك وراح أتابعه بشكل مناسب",
+    "أقدّر صبرك وإحنا نحل الموضوع ونتأكد إنه ما يتكرر",
+    "فاهم إحساسك لما توصلك غرض غلط وأنا متابع عشان نطور من الخدمة",
+    "عارف إن اللي وصلك مو اللي طلبته وراح نحرص تكون الدقة أعلى المرات الجاية",
+    "أنا معك في اللي صار وراح نراجع الخطأ ونتأكد طلبك الجاي يوصل مثل المطلوب"],
+
+  en:[
+    "I completely understand receiving the wrong item is disappointing and we’ll make sure this doesn’t happen again",
+    "I know how frustrating it is when the order isn’t what you expected and we’ll fix this for the future",
+    "I truly apologize for the wrong item and we’ll make sure your next order is accurate",
+    "I understand this mistake shouldn’t happen and I’ll make sure your feedback is taken seriously",
+    "I’m on your side and we’ll check with the restaurant to prevent it from happening again",
+    "I can imagine how confusing this must have been and we’ll take care of it",
+    "I understand your frustration receiving the wrong item isn’t acceptable and we’ll improve on it",
+    "I completely get your concern and I’ll ensure the right team looks into this",
+    "I truly value your understanding and we’ll make sure your next experience is right",
+    "I know it’s disappointing to receive the wrong order and we’ll do better moving forward",
+    "I can see how this could be upsetting and I’ll make sure this is addressed properly",
+    "I truly appreciate your patience while we fix this and make sure it doesn’t happen again",
+    "I understand how it feels to get the wrong item and I’m already on it to ensure improvement",
+    "I know this isn’t what you ordered and we’ll ensure accuracy going forward",
+    "I’m with you on this we’ll review what happened and make sure your next order arrives correctly"] },
+
+  coldfood: { 
+  ar:[
+  "عارف إن انتظار الطلب أو وصوله بارد شي مزعج وأنا فعلاً متفهم إحساسك وراح نحسن الخدمة أكثر",
+  "أتفهم تمامًا إنك كنت متحمس للطلب وتأخره خيب ظنك وراح نعمل على تحسين السرعة مستقبلاً",
+  "أكيد ما كان من المفترض يوصل الطلب متأخر أو بارد وراح نحرص تكون التجربة الجاية أفضل",
+  "أقدر شعورك لما يوصل الأكل مو بحرارته المعتادة وراح نراجع هالشي حتى ما يتكرر",
+  "فعلاً مو من اللطيف يوصل الطلب متأخر وأنا متفهم إحباطك وراح نتابع لتحسين الخدمة",
+  "عارف قديش يضايق لما تكون متوقع الطلب بوقته ويجي متأخر وراح نحسن التجربة القادمة",
+  "أتفهم إن حرارة الأكل جزء من التجربة وراح نحرص نوصلها أفضل المرات القادمة",
+  "معك حق التأخير يسبب انزعاج وأنا متفهم إحساسك تمامًا وراح نشتغل على تحسين السرعة",
+  "أعتذر عن التأخير اللي حصل وأقدر صبرك وراح نحرص تكون التجارب القادمة أسرع",
+  "عارف إن الأكل فقد حرارته وراح نعمل على تحسين طريقة التوصيل بالمستقبل"], 
+
+  en:[
+  "I know waiting too long or getting a cold order is frustrating I completely understand and we’ll improve the service",
+  "I totally understand you were excited for your meal and the delay disappointed you we’ll work on improving delivery speed",
+  "It shouldn’t have arrived late or cold and we’ll make sure your next experience is better",
+  "I understand how it feels to receive food that’s not warm and we’ll review this to avoid it happening again",
+  "It’s really not pleasant to get your order late I understand your frustration and we’ll work on improving delivery",
+  "I get that you expected your food on time and the delay is upsetting we’ll make sure to improve the next time",
+  "I understand that temperature matters and we’ll focus on delivering better next time",
+  "You’re right delays can be frustrating I completely get how you feel and we’ll work on faster delivery",
+  "I’m sorry for the delay and I appreciate your patience we’ll make sure future deliveries are faster",
+  "I know the food lost its warmth and we’ll work on improving how we handle deliveries"] },
+
+  notdelicious: {
+  ar:[  
+  "عارف إن الطعم ما كان بالمستوى المتوقع وفعلاً أتفهم انزعاجك وراح نحرص تكون التجربة الجاية أفضل",
+  "أتفهم إن الطعم ما عجبك وراح نحرص نراجع التفاصيل مع المطعم لتتحسن الجودة أكثر",
+  "فعلاً إحساس مو حلو لما الأكل ما يكون زاكي وأنا معك تمامًا وراح نشتغل على تحسين التجربة",
+  "أقدر رأيك بالطعم وراح نأخذه بعين الاعتبار لتحسين الخدمة القادمة",
+  "عارف إن الأكل ما طلع مثل المتوقع وراح نحرص تكون التجربة الجاية أفضل بكثير",
+  "أتفهم إن الطعم أثر على تجربتك وأنا معك تمامًا وراح نراجع هذا الشي مع الفريق",
+  "أعتذر إن الطعم ما كان مرضي وراح نحرص نتابع تحسين الجودة أكثر",
+  "عارف قديش ممكن ينزعج الشخص لما الأكل ما يعجبه وراح نشتغل نرفع مستوى التجربة",
+  "أكيد كنت متوقع تجربة ألذ وأنا متفهم تمامًا وراح نحاول نحسن التجربة القادمة",
+  "الطعم جزء مهم من التجربة وأنا فاهمك تمامًا وراح نحرص نوصل جودة أفضل المرات الجاية"], 
+
+  en:[  
+  "I understand the taste wasn’t as expected and I completely get how that felt we’ll make sure your next experience is better",
+  "I get that the food didn’t taste right and we’ll review this with the restaurant to improve the quality",
+  "I know it’s unpleasant when the food doesn’t taste good I’m totally with you and we’ll work on improving the experience",
+  "I value your feedback about the taste and we’ll take it seriously to improve future service",
+  "I understand the meal didn’t meet your expectations and we’ll make sure the next one is much better",
+  "I get that the taste affected your experience and I’m with you we’ll follow up on this for improvement",
+  "I’m sorry the flavor wasn’t satisfying and we’ll make sure to work on improving quality",
+  "I know how disappointing it feels when the meal isn’t tasty we’ll keep working to improve the experience",
+  "You were expecting a better taste and I totally understand we’ll make sure the next one feels worth it",
+  "Taste is a big part of the experience and I completely get you we’ll make sure to aim for better quality next time"] },
+
+  portion: { 
+  ar:[  
+  "عارف إحساسك تمامًا لما تكون الكمية أقل من المتوقع وأنا معك وراح نشارك ملاحظتك للمطعم حتى تتحسن التجربة الجاية",
+  "أتفهم شعورك بالحجم فعلاً وأنا معك وراح أتابع الملاحظة مع المطعم لتحسين الجودة",
+  "أقدر إنك حسيت إن الوجبة صغيرة وأنا أتفق معك وراح نحرص نوصل الملاحظة للمطعم",
+  "عارف قديش ممكن يضايقك الموضوع وأنا معك تمامًا وراح نراجع الموضوع مع المطعم",
+  "فعلاً ما يكون إحساس حلو لما الوجبة تطلع أصغر من المتوقع وأنا أشاركك الإحساس وراح نراجع الملاحظة",
+  "أتفهمك تمامًا وأنا معك هذا الحجم هو اللي يقدمه المطعم بس راح نرفع الملاحظة لتحسين التجربة",
+  "عارف إن الحجم خيّب توقعك وأنا أتفهمك وراح أحرص نوصل الملاحظة للمطعم لتتحسن الخدمة",
+  "أقدر إحباطك تمامًا لما تشوف الكمية أقل وأنا فعلاً معك وراح نراجع الموضوع لتحسينه",
+  "أتفهمك جدًا لما ما تكون الكمية كافية وأنا معك وراح نأخذ الملاحظة بعين الاعتبار",
+  "عارف إن التجربة ما كانت مرضية بسبب الحجم وأنا متفهمك تمامًا وراح نوصلها للمطعم للتحسين"],
+
+  en:[  
+  "I totally get how it feels when the portion is smaller than expected I’m on your side and we’ll share your feedback with the restaurant",
+  "I completely understand your feeling about the size I’m with you and we’ll review this with the restaurant to improve",
+  "I get that the portion felt small and I agree with you we’ll make sure the feedback reaches the restaurant",
+  "I know it’s frustrating to receive a small portion and I’m with you we’ll bring this up with the restaurant",
+  "I get how disappointing it feels when the meal looks smaller I feel you and we’ll make sure to check this with the restaurant",
+  "I understand and I’m totally with you this is the portion size provided by the restaurant but we’ll raise your note for improvement",
+  "I see how that felt and I’m with you we’ll make sure your comment helps improve future experiences",
+  "I completely understand your frustration and I’m with you we’ll take this seriously with the restaurant",
+  "I get it the portion didn’t meet your expectations and I’m on your side we’ll ensure the feedback helps improve quality",
+  "I totally understand your disappointment I’m really with you and we’ll forward this to the restaurant to improve"] },
+
+  general: { 
+  ar:[ 
+  "أتفهم تمامًا إحباطك من التجربة وأنا معك وراح نتأكد إنها ما تتكرر بإذن الله",
+  "عارف شعورك وأنا أعتذر بصدق عن اللي صار وراح نهتم بالملاحظة لتحسين تجربتك القادمة",
+  "أقدر وقتك فعلاً وراح أحرص إن ملاحظتك تساعدنا نطور الخدمة أكثر",
+  "أنا متفهمك تمامًا واللي صار فعلاً مو المفروض يصير وراح نحرص نمنع تكراره",
+  "أتفهمك جدًا وراح نراجع التفاصيل عشان نتحسن أكثر بالتجارب القادمة",
+  "عارف قديش هالشي ممكن يضايق وأنا فعلاً أعتذر وراح نهتم بالملاحظة للتحسين",
+  "أقدر تفهمك وصبرك جدًا وراح نعمل على تحسين الخدمة بشكل أفضل",
+  "أعتذر عن الإزعاج اللي سببناه وأؤكد لك إننا راح نراجع الموضوع لتحسين تجربتك القادمة",
+  "أقدر ملاحظتك كثير وراح نراجع اللي صار لتجنب تكراره",
+  "أتفهم تمامًا مشاعرك وراح نأخذ الملاحظة بجدية لتحسين تجربتك القادمة"
+], 
+  en:[ 
+  "I completely understand your frustration and I’m with you we’ll make sure this doesn’t happen again",
+  "I truly understand how you feel and I’m sorry for the experience we’ll work on improving moving forward",
+  "I really appreciate your time and I’ll make sure your feedback helps us improve",
+  "I get how that felt and I agree it shouldn’t have happened we’ll make sure it’s reviewed",
+  "I understand you and we’ll take this note seriously to make your next experience better",
+  "I totally get it and I’m sorry for the inconvenience we’ll use your feedback to improve",
+  "I appreciate your understanding and patience we’ll keep improving the service",
+  "I’m sorry for the inconvenience caused and we’ll review this carefully to improve next time",
+  "I value your feedback and we’ll make sure to review what happened to avoid it again",
+  "I truly understand how you felt and we’ll take your note seriously for future improvement"] }
+
+};
+
+function aplg_generate(type) {
+  const data = aplg_data[type];
+  const rand = Math.floor(Math.random() * data.ar.length);
+  document.getElementById("aplg_ar_" + type).textContent = data.ar[rand] || "~";
+  document.getElementById("aplg_en_" + type).textContent = data.en[rand] || "~";
+}
+
+// ✅ النسخ الفعّال + إشعار زجاجي فوق الماوس
+document.addEventListener("click", function(e) {
+  const target = e.target.closest(".aplg_copy");
+  if (!target) return;
+
+  const text = target.textContent.trim();
+  if (!text || text === "~") return; // نتأكد مو فاضي
+
+  try {
+    navigator.clipboard.writeText(text);
+    aplg_showCopiedNotice(e.pageX, e.pageY);
+  } catch (err) {
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+    aplg_showCopiedNotice(e.pageX, e.pageY);
+  }
+});
+
+// ✨ إشعار زجاجي فوق الماوس
+function aplg_showCopiedNotice(x, y) {
+  const note = document.createElement("div");
+  note.textContent = "☑️ تم النسخ";
+  Object.assign(note.style, {
+    position: "fixed",
+    left: x + "px",
+    top: y - 25 + "px",
+    background: "rgba(255, 255, 255, 0.55)",
+    color: "#00b36b",
+    padding: "6px 14px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    fontWeight: "600",
+    backdropFilter: "blur(10px)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+    transform: "translate(-50%,-50%)",
+    zIndex: "999999",
+    opacity: "0",
+    transition: "opacity 0.3s ease, top 0.5s ease"
+  });
+
+  document.body.appendChild(note);
+
+  requestAnimationFrame(() => {
+    note.style.opacity = "1";
+    note.style.top = (y - 55) + "px";
+  });
+
+  setTimeout(() => {
+    note.style.opacity = "0";
+    note.style.top = (y - 80) + "px";
+    setTimeout(() => note.remove(), 400);
+  }, 900);
+}
+</script>
+
+<!-- 🌐 شريط التنقل السفلي -->
+<!-- ✅ زر الواجهة الثانية -->
+ <!-- ✅ الشريط السفلي الموحد -->
+<div id="bottomBar">
+  <button onclick="openPage2()" style="opacity:0.6;cursor:default;color:#295eff;">All scripts</button>
+  <button onclick="goHome()" style="color:#c8c8c8;">Main </button>
+</div>
+
+<div id="page2Overlay">
+  <iframe id="page2Frame" src=""></iframe>
+</div>
+
+<style>
+/* 🌫️ شريط زجاجي شفاف لكن مرئي بشكل أوضح */
+#bottomBar {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.06); /* ← زادت الشفافية شوي */
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(35px) saturate(250%);
+  -webkit-backdrop-filter: blur(35px) saturate(250%);
+  box-shadow:
+    inset 0 0 4px rgba(255,255,255,0.25),
+    0 4px 25px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* ✨ انكسار الضوء */
+#bottomBar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.04)
+  );
+  opacity: 0.7;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* ⚪️ الأزرار */
+.nav-btn {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.9);
+  font-size: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    inset 1px 1px 4px rgba(255,255,255,0.25),
+    inset -2px -2px 5px rgba(0,0,0,0.15),
+    0 3px 15px rgba(0,0,0,0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.nav-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.08);
+  box-shadow:
+    0 0 20px rgba(255,255,255,0.15),
+    inset 2px 2px 8px rgba(255,255,255,0.4);
+}
+
+/* 🔵 النشط */
+.nav-btn.active {
+  background: rgba(40,94,255,0.18);
+  box-shadow:
+    0 0 25px rgba(40,94,255,0.45),
+    inset 1px 1px 6px rgba(255,255,255,0.2);
+  color: #fff;
+  transform: scale(1.1);
+}
+#bottomBar button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#bottomBar button:hover {
+  transform: scale(1.2);
+}
+#page2Overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f7faff;
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#page2Overlay.show {
+  display: flex;
+  opacity: 1;
+}
+#page2Frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+
+<script>
+function openPage2() {
+  const overlay = document.getElementById("page2Overlay");
+  const frame = document.getElementById("page2Frame");
+
+  // ✅ نتأكد إن العنصر ظاهر قبل تشغيل الأنيميشن
+  overlay.style.display = "flex";
+  setTimeout(() => overlay.classList.add("show"), 20);
+
+  frame.src = "missingsol5.html"; // يربط الصفحة الثانية
+}
+
+function closePage2() {
+  const overlay = document.getElementById("page2Overlay");
+  const frame = document.getElementById("page2Frame");
+
+  overlay.classList.remove("show");
+  setTimeout(() => {
+    // ✅ ما نحذف العنصر من العرض، فقط نخفيه مؤقتًا
+    overlay.style.display = "none";
+    frame.src = "";
+  }, 600);
+}
+
+
+function goHome() {
+  const overlay = document.getElementById("page2Overlay");
+  if (overlay.classList.contains("show")) {
+    // إذا كنا داخل الصفحة الثانية
+    closePage2();
+  } else {
+    // إذا كنا بالصفحة الرئيسية فقط ننقل لأعلى الصفحة
+    scrollTo(0, 0);
+  }
+}
+
+// تأكد من أن overlay يظهر بعد التحميل
+const overlay = document.getElementById("page2Overlay");
+overlay.addEventListener("transitionstart", () => {
+  overlay.style.display = "flex";
+});
+</script>
+<!-- 🧭 زر تشغيل التعليم -->
+<button id="guideBtn" style="
+  position:fixed;bottom:20px;right:20px;
+  background:#285eff;color:#fff;
+  border:none;border-radius:10px;
+  padding:10px 18px;cursor:pointer;
+  font-family:'Cairo',sans-serif;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  z-index:99999;">🧭 Project guide  </button>
+
+<!-- ⚙️ شريط التحكم -->
+<div id="guideControls" style="
+  display:none;position:fixed;bottom:0;left:0;width:100%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(10px);
+  border-top:1px solid #d8e5ff;
+  padding:10px;text-align:center;
+  font-family:'Cairo',sans-serif;z-index:999999;">
+  <button id="nextGuide" style="
+    background:#285eff;color:white;border:none;
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Next ⏭️</button>
+  <button id="endGuide" style="
+    background:#ff4d4d;color:white;border:none;
+    border-radius:8px;padding:8px 16px;margin:0 6px;cursor:pointer;">Done 🏁</button>
+</div>
+
+<!-- 🌫️ القناع الزجاجي -->
+<div id="guideMask">
+  <svg width="100%" height="100%">
+    <defs>
+      <mask id="mask">
+        <rect width="100%" height="100%" fill="white"/>
+        <rect id="highlightRect" fill="black" rx="10"/>
+      </mask>
+    </defs>
+    <rect width="100%" height="100%" fill="rgba(0,0,0,0.5)" mask="url(#mask)"/>
+  </svg>
+</div>
+
+<style>
+#guideMask {
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  z-index:99998;
+}
+.highlighted {
+  position:relative !important;
+  z-index:99999 !important;
+  box-shadow:0 0 25px 10px rgba(40,94,255,0.7) !important;
+  transition:all 0.3s ease;
+}
+.guideTextBox {
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(10px);
+  border-radius:12px;
+  border:1px solid #c9dafd;
+  padding:12px 18px;
+  text-align:center;
+  box-shadow:0 4px 25px rgba(0,0,0,0.15);
+  font-family:'Cairo',sans-serif;
+  color:#222;
+  width:80%;
+  max-width:280px;
+  animation:fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:translate(-50%,-40%);}
+  to {opacity:1; transform:translate(-50%,-50%);}
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  // الأقسام الأربعة
+  const sections = [
+    {id:"apology", ar:"كلمة انشاء تقوم بوضع سكربت مختلف دائما نقره واحده لنسخ النص", en:"The word “Create” creates a different script each time — one click to copy the text."},
+    {id:"hold", ar:"هنا لدينا القسم الهولد مشابه للاعتذار والسوليوشن لتسهيل صنع التكيت", en:"Here we have the Hold section, similar to the Apology and Solution sections, designed to make ticket creation easier."},
+    {id:"chatScriptsSimple", ar:"هنا القسم المختص في بدايه الشات ضع اسمك حتى يظهر في السكربت ", en:"Here is the section dedicated to the beginning of the chat — enter your name so it appears in the script."},
+    {id:"compensationSection", ar:"لدينا هنا التعويض في كل الحالات ثم الحاسبه وفي زاويه الشاشة سكربتات مخصصه لكل مشكله", en:"Here we have the compensation section for all cases, followed by the calculator, and in the corner of the screen, you’ll find special scripts for each issue."}
+  ];
+
+  let step = 0;
+  const mask = document.getElementById("guideMask");
+  const rect = document.getElementById("highlightRect");
+  const controls = document.getElementById("guideControls");
+  let activeText = null;
+
+  document.getElementById("guideBtn").onclick = startGuide;
+  document.getElementById("nextGuide").onclick = nextStep;
+  document.getElementById("endGuide").onclick = endGuide;
+
+  function startGuide(){
+    step = 0;
+    mask.style.display="block";
+    controls.style.display="block";
+    showStep();
+  }
+
+  function showStep(){
+    document.querySelectorAll(".highlighted").forEach(e=>e.classList.remove("highlighted"));
+    if(activeText) activeText.remove();
+
+    const s = sections[step];
+    const el = document.getElementById(s.id);
+    if(!el) return;
+
+    // تمرير ناعم إلى القسم
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+
+    const r = el.getBoundingClientRect();
+    rect.setAttribute("x", r.left);
+    rect.setAttribute("y", r.top + window.scrollY);
+    rect.setAttribute("width", r.width);
+    rect.setAttribute("height", r.height);
+
+    el.classList.add("highlighted");
+
+    const txt = document.createElement("div");
+    txt.className = "guideTextBox";
+    txt.innerHTML = `<strong style='color:#285eff;'>${s.ar}</strong><br>${s.en}`;
+    el.style.position = "relative";
+    el.appendChild(txt);
+    activeText = txt;
+  }
+
+  function nextStep(){
+    step++;
+    if(step >= sections.length){ endGuide(); return; }
+    showStep();
+  }
+
+  function endGuide(){
+    mask.style.display="none";
+    controls.style.display="none";
+    if(activeText) activeText.remove();
+    document.querySelectorAll(".highlighted").forEach(e=>e.classList.remove("highlighted"));
+  }
+});
+</script>
+<script>
+const skipBtn = document.getElementById("skipBtn");
+const readBtn = document.getElementById("readBtn");
+const funnyMsg = document.getElementById("funnyMsg");
+let hasRead = false;
+let currentDirection = 1; // 1 = يمين، -1 = يسار
+
+// ✨ اهتزاز لطيف لزر القراءة
+readBtn.animate([
+  { transform: "translate(0,0)" },
+  { transform: "translate(2px,0)" },
+  { transform: "translate(-2px,0)" },
+  { transform: "translate(2px,0)" },
+  { transform: "translate(0,0)" }
+], { duration: 800, iterations: Infinity });
+
+// ✅ يثبّت الزر بعد القراءة
+readBtn.onclick = () => {
+  hasRead = true;
+  readBtn.style.background = "#22c55e";
+  readBtn.textContent = "✅ Done";
+  funnyMsg.style.display = "none";
+  skipBtn.style.transform = "translateX(0)";
+};
+
+// ⚡ الزر يهرب بسرعة عند الاقتراب
+skipBtn.onmouseenter = () => {
+  if (!hasRead) {
+    funnyMsg.style.display = "block";
+
+    // يبدّل الاتجاه كل مرة
+    currentDirection *= -1;
+
+    const distance = 120 * currentDirection; // يتحرك يمين أو يسار
+    skipBtn.style.transform = `translateX(${distance}px)`;
+  }
+};
+
+// ✅ يسمح بالتخطي فعلاً بعد القراءة
+skipBtn.onclick = () => {
+  if (hasRead) closePopup();
+};
+
+// 🔻 إغلاق النافذة بلطف
+function closePopup() {
+  const popup = document.getElementById("updatePopup");
+  popup.style.opacity = 0;
+  popup.style.pointerEvents = "none";
+  setTimeout(() => popup.remove(), 400);
+}
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(2px, 0); }
+  50% { transform: translate(-2px, 0); }
+  75% { transform: translate(2px, 0); }
+}
+</style>
+<script>
+function closePopup() {
+  const popup = document.getElementById("updatePopup");
+  if (!popup) return;
+  
+  // تعطيل الضغط بعد الكبس
+  popup.style.pointerEvents = "none";
+  popup.style.opacity = "0";
+
+  // إزالته بعد نصف ثانية
+  setTimeout(() => {
+    if (popup.parentNode) popup.remove();
+  }, 500);
+}
+</script>
+<script>
+// 🧊 إعداد إشعار النسخ الزجاجي المتحرك
+let followNote = null;
+let mouseX = 0, mouseY = 0;
+
+// 🔹 تتبع حركة الماوس
+document.addEventListener("mousemove", (e)=>{
+  mouseX = e.clientX + 20;
+  mouseY = e.clientY + 20;
+  if (followNote) {
+    followNote.style.left = mouseX + "px";
+    followNote.style.top = mouseY + "px";
+  }
+});
+
+// 💬 إنشاء وإظهار الإشعار الزجاجي
+function showCopyNotice(sectionName){
+  if (!followNote){
+    followNote = document.createElement("div");
+    Object.assign(followNote.style, {
+      position: "fixed",
+      pointerEvents: "none",
+      zIndex: "999999",
+      padding: "10px 18px",
+      borderRadius: "14px",
+      fontFamily: "Cairo, sans-serif",
+      fontSize: "14px",
+      fontWeight: "600",
+      backdropFilter: "blur(12px)",
+      background: "rgba(255,255,255,0.35)",
+      color: "#003cff",
+      boxShadow: "0 4px 18px rgba(0,0,0,0.25)",
+      transition: "opacity 0.3s ease, transform 0.3s ease",
+      opacity: "0",
+      transform: "scale(0.95)"
+    });
+    document.body.appendChild(followNote);
+  }
+
+  followNote.innerHTML = `<span style="color:#285eff;">${sectionName}</span>`;
+  followNote.style.left = mouseX + "px";
+  followNote.style.top = mouseY + "px";
+  followNote.style.opacity = "1";
+  followNote.style.transform = "scale(1)";
+
+  clearTimeout(followNote.hideTimeout);
+  followNote.hideTimeout = setTimeout(()=>{
+    followNote.style.opacity = "0";
+    followNote.style.transform = "scale(0.95)";
+  }, 1800);
+}
+
+// 🧠 النسخ الذكي فقط لعناصر النصوص المحددة
+document.addEventListener("click", (e)=>{
+  // ✅ تجاهل الأزرار وحقول الإدخال
+  if (["BUTTON", "INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+  // ✅ العناصر المسموح فيها النسخ فقط
+  const el = e.target.closest(
+    ".msg, .aplg_msg, .req-card, .chat-row div, .aplg_copy"
+  );
+  if (!el) return;
+
+  const text = el.textContent?.trim();
+  if (!text || text === "—" || text === "~" || text.length < 2) return;
+
+  // 🔍 تحديد اسم القسم تلقائيًا
+
+
+  // 📋 تنفيذ النسخ
+  navigator.clipboard.writeText(text)
+    .then(()=> showCopyNotice(sectionName))
+    .catch(()=> showCopyNotice("تم النسخ"));
+});
+</script>
+</body>
+</html>
