@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WFM Shift Builder</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --ink:#1C2433; --navy:#14294B; --navy2:#1F3B6E; --paper:#F4F6FA; --card:#FFFFFF;
+  --line:#E2E7F0; --muted:#68718B; --amber:#E8930C; --amber-bg:#FFF3DB;
+  --green:#0E9F6E; --green-bg:#E3F5ED; --red:#D53844; --red-bg:#FCE9EB;
+  --blue-bg:#EAF1FC; --radius:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--paper); color:var(--ink);
+  font-family:"Segoe UI", "Helvetica Neue", Tahoma, Arial, sans-serif; font-size:15px;}
+body{padding-bottom:80px;}
+.wrap{max-width:1240px; margin:0 auto; padding:0 20px;}
+
+/* header */
+.topbar{background:var(--navy); color:#fff; border-bottom:4px solid var(--amber);}
+.topbar .wrap{display:flex; align-items:center; justify-content:space-between; padding:20px;}
+.brand h1{font-size:22px; font-weight:700; letter-spacing:.2px;}
+.brand p{color:#B9C6DE; font-size:13px; margin-top:4px;}
+.clockstrip{display:flex; gap:3px;}
+.clockstrip span{width:9px; height:26px; border-radius:2px; background:#243d6b;}
+.clockstrip span.on{background:var(--amber);}
+
+/* steps */
+.steps{margin-top:24px; display:flex; flex-direction:column; gap:16px;}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+.card-h{display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line); background:#FBFCFE;}
+.stepnum{width:30px; height:30px; border-radius:8px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex:none;}
+.card-h .t{font-weight:700; font-size:15px;}
+.card-h .t small{display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:2px;}
+.card-h .spacer{flex:1;}
+.card-b{padding:16px 18px;}
+
+.chip{display:inline-flex; align-items:center; gap:6px; background:var(--green-bg); color:var(--green); border:1px solid #BFE6D6; border-radius:999px; padding:4px 12px; font-size:13px; font-weight:600;}
+.chip.warn{background:var(--amber-bg); color:#9A6206; border-color:#F0D9A8;}
+.chip.off{background:#EEF1F6; color:var(--muted); border-color:var(--line);}
+
+.upl{border:2px dashed #C7D2E4; border-radius:10px; padding:18px; text-align:center; color:var(--muted); cursor:pointer; transition:.15s; font-size:14px;}
+.upl:hover, .upl.drag{border-color:var(--navy2); background:var(--blue-bg); color:var(--navy2);}
+.upl b{color:var(--navy2);}
+.upl input{display:none;}
+
+.note{font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.7;}
+
+/* tables */
+.tblwrap{overflow:auto; border:1px solid var(--line); border-radius:10px; max-height:520px;}
+table{border-collapse:separate; border-spacing:0; width:100%; font-size:13px; white-space:nowrap;}
+th,td{padding:7px 10px; border-bottom:1px solid var(--line); text-align:left;}
+thead th{background:var(--navy); color:#fff; position:sticky; top:0; z-index:5; font-weight:600; font-size:12.5px;}
+thead th small{display:block; color:#AFC0DE; font-weight:400; font-size:11px;}
+tbody tr:hover td{background:#F7F9FD;}
+td.num, th.num{font-variant-numeric:tabular-nums; text-align:center;}
+td.center{text-align:center;}
+.taskcell{font-weight:600; color:var(--navy2);}
+.groupcell{color:var(--muted); font-size:12px;}
+
+.offcell{background:var(--amber-bg); color:#9A6206; font-weight:700; text-align:center; letter-spacing:1px;}
+.shiftcell{text-align:center; font-variant-numeric:tabular-nums;}
+.extrabadge{background:var(--blue-bg); color:var(--navy2); font-size:11px; border-radius:6px; padding:1px 7px; margin-inline-start:6px; font-weight:600;}
+
+input.cnt{width:56px; padding:4px 6px; border:1px solid var(--line); border-radius:6px; text-align:center; font-size:13px; font-variant-numeric:tabular-nums;}
+input.cnt:focus{outline:2px solid var(--navy2); border-color:var(--navy2);}
+
+.avail-ok{color:var(--green); font-weight:700;}
+.avail-bad{color:var(--red); font-weight:700;}
+
+/* coverage */
+.covblock{margin-bottom:22px;}
+.covblock h4{margin-bottom:8px; font-size:14px; color:var(--navy2);}
+.cov-ok{background:var(--green-bg); color:#0B7A55; font-weight:600;}
+.cov-short{background:var(--red-bg); color:#A9222C; font-weight:700;}
+.cov-over{background:var(--blue-bg); color:var(--navy2); font-weight:600;}
+
+/* controls */
+.row{display:flex; gap:14px; align-items:center; flex-wrap:wrap;}
+input[type=date]{padding:9px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px; font-family:inherit;}
+.weekchips{display:flex; gap:6px; flex-wrap:wrap;}
+.wday{background:#EEF1F6; border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-size:12px; color:var(--ink); text-align:center;}
+.wday b{display:block; font-size:11px; color:var(--muted); font-weight:600;}
+
+.btn{border:none; border-radius:10px; padding:12px 26px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; transition:.15s;}
+.btn-main{background:var(--navy); color:#fff;}
+.btn-main:hover{background:var(--navy2);}
+.btn-main:disabled{background:#A8B3C9; cursor:not-allowed;}
+.btn-green{background:var(--green); color:#fff;}
+.btn-green:hover{background:#0B845B;}
+.btn-ghost{background:#fff; border:1px solid var(--line); color:var(--ink); font-weight:600; padding:9px 16px; font-size:13.5px;}
+.btn-ghost:hover{border-color:var(--navy2); color:var(--navy2);}
+
+.genbar{display:flex; align-items:center; gap:16px; margin-top:20px; flex-wrap:wrap;}
+.genmsg{color:var(--red); font-size:13.5px; font-weight:600;}
+
+/* results */
+#results{margin-top:28px; display:none;}
+.res-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+.res-head h2{font-size:18px; color:var(--navy);}
+.stats{display:flex; gap:10px; flex-wrap:wrap;}
+.stat{background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px 16px; font-size:13px;}
+.stat b{display:block; font-size:18px; color:var(--navy); font-variant-numeric:tabular-nums;}
+.tabs{display:flex; gap:4px; border-bottom:2px solid var(--line); margin-bottom:14px; flex-wrap:wrap;}
+.tab{padding:10px 18px; cursor:pointer; font-weight:600; font-size:14px; color:var(--muted); border-bottom:3px solid transparent; margin-bottom:-2px;}
+.tab.active{color:var(--navy); border-color:var(--amber);}
+.tab .badge{background:var(--red); color:#fff; border-radius:999px; font-size:11px; padding:1px 7px; margin-inline-start:5px;}
+.tabpane{display:none;}
+.tabpane.active{display:block;}
+
+.searchbox{padding:8px 14px; border:1px solid var(--line); border-radius:8px; font-size:13.5px; width:280px; max-width:100%; font-family:inherit;}
+
+.warnitem{border-radius:10px; padding:11px 14px; margin-bottom:9px; font-size:13.5px; line-height:1.8; border:1px solid;}
+.warnitem.red{background:var(--red-bg); border-color:#F2C4C8; color:#8E1E27;}
+.warnitem.amber{background:var(--amber-bg); border-color:#F0D9A8; color:#7D5104;}
+.warnitem.blue{background:var(--blue-bg); border-color:#C9D9F2; color:var(--navy2);}
+.warnitem details{margin-top:4px;}
+.warnitem summary{cursor:pointer; font-weight:600; font-size:12.5px;}
+.warnitem ul{margin:6px 0 0 18px; font-size:12.5px;}
+
+.okmark{color:var(--green); font-weight:800;}
+.badmark{color:var(--red); font-weight:800;}
+.mutedtxt{color:var(--muted);}
+
+@media (max-width:720px){
+  .topbar .wrap{flex-direction:column; gap:12px; align-items:flex-start;}
+  .searchbox{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <h1>WFM Shift Builder</h1>
+      <p>From headcount and requirement to a system-ready schedule &middot; all processing runs on your device</p>
+    </div>
+    <div class="clockstrip" id="clockstrip" title="24-hour coverage"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="steps">
+
+    <!-- STEP 1: HC -->
+    <div class="card">
+      <div class="card-h">
+        <div class="stepnum">1</div>
+        <div class="t">Headcount (HC)<small>Excel file with: OPS &middot; Agent Name &middot; Task (extra columns are fine)</small></div>
+        <div class="spacer"></div>
+        <span class="chip off" id="hcChip">Not uploaded yet</span>
+      </div>
+      <div class="card-b">
+        <label class="upl" id="hcDrop">
+          <b>Click to choose the HC file</b> or drag and drop it here
+          <input type="file" id="hcFile" accept=".xlsx,.xls,.csv">
+        </label>
+        <div class="note" id="hcNote"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: REQUIREMENT -->
+    <div class="card">
+      <div class="card-h">
+        <div class="stepnum">2</div>
+        <div class="t">Requirement<small>Excel file: tasks in rows, shifts in columns (any names, any times &mdash; we read them automatically)</small></div>
+        <div class="spacer"></div>
+        <span class="chip off" id="reqChip">Not uploaded yet</span>
+      </div>
+      <div class="card-b">
+        <label class="upl" id="reqDrop">
+          <b>Click to choose the requirement file</b> or drag and drop it here
+          <input type="file" id="reqFile" accept=".xlsx,.xls,.csv">
+        </label>
+        <div class="note">Shift-reading rule: each shift column header must contain a time range like <span>8:00-16:00</span> &mdash; the label next to it is free.</div>
+        <div id="reqPreview" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- STEP 3: PREFERENCES -->
+    <div class="card">
+      <div class="card-h">
+        <div class="stepnum">3</div>
+        <div class="t">Preferences <span style="color:var(--muted); font-weight:400;">(optional)</span><small>OPS &middot; Task &middot; Shift (as a time such as <span>13:00 - 21:00</span>) &middot; Off Request (a day or Any Day)</small></div>
+        <div class="spacer"></div>
+        <span class="chip off" id="prefChip">No preferences</span>
+      </div>
+      <div class="card-b">
+        <label class="upl" id="prefDrop">
+          <b>Click to choose the preferences file</b> or drag and drop it here
+          <input type="file" id="prefFile" accept=".xlsx,.xls,.csv">
+        </label>
+        <div class="note" id="prefNote"></div>
+      </div>
+    </div>
+
+    <!-- STEP 4: DATES -->
+    <div class="card">
+      <div class="card-h">
+        <div class="stepnum">4</div>
+        <div class="t">Schedule week<small>Pick the first day &mdash; we build 7 days from there</small></div>
+      </div>
+      <div class="card-b">
+        <div class="row">
+          <input type="date" id="startDate">
+          <div class="weekchips" id="weekChips"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="genbar">
+    <button class="btn btn-main" id="genBtn">&#9881; Build schedule</button>
+    <span class="genmsg" id="genMsg"></span>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="res-head">
+      <h2>Result</h2>
+      <div class="stats" id="stats"></div>
+      <div class="spacer" style="flex:1;"></div>
+      <button class="btn btn-green" id="dlBtn">&#11015; Download Excel</button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="tabSchedule">Schedule</div>
+      <div class="tab" data-tab="tabCoverage">Coverage</div>
+      <div class="tab" data-tab="tabPrefs">Preferences</div>
+      <div class="tab" data-tab="tabWarns">Alerts <span class="badge" id="warnBadge" style="display:none;"></span></div>
+    </div>
+
+    <div class="tabpane active" id="tabSchedule">
+      <div class="row" style="margin-bottom:12px;">
+        <input class="searchbox" id="schedSearch" placeholder="Search by number / name / task...">
+      </div>
+      <div class="tblwrap" id="schedWrap"></div>
+    </div>
+
+    <div class="tabpane" id="tabCoverage">
+      <div class="note" style="margin-bottom:12px;">Each cell = <b>working / required</b> that day. Green = on target, red = short, blue = over.</div>
+      <div id="covWrap"></div>
+    </div>
+
+    <div class="tabpane" id="tabPrefs">
+      <div class="tblwrap" id="prefWrap"></div>
+    </div>
+
+    <div class="tabpane" id="tabWarns">
+      <div id="warnWrap"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ============ helpers ============ */
+const $ = id => document.getElementById(id);
+const S = { hc:null, req:null, prefs:null, result:null, week:[] };
+
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_MAP = {
+  'sunday':0,'sun':0,
+  'monday':1,'mon':1,
+  'tuesday':2,'tue':2,'tues':2,
+  'wednesday':3,'wed':3,
+  'thursday':4,'thu':4,'thur':4,'thurs':4,
+  'friday':5,'fri':5,
+  'saturday':6,'sat':6
+};
+
+function norm(s){ return String(s??'').toLowerCase().replace(/[\u2013\u2014]/g,'-').replace(/\s+/g,' ').trim(); }
+function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function parseRange(s){
+  const m = String(s??'').match(/(\d{1,2})[:.](\d{2})\s*(?:-|\u2013|\u2014|to)\s*(\d{1,2})[:.](\d{2})/i);
+  if(!m) return null;
+  const start = ((+m[1])%24)*60 + (+m[2]);
+  const end   = ((+m[3])%24)*60 + (+m[4]);
+  return { start, end, text: fmtT(start)+' - '+fmtT(end) };
+}
+function fmtT(mins){ return (Math.floor(mins/60)%24) + ':' + String(mins%60).padStart(2,'0'); }
+function fmtDate(d){ return (d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear(); }
+function toNum(v){
+  if(v===''||v==null) return 0;
+  const n = parseFloat(String(v).replace(/[^\d.\-]/g,''));
+  return isFinite(n) ? Math.max(0, Math.round(n)) : 0;
+}
+
+function readWB(file){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = e => { try{ res(XLSX.read(new Uint8Array(e.target.result), {type:'array'})); }catch(err){ rej(err); } };
+    r.onerror = ()=> rej(new Error('Failed to read the file'));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+function hookUpload(dropId, fileId, handler){
+  const drop = $(dropId), inp = $(fileId);
+  inp.addEventListener('change', ()=>{ if(inp.files[0]) handler(inp.files[0]); inp.value=''; });
+  drop.addEventListener('dragover', e=>{ e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', ()=> drop.classList.remove('drag'));
+  drop.addEventListener('drop', e=>{ e.preventDefault(); drop.classList.remove('drag'); if(e.dataTransfer.files[0]) handler(e.dataTransfer.files[0]); });
+}
+
+/* ============ HC parsing ============ */
+async function loadHC(file){
+  try{
+    const wb = await readWB(file);
+    const agents = []; const warns = [];
+    wb.SheetNames.forEach(sn=>{
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:''});
+      let hi=-1, C=null;
+      for(let i=0;i<Math.min(rows.length,25);i++){
+        const low = rows[i].map(c=>norm(c));
+        const oi = low.findIndex(c => c==='ops' || c==='ops number' || c==='person number' || c==='ops#');
+        const ti = low.findIndex(c => c.includes('task'));
+        if(oi>-1 && ti>-1){
+          hi=i;
+          C = {
+            ops:oi, task:ti,
+            name: low.findIndex(c => c.includes('name') && !c.includes('id')),
+            proj: low.findIndex(c => c.includes('project')),
+            id:   low.findIndex(c => c.includes('id') && c!=='ops')
+          };
+          break;
+        }
+      }
+      if(hi<0) return;
+      for(let i=hi+1;i<rows.length;i++){
+        const r = rows[i];
+        const ops = String(r[C.ops]??'').trim();
+        const task = String(r[C.task]??'').trim();
+        if(!ops || !task || !/^\d+/.test(ops)) continue;
+        agents.push({
+          ops: String(parseInt(ops,10)),
+          name: C.name>-1 ? String(r[C.name]??'').trim() : '',
+          task,
+          project: C.proj>-1 ? String(r[C.proj]??'').trim() : '',
+          opsId: C.id>-1 ? String(r[C.id]??'').trim() : ''
+        });
+      }
+    });
+    const seen = new Set(); const out = []; let dup=0;
+    agents.forEach(a=>{ if(seen.has(a.ops)){dup++; return;} seen.add(a.ops); out.push(a); });
+    if(!out.length) throw new Error('Could not find OPS and Task columns in the file');
+    if(dup) warns.push(dup+' duplicate row(s) with the same OPS number \u2014 only the first was kept');
+
+    S.hc = { agents: out, warns };
+    const tasks = new Set(out.map(a=>a.task));
+    $('hcChip').textContent = out.length+' agents \u00b7 '+tasks.size+' tasks';
+    $('hcChip').className = 'chip';
+    $('hcNote').innerHTML = warns.map(w=>'\u26a0 '+esc(w)).join('<br>');
+    refreshReqAvailability();
+  }catch(err){
+    $('hcChip').textContent = 'Failed'; $('hcChip').className='chip warn';
+    $('hcNote').innerHTML = '\u26a0 '+esc(err.message);
+    S.hc = null;
+  }
+}
+
+/* ============ Requirement parsing ============ */
+async function loadREQ(file){
+  try{
+    const wb = await readWB(file);
+    let parsed = null;
+    for(const sn of wb.SheetNames){
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:''});
+      let hi=-1, shiftCols=[];
+      for(let i=0;i<Math.min(rows.length,30);i++){
+        const found = [];
+        rows[i].forEach((c,ci)=>{ const t=parseRange(c); if(t) found.push({ci, ...t, raw:c}); });
+        if(found.length>=2){ hi=i; shiftCols=found; break; }
+      }
+      if(hi<0) continue;
+
+      const header = rows[hi];
+      const shifts = shiftCols.map((sc,idx)=>({
+        key:'s'+idx, col:sc.ci, start:sc.start, end:sc.end, text:sc.text,
+        name: shiftName(sc.raw, idx)
+      }));
+      const firstShiftCol = Math.min(...shifts.map(s=>s.col));
+      let totalCol = -1;
+      header.forEach((c,ci)=>{
+        const n = norm(c);
+        if(ci<firstShiftCol && (n.includes('total')||n.includes('fte'))) totalCol = ci;
+      });
+      const taskCols = [];
+      for(let ci=0; ci<firstShiftCol; ci++){ if(ci!==totalCol) taskCols.push(ci); }
+      if(!taskCols.length) continue;
+      const lastTask = taskCols[taskCols.length-1];
+      const groupCols = taskCols.slice(0,-1);
+
+      const carry = {};
+      const outRows = [];
+      for(let i=hi+1;i<rows.length;i++){
+        const r = rows[i];
+        groupCols.forEach(ci=>{ const v=String(r[ci]??'').trim(); if(v) carry[ci]=v; });
+        const type = String(r[lastTask]??'').trim();
+        if(!type) continue;
+        if(norm(type)==='total' || norm(type)==='grand total') continue;
+        const counts = {};
+        let any=false;
+        shifts.forEach(s=>{ const n=toNum(r[s.col]); counts[s.key]=n; if(n>0) any=true; });
+        const totalGiven = totalCol>-1 ? toNum(r[totalCol]) : null;
+        if(!any && !totalGiven) continue;
+        const groupParts = groupCols.map(ci=>carry[ci]).filter(Boolean);
+        const full = [...groupParts, type].join(' - ');
+        outRows.push({ group: groupParts.join(' - '), type, full, counts, totalGiven });
+      }
+      if(outRows.length){ parsed = { shifts, rows: outRows, sheet: sn }; break; }
+    }
+    if(!parsed) throw new Error('Could not find a header row with shift times (e.g. 8:00-16:00) plus task rows');
+
+    S.req = parsed;
+    $('reqChip').textContent = parsed.rows.length+' tasks \u00b7 '+parsed.shifts.length+' shifts';
+    $('reqChip').className = 'chip';
+    renderReqPreview();
+    refreshReqAvailability();
+  }catch(err){
+    $('reqChip').textContent='Failed'; $('reqChip').className='chip warn';
+    $('reqPreview').innerHTML = '<div class="warnitem red">\u26a0 '+esc(err.message)+'</div>';
+    S.req = null;
+  }
+}
+function shiftName(raw, idx){
+  let t = String(raw??'').replace(/\(.*?\)/g,' ');
+  t = t.replace(/\d{1,2}[:.]\d{2}\s*(?:-|\u2013|\u2014|to)\s*\d{1,2}[:.]\d{2}/gi,' ');
+  t = t.replace(/\s+/g,' ').trim();
+  return t || ('Shift '+(idx+1));
+}
+
+function renderReqPreview(){
+  if(!S.req){ $('reqPreview').innerHTML=''; return; }
+  const R = S.req;
+  let h = '<div class="tblwrap"><table><thead><tr>';
+  h += '<th>Line</th><th>Task</th><th class="num">Total</th>';
+  R.shifts.forEach(s=>{ h += '<th class="num">'+esc(s.name)+'<small>'+esc(s.text)+'</small></th>'; });
+  h += '<th class="num">Available in HC</th></tr></thead><tbody>';
+  R.rows.forEach((row,ri)=>{
+    h += '<tr><td class="groupcell">'+esc(row.group)+'</td><td class="taskcell">'+esc(row.type)+'</td>';
+    h += '<td class="num" id="reqTot'+ri+'"></td>';
+    R.shifts.forEach(s=>{
+      h += '<td class="num"><input class="cnt" type="number" min="0" value="'+(row.counts[s.key]||0)+'" data-ri="'+ri+'" data-key="'+s.key+'"></td>';
+    });
+    h += '<td class="num" id="reqAvail'+ri+'">\u2014</td></tr>';
+  });
+  h += '</tbody></table></div>';
+  h += '<div class="note">You can edit the counts here directly before generating \u2014 the total updates automatically.</div>';
+  $('reqPreview').innerHTML = h;
+  $('reqPreview').querySelectorAll('input.cnt').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const ri=+inp.dataset.ri, key=inp.dataset.key;
+      S.req.rows[ri].counts[key] = Math.max(0, Math.round(+inp.value||0));
+      refreshReqAvailability();
+    });
+  });
+  refreshReqAvailability();
+}
+
+function rowTotal(row){ return Object.values(row.counts).reduce((t,n)=>t+n,0); }
+
+function matchReqToHC(){
+  if(!S.req) return;
+  const byTask = {};
+  if(S.hc) S.hc.agents.forEach(a=>{ (byTask[a.task] ||= []).push(a); });
+  const hcTasks = Object.keys(byTask);
+  const normMap = new Map(hcTasks.map(t=>[norm(t), t]));
+  S.req.rows.forEach(r=>{
+    r.hcTask = null; r.ambiguous = null;
+    let hit = normMap.get(norm(r.full)) || (!r.group ? normMap.get(norm(r.type)) : null);
+    if(!hit && S.hc){
+      const g = norm(r.group), ty = norm(r.type);
+      const found = hcTasks.filter(t=>{ const n=norm(t); return n.includes(ty) && (!g || n.includes(g)); });
+      if(found.length===1) hit = found[0];
+      else if(found.length>1) r.ambiguous = found;
+    }
+    r.hcTask = hit || null;
+    r.avail = hit ? byTask[hit].length : 0;
+  });
+  return byTask;
+}
+
+function refreshReqAvailability(){
+  if(!S.req) return;
+  matchReqToHC();
+  S.req.rows.forEach((row,ri)=>{
+    const tot = rowTotal(row);
+    const totEl = $('reqTot'+ri), avEl = $('reqAvail'+ri);
+    if(totEl) totEl.textContent = tot;
+    if(avEl){
+      if(!S.hc){ avEl.textContent='\u2014'; avEl.className='num'; }
+      else if(!row.hcTask){ avEl.textContent = row.ambiguous ? 'Ambiguous' : 'Not found'; avEl.className='num avail-bad'; }
+      else { avEl.textContent = row.avail; avEl.className = 'num ' + (row.avail>=tot ? 'avail-ok' : 'avail-bad'); }
+    }
+  });
+}
+
+/* ============ Preferences parsing ============ */
+async function loadPREFS(file){
+  try{
+    const wb = await readWB(file);
+    let list = null; const warns = [];
+    for(const sn of wb.SheetNames){
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:''});
+      let hi=-1, C=null;
+      for(let i=0;i<Math.min(rows.length,25);i++){
+        const low = rows[i].map(c=>norm(c));
+        const oi = low.findIndex(c=> c==='ops' || c==='ops number');
+        const si = low.findIndex(c=> c.includes('shift'));
+        const fi = low.findIndex(c=> c.includes('off'));
+        if(oi>-1 && (si>-1 || fi>-1)){
+          hi=i;
+          C = { ops:oi, shift:si, off:fi,
+                task: low.findIndex(c=>c.includes('task')),
+                reason: low.findIndex(c=>c.includes('reason')) };
+          break;
+        }
+      }
+      if(hi<0) continue;
+      list = [];
+      for(let i=hi+1;i<rows.length;i++){
+        const r = rows[i];
+        const ops = String(r[C.ops]??'').trim();
+        if(!ops || !/^\d+/.test(ops)) continue;
+        const shiftText = C.shift>-1 ? String(r[C.shift]??'').trim() : '';
+        const range = shiftText ? parseRange(shiftText) : null;
+        if(shiftText && !range) warns.push('OPS '+ops+': could not read the shift time "'+shiftText+'"');
+        const offRaw = C.off>-1 ? String(r[C.off]??'').trim() : '';
+        let offDay = null;
+        if(offRaw){
+          const n = norm(offRaw);
+          if(n.includes('any')) offDay='any';
+          else if(DAY_MAP[n]!=null) offDay = DAY_MAP[n];
+          else warns.push('OPS '+ops+': could not read the off day "'+offRaw+'"');
+        }
+        if(!range && offDay==null) continue;
+        list.push({
+          ops: String(parseInt(ops,10)),
+          task: C.task>-1 ? String(r[C.task]??'').trim() : '',
+          shiftText: range ? range.text : '',
+          shiftStart: range ? range.start : null,
+          shiftEnd: range ? range.end : null,
+          offDay,
+          reason: C.reason>-1 ? String(r[C.reason]??'').trim() : ''
+        });
+      }
+      if(list.length) break;
+    }
+    if(!list || !list.length) throw new Error('No valid preference rows found (need an OPS column with Shift or Off)');
+    const seen = new Set(); const out = [];
+    list.forEach(p=>{ if(seen.has(p.ops)){ warns.push('OPS '+p.ops+' is duplicated in preferences \u2014 only the first was kept'); return; } seen.add(p.ops); out.push(p); });
+
+    S.prefs = { list: out, warns };
+    const ns = out.filter(p=>p.shiftStart!=null).length;
+    const no = out.filter(p=>p.offDay!=null).length;
+    $('prefChip').textContent = out.length+' preferences ('+ns+' shift \u00b7 '+no+' off)';
+    $('prefChip').className='chip';
+    $('prefNote').innerHTML = warns.map(w=>'\u26a0 '+esc(w)).join('<br>');
+  }catch(err){
+    $('prefChip').textContent='Failed'; $('prefChip').className='chip warn';
+    $('prefNote').innerHTML='\u26a0 '+esc(err.message);
+    S.prefs = null;
+  }
+}
+
+/* ============ week ============ */
+function updateWeek(){
+  const v = $('startDate').value;
+  S.week = [];
+  if(!v){ $('weekChips').innerHTML=''; return; }
+  const [y,m,d] = v.split('-').map(Number);
+  for(let i=0;i<7;i++) S.week.push(new Date(y, m-1, d+i));
+  $('weekChips').innerHTML = S.week.map(dt=>
+    '<div class="wday"><b>'+DAYS[dt.getDay()]+'</b><span>'+fmtDate(dt)+'</span></div>'
+  ).join('');
+}
+
+/* ============ GENERATE ============ */
+function generate(){
+  $('genMsg').textContent = '';
+  if(!S.hc){ $('genMsg').textContent='Upload the headcount file first'; return; }
+  if(!S.req){ $('genMsg').textContent='Upload the requirement file'; return; }
+  if(S.week.length!==7){ $('genMsg').textContent='Pick the week start date'; return; }
+
+  const byTask = matchReqToHC();
+  const prefRt = new Map();
+  (S.prefs?.list||[]).forEach(p=> prefRt.set(p.ops, {...p, shiftMet:null, offMet:null, notes:[], scheduled:false}));
+
+  const scheduled = [];
+  const coverage = [];
+  const warns = [];
+  const usedTasks = new Set();
+  let offRotate = 0; /* spread offs across all week days in rotation */
+
+  S.req.rows.forEach((row, orderIdx)=>{
+    const need = rowTotal(row);
+    if(need===0 && !row.hcTask) return;
+
+    if(!row.hcTask){
+      if(row.ambiguous){
+        warns.push({level:'red', msg:'Task "'+row.full+'" matched more than one HC task and could not be resolved \u2014 rename it in one of the files', detail: row.ambiguous});
+      }else{
+        warns.push({level:'red', msg:'Task "'+row.full+'" is not in the headcount \u2014 full shortage: '+need+' agents'});
+      }
+      coverage.push({ row, orderIdx, slots: S.req.shifts.filter(s=>row.counts[s.key]>0).map(s=>({shift:s, need:row.counts[s.key], members:[], offs:[0,0,0,0,0,0,0]})) });
+      return;
+    }
+    usedTasks.add(row.hcTask);
+    const agents = [...byTask[row.hcTask]].sort((a,b)=>(+a.ops)-(+b.ops));
+    agents.forEach(a=>{ a._off=null; a._extra=false; });
+
+    const slots = S.req.shifts.map(s=>({shift:s, need:row.counts[s.key]||0, got:[]})).filter(sl=>sl.need>0);
+
+    /* pass 1: shift preferences */
+    const pending = [];
+    const withPref = [], noPref = [];
+    agents.forEach(a=>{
+      const p = prefRt.get(a.ops);
+      if(p && p.shiftStart!=null) withPref.push(a); else noPref.push(a);
+    });
+    const wants = new Map();
+    withPref.forEach(a=>{
+      const p = prefRt.get(a.ops);
+      const slot = slots.find(sl=> sl.shift.start===p.shiftStart && sl.shift.end===p.shiftEnd);
+      if(!slot){
+        p.shiftMet = false;
+        p.notes.push('Requested shift ('+p.shiftText+') is not among this task\u2019s shifts in the requirement');
+        pending.push(a);
+        return;
+      }
+      if(!wants.has(slot)) wants.set(slot, []);
+      wants.get(slot).push(a);
+    });
+    wants.forEach((arr, slot)=>{
+      arr.sort((a,b)=>{
+        const pa=prefRt.get(a.ops), pb=prefRt.get(b.ops);
+        const oa = pa.offDay!=null?1:0, ob = pb.offDay!=null?1:0; /* those who also want an off get served via the off */
+        if(oa!==ob) return oa-ob;
+        return (+a.ops)-(+b.ops);
+      });
+      arr.forEach(a=>{
+        const p = prefRt.get(a.ops);
+        if(slot.got.length < slot.need){ slot.got.push(a); p.shiftMet = true; }
+        else { p.shiftMet = false; p.notes.push('Shift '+p.shiftText+' is full \u2014 distributed evenly instead'); pending.push(a); }
+      });
+    });
+
+    /* pass 2: fill remaining slots */
+    const queue = [...pending, ...noPref];
+    let qi = 0;
+    slots.forEach(sl=>{ while(sl.got.length < sl.need && qi < queue.length) sl.got.push(queue[qi++]); });
+    const leftovers = queue.slice(qi);
+
+    slots.forEach(sl=>{
+      if(sl.got.length < sl.need)
+        warns.push({level:'red', msg:'Shortage in task "'+row.full+'" \u2014 '+sl.shift.name+' ('+sl.shift.text+'): required '+sl.need+', available '+sl.got.length});
+    });
+
+    if(leftovers.length){
+      if(slots.length){
+        warns.push({level:'blue', msg:'Surplus in task "'+row.full+'": '+leftovers.length+' agent(s) above requirement \u2014 spread across shifts as extra support'});
+        leftovers.forEach((a,i)=>{ const sl=slots[i%slots.length]; sl.got.push(a); a._extra=true; });
+      }else{
+        warns.push({level:'amber', msg:'Task "'+row.full+'" has no required count in the requirement \u2014 '+leftovers.length+' agent(s) were not scheduled', detail: leftovers.map(a=>a.ops+' \u2014 '+a.name)});
+      }
+    }
+
+    /* offs */
+    const cov = { row, orderIdx, slots: [] };
+    slots.forEach(sl=>{
+      const members = sl.got;
+      const offs = [0,0,0,0,0,0,0];
+      if(members.length){
+        const cap = members.length - sl.need;
+        const lim = Math.max(cap, Math.ceil(members.length/7));
+
+        const rest = new Set(members);
+        const byDay = {};
+        members.forEach(a=>{
+          const p = prefRt.get(a.ops);
+          if(p && p.offDay!=null && p.offDay!=='any'){
+            const di = S.week.findIndex(dt=> dt.getDay()===p.offDay);
+            (byDay[di] ||= []).push(a);
+          }
+        });
+        Object.keys(byDay).forEach(k=>{
+          const di = +k;
+          const arr = byDay[k];
+          arr.sort((a,b)=>{
+            const pa=prefRt.get(a.ops), pb=prefRt.get(b.ops);
+            const ca = pa.shiftMet===false?0:1, cb = pb.shiftMet===false?0:1; /* whoever lost their shift gets off-day priority */
+            if(ca!==cb) return ca-cb;
+            return (+a.ops)-(+b.ops);
+          });
+          arr.forEach(a=>{
+            const p = prefRt.get(a.ops);
+            if(offs[di] < lim){ offs[di]++; a._off=di; p.offMet=true; rest.delete(a); }
+            else { p.offMet=false; p.notes.push('Too many requested off on the same day ('+DAYS[S.week[di].getDay()]+') \u2014 balanced and moved to another day'); }
+          });
+        });
+        members.forEach(a=>{
+          const p = prefRt.get(a.ops);
+          if(p && p.offDay==='any' && p.offMet==null) p.offMet = true;
+        });
+        [...rest].sort((a,b)=>(+a.ops)-(+b.ops)).forEach(a=>{
+          let best = offRotate % 7;
+          for(let k=1; k<7; k++){ const d=(offRotate+k)%7; if(offs[d] < offs[best]) best=d; }
+          offs[best]++; a._off=best; offRotate++;
+        });
+
+        members.forEach(a=>{
+          const p = prefRt.get(a.ops);
+          if(p) p.scheduled = true;
+          scheduled.push({ agent:a, shift:sl.shift, offIdx:a._off, extra:a._extra, taskFull:row.full, orderIdx });
+        });
+      }
+      cov.slots.push({ shift:sl.shift, need:sl.need, members:[...members], offs });
+
+      /* coverage dip info */
+      if(members.length && sl.need>0){
+        const dipDays = [];
+        offs.forEach((o,d)=>{ if(members.length - o < sl.need) dipDays.push(DAYS[S.week[d].getDay()]); });
+        if(dipDays.length){
+          warns.push({level:'amber', msg:'"'+row.full+'" \u2014 '+sl.shift.name+' ('+sl.shift.text+'): coverage drops below requirement on off days ('+dipDays.join(', ')+'). To keep coverage from dropping on any day you need roughly +17% above requirement (one off per agent per week).'});
+        }
+      }
+    });
+    coverage.push(cov);
+  });
+
+  /* HC tasks not in requirement */
+  const unused = Object.keys(byTask).filter(t=>!usedTasks.has(t));
+  if(unused.length){
+    const n = unused.reduce((t,k)=>t+byTask[k].length,0);
+    warns.push({level:'amber', msg:n+' agent(s) on '+unused.length+' task(s) are not in the requirement \u2014 not scheduled', detail: unused.map(t=>t+' ('+byTask[t].length+')')});
+  }
+  /* prefs for unscheduled agents */
+  prefRt.forEach(p=>{
+    if(!p.scheduled) p.notes.push('Agent not scheduled (task not in requirement or not in HC)');
+  });
+
+  scheduled.sort((a,b)=> a.orderIdx-b.orderIdx || a.shift.start-b.shift.start || (a.extra?1:0)-(b.extra?1:0) || (+a.agent.ops)-(+b.agent.ops));
+
+  S.result = { scheduled, coverage, warns, prefRt, week:[...S.week] };
+  renderResults();
+}
+
+/* ============ render results ============ */
+function renderResults(){
+  const R = S.result;
+  $('results').style.display = 'block';
+
+  const shortCount = R.warns.filter(w=>w.level==='red').length;
+  $('stats').innerHTML =
+    '<div class="stat"><b>'+R.scheduled.length+'</b>agents scheduled</div>'+
+    '<div class="stat"><b>'+R.coverage.length+'</b>tasks</div>'+
+    '<div class="stat"><b>'+(S.prefs? S.prefs.list.length : 0)+'</b>preferences</div>'+
+    '<div class="stat"><b style="color:'+(shortCount?'var(--red)':'var(--green)')+'">'+shortCount+'</b>shortage alerts</div>';
+
+  /* schedule */
+  let h = '<table><thead><tr><th class="num">Person Number</th><th>Name</th><th>Task</th><th>Shift</th>';
+  R.week.forEach(dt=>{ h += '<th class="num">'+DAYS[dt.getDay()]+'<small>'+fmtDate(dt)+'</small></th>'; });
+  h += '</tr></thead><tbody>';
+  R.scheduled.forEach(s=>{
+    const search = (s.agent.ops+' '+s.agent.name+' '+s.taskFull+' '+s.shift.text).toLowerCase();
+    h += '<tr data-search="'+esc(search)+'"><td class="num">'+esc(s.agent.ops)+'</td>';
+    h += '<td>'+esc(s.agent.name)+(s.extra?'<span class="extrabadge">Extra</span>':'')+'</td>';
+    h += '<td class="taskcell">'+esc(s.taskFull)+'</td>';
+    h += '<td class="shiftcell">'+esc(s.shift.text)+'</td>';
+    for(let d=0; d<7; d++){
+      h += d===s.offIdx ? '<td class="offcell">OFF</td>' : '<td class="shiftcell">'+esc(s.shift.text)+'</td>';
+    }
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  $('schedWrap').innerHTML = h;
+  $('schedSearch').value = '';
+
+  /* coverage */
+  let ch = '';
+  R.coverage.forEach(cov=>{
+    if(!cov.slots.length) return;
+    ch += '<div class="covblock"><h4>'+esc(cov.row.full)+'</h4><div class="tblwrap"><table><thead><tr><th>Shift</th><th class="num">Required</th><th class="num">Assigned</th>';
+    R.week.forEach(dt=>{ ch += '<th class="num">'+DAYS[dt.getDay()]+'<small>'+fmtDate(dt)+'</small></th>'; });
+    ch += '</tr></thead><tbody>';
+    cov.slots.forEach(sl=>{
+      ch += '<tr><td class="shiftcell" style="text-align:left;"><b>'+esc(sl.shift.name)+'</b> <span class="mutedtxt">'+esc(sl.shift.text)+'</span></td>';
+      ch += '<td class="num">'+sl.need+'</td><td class="num">'+sl.members.length+'</td>';
+      for(let d=0; d<7; d++){
+        const w = sl.members.length - sl.offs[d];
+        const cls = w < sl.need ? 'cov-short' : (w > sl.need ? 'cov-over' : 'cov-ok');
+        ch += '<td class="num '+cls+'">'+w+'/'+sl.need+'</td>';
+      }
+      ch += '</tr>';
+    });
+    ch += '</tbody></table></div></div>';
+  });
+  $('covWrap').innerHTML = ch || '<div class="note">No coverage to display.</div>';
+
+  /* prefs */
+  if(S.prefs && S.prefs.list.length){
+    let ph = '<table><thead><tr><th class="num">OPS</th><th>Name</th><th>Task</th><th>Shift request</th><th class="center">Met?</th><th>Off request</th><th class="center">Met?</th><th>Notes</th></tr></thead><tbody>';
+    const nameByOps = new Map(S.hc.agents.map(a=>[a.ops, a]));
+    R.prefRt.forEach(p=>{
+      const ag = nameByOps.get(p.ops);
+      const offTxt = p.offDay==null ? '' : (p.offDay==='any' ? 'Any day' : DAYS[p.offDay]);
+      ph += '<tr><td class="num">'+esc(p.ops)+'</td><td>'+esc(ag?ag.name:'(not in HC)')+'</td><td>'+esc(ag?ag.task:p.task)+'</td>';
+      ph += '<td class="shiftcell">'+esc(p.shiftText||'\u2014')+'</td>';
+      ph += '<td class="center">'+(p.shiftStart==null?'<span class="mutedtxt">\u2014</span>':(p.shiftMet?'<span class="okmark">\u2713</span>':'<span class="badmark">\u2717</span>'))+'</td>';
+      ph += '<td>'+esc(offTxt||'\u2014')+'</td>';
+      ph += '<td class="center">'+(p.offDay==null?'<span class="mutedtxt">\u2014</span>':(p.offMet?'<span class="okmark">\u2713</span>':'<span class="badmark">\u2717</span>'))+'</td>';
+      ph += '<td style="white-space:normal; max-width:340px; font-size:12.5px;">'+esc(p.notes.join(' \u00b7 '))+'</td></tr>';
+    });
+    ph += '</tbody></table>';
+    $('prefWrap').innerHTML = ph;
+  }else{
+    $('prefWrap').innerHTML = '<div class="note" style="padding:14px;">No preferences file uploaded \u2014 everything was distributed by the requirement.</div>';
+  }
+
+  /* warns */
+  const order = {red:0, amber:1, blue:2};
+  const ws = [...R.warns].sort((a,b)=>order[a.level]-order[b.level]);
+  $('warnWrap').innerHTML = ws.length ? ws.map(w=>{
+    let d = '';
+    if(w.detail && w.detail.length){
+      d = '<details><summary>Details ('+w.detail.length+')</summary><ul>'+w.detail.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></details>';
+    }
+    return '<div class="warnitem '+w.level+'">'+esc(w.msg)+d+'</div>';
+  }).join('') : '<div class="warnitem blue">No alerts \u2014 everything runs per the requirement \u2713</div>';
+  const redAmber = ws.filter(w=>w.level!=='blue').length;
+  $('warnBadge').style.display = redAmber ? 'inline-block' : 'none';
+  $('warnBadge').textContent = redAmber;
+
+  $('results').scrollIntoView({behavior:'smooth'});
+}
+
+/* ============ export ============ */
+function exportXlsx(){
+  const R = S.result;
+  if(!R) return;
+  const wb = XLSX.utils.book_new();
+  const dateHeader = R.week.map(d=>d);
+
+  /* System Upload */
+  const sysRows = [['Person Number', ...dateHeader]];
+  R.scheduled.forEach(s=>{
+    sysRows.push([ +s.agent.ops, ...R.week.map((d,i)=> i===s.offIdx ? 'OFF' : s.shift.text) ]);
+  });
+  const ws1 = XLSX.utils.aoa_to_sheet(sysRows, {cellDates:true});
+  for(let c=1; c<=7; c++){ const addr = XLSX.utils.encode_cell({r:0,c}); if(ws1[addr]){ ws1[addr].t='d'; ws1[addr].z='m/d/yyyy'; } }
+  ws1['!cols'] = [{wch:14}, ...Array(7).fill({wch:13})];
+  XLSX.utils.book_append_sheet(wb, ws1, 'System Upload');
+
+  /* Details */
+  const detRows = [['OPS','Agent Name','OPS ID','Task','Shift','Extra', ...dateHeader]];
+  R.scheduled.forEach(s=>{
+    detRows.push([ +s.agent.ops, s.agent.name, s.agent.opsId, s.taskFull, s.shift.text, s.extra?'Yes':'', ...R.week.map((d,i)=> i===s.offIdx ? 'OFF' : s.shift.text) ]);
+  });
+  const ws2 = XLSX.utils.aoa_to_sheet(detRows, {cellDates:true});
+  for(let c=6; c<=12; c++){ const addr = XLSX.utils.encode_cell({r:0,c}); if(ws2[addr]){ ws2[addr].t='d'; ws2[addr].z='m/d/yyyy'; } }
+  ws2['!cols'] = [{wch:8},{wch:30},{wch:26},{wch:36},{wch:13},{wch:7}, ...Array(7).fill({wch:13})];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Details');
+
+  /* Coverage */
+  const covRows = [['Task','Shift','Time','Required','Assigned', ...R.week.map(d=>fmtDate(d)+' ('+DAYS[d.getDay()]+')')]];
+  R.coverage.forEach(cov=>{
+    cov.slots.forEach(sl=>{
+      covRows.push([ cov.row.full, sl.shift.name, sl.shift.text, sl.need, sl.members.length, ...sl.offs.map(o=> sl.members.length - o) ]);
+    });
+  });
+  const ws3 = XLSX.utils.aoa_to_sheet(covRows);
+  ws3['!cols'] = [{wch:36},{wch:12},{wch:14},{wch:9},{wch:9}, ...Array(7).fill({wch:16})];
+  XLSX.utils.book_append_sheet(wb, ws3, 'Coverage');
+
+  /* Notes */
+  const noteRows = [['Type','Note']];
+  R.warns.forEach(w=>{
+    noteRows.push([ w.level==='red'?'Shortage':(w.level==='amber'?'Alert':'Info'), w.msg + (w.detail? ' \u2014 '+w.detail.join(' | ') : '') ]);
+  });
+  R.prefRt.forEach(p=>{
+    if((p.shiftStart!=null && p.shiftMet===false) || (p.offDay!=null && p.offMet===false))
+      noteRows.push(['Preference', 'OPS '+p.ops+': '+p.notes.join(' \u00b7 ')]);
+  });
+  const ws4 = XLSX.utils.aoa_to_sheet(noteRows);
+  ws4['!cols'] = [{wch:10},{wch:120}];
+  XLSX.utils.book_append_sheet(wb, ws4, 'Notes');
+
+  const fn = 'Schedule_'+fmtDate(R.week[0]).replace(/\//g,'-')+'.xlsx';
+  XLSX.writeFile(wb, fn);
+}
+
+/* ============ UI wiring ============ */
+hookUpload('hcDrop','hcFile', loadHC);
+hookUpload('reqDrop','reqFile', loadREQ);
+hookUpload('prefDrop','prefFile', loadPREFS);
+$('startDate').addEventListener('change', updateWeek);
+$('genBtn').addEventListener('click', generate);
+$('dlBtn').addEventListener('click', exportXlsx);
+$('schedSearch').addEventListener('input', ()=>{
+  const q = $('schedSearch').value.toLowerCase().trim();
+  $('schedWrap').querySelectorAll('tbody tr').forEach(tr=>{
+    tr.style.display = !q || tr.dataset.search.includes(q) ? '' : 'none';
+  });
+});
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $(t.dataset.tab).classList.add('active');
+  });
+});
+
+/* default date = today; clock strip */
+(function(){
+  const now = new Date();
+  $('startDate').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  updateWeek();
+  const strip = $('clockstrip');
+  for(let i=0;i<24;i++){ const s=document.createElement('span'); if(i%3===0) s.classList.add('on'); strip.appendChild(s); }
+})();
+</script>
+</body>
+</html>
